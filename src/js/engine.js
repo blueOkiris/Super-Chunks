@@ -35,13 +35,15 @@ function Player(startx, starty, image_speed, move_speed, gravity, jumpSpeed, mas
 	this.collision = new Rect(this.x, this.y, 64, 64);
 }
 
-var player = new Player(400, 300, 1, 8, 0.2, 7, 53, 60);
+var player = new Player(400, 300, 1, 8, 0.2, 9, 53, 60);
 
 var game_state = GameState.Game;
 
-function blockAt(checky, checkx) {
+function blockAt(checkx, checky) {
 	return current_level[Math.floor(checky / 64)][Math.floor(checkx / 64)];
 }
+
+var jump = false;
 
 // Updates whenever possible (to be fast)
 function Update() {
@@ -67,37 +69,79 @@ function Update() {
 		var move = key[right] - key[left];
 		player.hsp = player.mv_spd * move;
 		
-		if(!player.grounded)
-			player.vsp += player.grav;
+		player.vsp += player.grav;
 		
 		// Check y collision
-		if(blockAt(player.y + player.mask_h + player.vsp, player.x + player.mask_w / 2) > 0) {
-			while(blockAt(player.y + player.mask_h + 1, player.x + player.mask_w / 2) == 0)
-				player.y += Math.sign(player.vsp);
+		if(player.vsp > 0) { // Falling
+			// Check in 3 warning zones for collision
+			var blockLeft = blockAt(player.x, player.y + player.mask_h + player.vsp);
+			var blockMid = blockAt(player.x + player.mask_w / 2, player.y + player.mask_h + player.vsp);
+			var blockRight = blockAt(player.x + player.mask_w, player.y + player.mask_h + player.vsp);
 			
-			player.vsp = 0;
-			player.grounded = true;
+			// Move until flush against contact
+			var xPos = blockLeft != 0 ? player.x : blockMid != 0 ? player.x + player.mask_w / 2 : blockRight != 0 ? player.x + player.mask_w : -1024;
+			
+			if(xPos >= 0) { // There is a collision
+				while(blockAt(xPos, player.y + player.mask_h + 1) == 0)
+					player.y++;
+				
+				player.vsp = 0;
+				player.grounded = true;
+			} else
+				player.grounded = false;
+		} else if(player.vsp < 0) { // Jumping
+			if(player.y + player.vsp < 0) {
+				player.y = 0;
+				player.vsp = 0;
+			} else {
+				// Check in 3 warning zones for collision
+				var blockLeft = blockAt(player.x, player.y + player.vsp);
+				var blockMid = blockAt(player.x + player.mask_w / 2, player.y + player.vsp);
+				var blockRight = blockAt(player.x + player.mask_w, player.y + player.vsp);
+				
+				// Move until flush against contact
+				var xPos = blockLeft != 0 ? player.x : blockMid != 0 ? player.x + player.mask_w / 2 : blockRight != 0 ? player.x + player.mask_w : -1024;
+				if(xPos >= 0) { // There is a collision
+					while(blockAt(xPos, player.y - 1) == 0)
+						player.y--;
+				
+					player.vsp = 0;
+				}
+			}
 		}
 		
 		// Check x collision
-		if(blockAt(player.y + player.mask_h / 2, player.x + player.mask_w + player.hsp) > 0) {
-			while(blockAt(player.y + player.mask_h / 2, player.x + player.mask_w + 1) == 0)
-				player.x += Math.sign(player.hsp);
-			
-			player.hsp = 0;
-		} else if(player.x + player.hsp < 0) {
+		if(player.x + player.hsp < 0) {
 			player.x = 0;
 			player.hsp = 0;
+		} else {
+			var blockTop = blockAt(player.x + (player.hsp > 0 ? player.mask_w : 0) + player.hsp, player.y);
+			var blockMid = blockAt(player.x + (player.hsp > 0 ? player.mask_w : 0) + player.hsp, player.y + player.mask_h / 2);
+			var blockLow = blockAt(player.x + (player.hsp > 0 ? player.mask_w : 0) + player.hsp, player.y + player.mask_h);
+			
+			// Move until flush against contact
+			var yPos = blockTop != 0 ? player.y : blockMid != 0 ? player.y + player.mask_h / 2 : blockLow != 0 ? player.y + player.mask_w : -1024;
+			if(yPos >= 0) { // There is a collision
+				while(blockAt(player.x + (player.hsp > 0 ? player.mask_w : 0) + player.hsp, yPos) == 0)
+					player.x += Math.sign(player.hsp);
+			
+				player.hsp = 0;
+			}
 		}
 		
 		player.x += player.hsp;
 		player.y += player.vsp;
 		
 		// Jump
-		if(key[up] && player.grounded) {
+		if(key[up] && player.grounded && jump) {
 			player.grounded = false;
 			player.vsp -= player.jmp_spd;
+			
+			jump = false;
 		}
+		
+		if(!key[up])
+			jump = true;
 		break;
 	}
 }

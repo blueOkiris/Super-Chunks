@@ -35,7 +35,7 @@ function Player(startx, starty, image_speed, move_speed, gravity, jumpSpeed, mas
 	this.collision = new Rect(this.x, this.y, 64, 64);
 }
 
-var player = new Player(400, 300, 1, 8, 0.2, 7, 53, 60);
+var player = new Player(400, 300, 1, 8, 0.2, 9, 53, 60);
 
 var game_state = GameState.Game;
 
@@ -67,23 +67,33 @@ function Update() {
 		var move = key[right] - key[left];
 		player.hsp = player.mv_spd * move;
 		
-		if(!player.grounded)
-			player.vsp += player.grav;
+		player.vsp += player.grav;
 		
 		// Check y collision
-		if(blockAt(player.y + player.mask_h + player.vsp, player.x + player.mask_w / 2) > 0) {
+		if(player.y + player.vsp < 0) {
+			player.y = 0;
+			player.vsp = 0;
+		} else if(blockAt(player.y + player.mask_h + player.vsp, player.x + player.mask_w / 2) > 0) { // Check down
 			while(blockAt(player.y + player.mask_h + 1, player.x + player.mask_w / 2) == 0)
 				player.y += Math.sign(player.vsp);
 			
+			
+			if(Math.sign(player.vsp) >= 0)
+				player.grounded = true;
+			else
+				player.grounded = false;
 			player.vsp = 0;
-			player.grounded = true;
-		}
+		} else
+			player.grounded = false;
 		
 		// Check x collision
-		if(player.x + player.hsp > 0 && blockAt(player.y + player.mask_h / 2, player.x + player.mask_w + player.hsp) > 0) {
+		if(blockAt(player.y + player.mask_h / 2, player.x + player.mask_w + player.hsp) > 0) {
 			while(blockAt(player.y + player.mask_h / 2, player.x + player.mask_w + 1) == 0)
 				player.x += Math.sign(player.hsp);
 			
+			player.hsp = 0;
+		} else if(player.x + player.hsp < 0) {
+			player.x = 0;
 			player.hsp = 0;
 		}
 		
