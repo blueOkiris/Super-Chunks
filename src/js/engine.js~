@@ -80,13 +80,10 @@ function Update() {
 		}
 		
 		// Check x collision
-		if(blockAt(player.y + player.mask_h / 2, player.x + player.mask_w + player.hsp) > 0) {
+		if(player.x + player.hsp > 0 && blockAt(player.y + player.mask_h / 2, player.x + player.mask_w + player.hsp) > 0) {
 			while(blockAt(player.y + player.mask_h / 2, player.x + player.mask_w + 1) == 0)
 				player.x += Math.sign(player.hsp);
 			
-			player.hsp = 0;
-		} else if(player.x + player.hsp < 0) {
-			player.x = 0;
 			player.hsp = 0;
 		}
 		

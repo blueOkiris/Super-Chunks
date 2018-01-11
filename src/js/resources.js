@@ -1,9 +1,33 @@
 /* Sprite images */
-var derp_face = new Sprite("images/derp.png", [[0, 0]], [599, 568]);
+//var derp_face = new Sprite("images/derp.png", [[0, 0]], [599, 568]);
 // Get a list from 0 to 13 of the form [index * 32, 0] which
 // is the location of the  sub images
-var bomb_locs = function() {var list = [[]];for(var i = 0; i < 13; i++)list.push([i*32, 0]);return list;}();
-var bomb = new Sprite("images/Hyptosis/BombExploding.png", bomb_locs, [32, 64]);
+//var bomb_locs = function() {var list = [[]];for(var i = 0; i < 13; i++)list.push([i*32, 0]);return list;}();
+//var bomb = new Sprite("images/Hyptosis/BombExploding.png", bomb_locs, [32, 64]);
+var spr_chunks_num = 1;
+var spr_chunks_locs = function() {var list = [[]];for(var i = 0; i < 1; i++)list.push([i*64, 0]);list.splice(0, 1);return list;}();
+var spr_chunks = new Sprite("images/spr_chunks.png", spr_chunks_locs, [64, 64]);
+
+var spr_grass_block = new Sprite("images/spr_block_1.png", [[0, 0], [64, 0]], [64, 64]);
+
+/* Level data 
+ * 0 - air
+ * 1 - grass
+ * 2 - dirt
+ */
+var test_level = [
+[0,0,0,0,0,0,0,0,0,0,0,0,0],
+[0,0,0,0,0,0,0,0,0,0,0,0,0],
+[0,0,0,0,0,0,0,0,0,0,0,0,0],
+[0,0,0,0,0,0,0,0,0,0,0,0,0],
+[0,0,0,0,0,0,0,0,0,0,0,0,0],
+[0,0,0,0,0,0,0,0,0,0,0,0,0],
+[0,0,0,0,0,0,0,0,0,0,0,0,0],
+[0,0,0,0,0,0,0,0,0,0,0,0,0],
+[1,1,1,1,1,1,1,1,1,1,1,1,1],
+[2,2,2,2,2,2,2,2,2,2,2,2,2],
+]; // Just grass on bottom
 
 /* Music files */
-var bg_music = new Audio("sounds/ES_Chefs_From_Europe_2_-_Magnus_Ringblom.ogg");
+//var bg_music = new Audio("sounds/ES_Chefs_From_Europe_2_-_Magnus_Ringblom.ogg");
+// bg_music.play() to play
