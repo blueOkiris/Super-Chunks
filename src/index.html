@@ -1,0 +1,23 @@
+<html>
+	<head>
+		<meta http-equiv="X-UA-Compatible" content="IE=9" >
+		<link rel="stylesheet" type="text/css" href="window.css">
+		
+		<script src="js/draw.js" type="text/Javascript"></script>
+		<script src="js/resources.js" type="text/Javascript"></script>
+		<script src="js/engine.js" type="text/Javascript"></script>
+		<script src="js/game.js" type="text/Javascript"></script>
+	</head>
+	<body bgcolor="#053630">
+		<canvas id="game_screen" width="800" height="600">
+			No canvas support
+		</canvas>
+		
+		<script type="text/Javascript">
+			var canvas = document.getElementById('game_screen'); // Get the canvas
+			var ctx = canvas.getContext('2d'); // and the context
+			
+			start_game();
+		</script>
+	</body>
+</html>
