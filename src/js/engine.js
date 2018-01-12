@@ -37,7 +37,7 @@ function Player(startx, starty, image_speed, move_speed, gravity, jumpSpeed, mas
 	this.collision = new Rect(this.x, this.y, 64, 64);
 }
 
-var player = new Player(400, 300, 1, 6, 0.7, 18, 53, 60);
+var player = new Player(400, 300, 1, 4, 0.7, 18, 53, 60);
 
 var game_state = GameState.Game;
 
@@ -136,6 +136,9 @@ function Update() {
 				player.dir = Math.sign(player.hsp);
 			
 			player.x += player.hsp;
+			
+			if(player.x > 400 && player.x < 64 * current_level[0].length - 400)
+				ctx.translate(-player.hsp, 0);
 		}
 		
 		player.y += player.vsp;
@@ -156,8 +159,6 @@ function Update() {
 
 // Updates every frame (60 fps)
 function Render() {
-	ctx.clearRect(0, 0, 800, 600); // Clear the screen
-	
 	switch(game_state) {
 	case GameState.Menu:
 	case GameState.MenuToGame:// start screen
@@ -171,11 +172,11 @@ function Render() {
 	
 	case GameState.Game: // Actual test code
 		ctx.fillStyle = "#FFFFFF";
-		ctx.fillRect(0, 0, 800, 600);
+		ctx.fillRect(player.x - 402, 0, 804, 600);
 		
 		// Draw level map
-		for(var y = 0; y < 10; y++)
-			for(var x = 0; x < 13; x++)
+		for(var y = 0; y < current_level.length; y++)
+			for(var x = 0; x < current_level[y].length; x++)
 				draw_block(current_level[y][x], x, y);
 		
 		// Draw player
