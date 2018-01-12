@@ -4,8 +4,15 @@
 // is the location of the  sub images
 //var bomb_locs = function() {var list = [[]];for(var i = 0; i < 13; i++)list.push([i*32, 0]);return list;}();
 //var bomb = new Sprite("images/Hyptosis/BombExploding.png", bomb_locs, [32, 64]);
-var spr_chunks_num = 1;
-var spr_chunks_locs = function() {var list = [[]];for(var i = 0; i < 1; i++)list.push([i*64, 0]);list.splice(0, 1);return list;}();
+var spr_chunks_num = 3;
+var spr_chunks_locs = function() {
+	var list = [[]];
+	for(var j = 0; j < 2; j++) {
+		for(var i = 0; i < spr_chunks_num; i++)
+			list.push([i*64, j * 64]);
+	}
+	list.splice(0, 1);
+return list;}();
 var spr_chunks = new Sprite("images/spr_chunks.png", spr_chunks_locs, [64, 64]);
 
 var spr_grass_block = new Sprite("images/spr_block_1.png", [[0, 0], [64, 0]], [64, 64]);
@@ -19,7 +26,7 @@ var test_level = [
 [0,0,0,0,0,0,0,0,0,0,0,0,1],
 [0,0,0,0,0,0,0,0,0,0,0,0,2],
 [0,0,0,0,0,0,0,0,0,0,0,0,2],
-[0,0,0,0,1,1,1,1,1,0,0,0,2],
+[0,0,0,0,0,1,1,1,1,0,0,0,2],
 [0,0,0,0,0,0,0,0,0,0,0,0,2],
 [0,0,1,0,0,0,0,0,0,0,0,1,2],
 [0,0,0,0,0,0,0,0,0,0,1,2,2],

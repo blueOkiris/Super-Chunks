@@ -30,12 +30,14 @@ function Player(startx, starty, image_speed, move_speed, gravity, jumpSpeed, mas
 	this.mask_w = maskw;
 	this.mask_h = maskh;
 	
+	this.dir = 1;
+	
 	this.grounded = false;
 	
 	this.collision = new Rect(this.x, this.y, 64, 64);
 }
 
-var player = new Player(400, 300, 1, 8, 0.2, 9, 53, 60);
+var player = new Player(400, 300, 1, 6, 0.7, 18, 53, 60);
 
 var game_state = GameState.Game;
 
@@ -129,7 +131,13 @@ function Update() {
 			}
 		}
 		
-		player.x += player.hsp;
+		if(Math.sign(player.hsp) != 0) {
+			if(player.dir != Math.sign(player.hsp))
+				player.dir = Math.sign(player.hsp);
+			
+			player.x += player.hsp;
+		}
+		
 		player.y += player.vsp;
 		
 		// Jump
@@ -171,7 +179,25 @@ function Render() {
 				draw_block(current_level[y][x], x, y);
 		
 		// Draw player
-		spr_chunks.draw(player.x, player.y, 64, 64, animCounter / player.img_spd);
+		if(player.dir == 1) {
+			if(player.grounded == false) {
+				if(player.vsp <= 0) // Jumping
+					spr_chunks.draw(player.x, player.y, 64, 64, 1);
+				else // Falling
+					spr_chunks.draw(player.x, player.y, 64, 64, 2);
+			} else {
+				spr_chunks.draw(player.x, player.y, 64, 64, 0);
+			}
+		} else {
+			if(player.grounded == false) {
+				if(player.vsp <= 0) // Jumping
+					spr_chunks.draw(player.x, player.y, 64, 64, 1 + spr_chunks_num);
+				else // Falling
+					spr_chunks.draw(player.x, player.y, 64, 64, 2 + spr_chunks_num);
+			} else {
+				spr_chunks.draw(player.x, player.y, 64, 64, 0 + spr_chunks_num);
+			}
+		}
 		
 		break;
 	}
