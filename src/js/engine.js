@@ -115,14 +115,14 @@ function Update() {
 			player.x = 0;
 			player.hsp = 0;
 		} else {
-			var blockTop = blockAt(player.x + (player.hsp > 0 ? player.mask_w : 0) + player.hsp, player.y);
-			var blockMid = blockAt(player.x + (player.hsp > 0 ? player.mask_w : 0) + player.hsp, player.y + player.mask_h / 2);
-			var blockLow = blockAt(player.x + (player.hsp > 0 ? player.mask_w : 0) + player.hsp, player.y + player.mask_h);
+			var blockTop = blockAt(player.x + (player.hsp >= 0 ? player.mask_w : 0) + player.hsp, player.y);
+			var blockMid = blockAt(player.x + (player.hsp >= 0 ? player.mask_w : 0) + player.hsp, player.y + player.mask_h / 2);
+			var blockLow = blockAt(player.x + (player.hsp >= 0 ? player.mask_w : 0) + player.hsp, player.y + player.mask_h);
 			
 			// Move until flush against contact
-			var yPos = blockTop != 0 ? player.y : blockMid != 0 ? player.y + player.mask_h / 2 : blockLow != 0 ? player.y + player.mask_w : -1024;
+			var yPos = blockTop != 0 ? player.y + 1 : blockMid != 0 ? player.y + player.mask_h / 2 : blockLow != 0 ? player.y + player.mask_h - 1 : -1024;
 			if(yPos >= 0) { // There is a collision
-				while(blockAt(player.x + (player.hsp > 0 ? player.mask_w : 0) + player.hsp, yPos) == 0)
+				while(blockAt(player.x + (player.hsp > 0 ? player.mask_w : 0) + Math.sign(player.hsp), yPos) == 0)
 					player.x += Math.sign(player.hsp);
 			
 				player.hsp = 0;
