@@ -37,7 +37,7 @@ function Player(startx, starty, image_speed, move_speed, gravity, jumpSpeed, mas
 	this.collision = new Rect(this.x, this.y, 64, 64);
 }
 
-var player = new Player(400, 300, 1, 4, 0.7, 18, 53, 60);
+var player = new Player(400 - 54, 300 - 60, 1, 4, 0.7, 18, 54, 60);
 
 var game_state = GameState.Game;
 
@@ -137,11 +137,13 @@ function Update() {
 			
 			player.x += player.hsp;
 			
-			if(player.x > 400 && player.x < 64 * current_level[0].length - 400)
+			if(player.x + player.mask_w / 2 > 400 && player.x + player.mask_w / 2 < 64 * current_level[0].length - 400)
 				ctx.translate(-player.hsp, 0);
 		}
 		
 		player.y += player.vsp;
+		if(player.y + player.mask_h / 2 < 64 * current_level.length - 300 && player.y + player.mask_h / 2 > 300)
+			ctx.translate(0, -player.vsp);
 		
 		// Jump
 		if(key[up] && player.grounded && jump) {
@@ -172,7 +174,7 @@ function Render() {
 	
 	case GameState.Game: // Actual test code
 		ctx.fillStyle = "#FFFFFF";
-		ctx.fillRect(player.x - 402, 0, 804, 600);
+		ctx.fillRect(player.x - (800 - player.mask_w), player.y - (600 - player.mask_h), 1600, 1200);
 		
 		// Draw level map
 		for(var y = 0; y < current_level.length; y++)
