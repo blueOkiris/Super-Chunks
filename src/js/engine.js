@@ -37,7 +37,7 @@ function Player(startx, starty, image_speed, move_speed, gravity, jumpSpeed, mas
 	this.collision = new Rect(this.x, this.y, 64, 64);
 }
 
-var player = new Player(test_level_start[0], test_level_start[1], 1, 4, 0.7, 18, 48, 50);
+var player = new Player(test_level_start[0], test_level_start[1], 1, 6, 0.7, 18, 48, 50);
 
 var game_state = GameState.MenuToGame;
 
