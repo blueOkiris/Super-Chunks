@@ -37,12 +37,24 @@ function Player(startx, starty, image_speed, move_speed, gravity, jumpSpeed, mas
 	this.collision = new Rect(this.x, this.y, 64, 64);
 }
 
-var player = new Player(400 - 54, 300 - 60, 1, 4, 0.7, 18, 54, 60);
+var player = new Player(test_level_start[0], test_level_start[1], 1, 4, 0.7, 18, 48, 50);
 
-var game_state = GameState.Game;
+var game_state = GameState.MenuToGame;
 
 function blockAt(checkx, checky) {
 	return current_level[Math.floor(checky / 64)][Math.floor(checkx / 64)];
+}
+
+function isSolid(block_id) {
+	switch(block_id) {
+	case 1: // Grass block
+		return true;
+	case 2: // Dirt block
+		return true;
+		
+	default:
+		return false;
+	}
 }
 
 var jump = false;
@@ -74,42 +86,24 @@ function Update() {
 		player.vsp += player.grav;
 		
 		// Check y collision
-		if(player.vsp > 0) { // Falling
-			// Check in 3 warning zones for collision
-			var blockLeft = blockAt(player.x, player.y + player.mask_h + player.vsp);
-			var blockMid = blockAt(player.x + player.mask_w / 2, player.y + player.mask_h + player.vsp);
-			var blockRight = blockAt(player.x + player.mask_w, player.y + player.mask_h + player.vsp);
+		if(player.y + player.vsp < 0) {
+			player.y = 0;
+			player.vsp = 0;
+		} else {
+			var blockLeft = blockAt(player.x, player.y + (player.vsp > 0 ? player.mask_h : 0) + player.vsp);
+			var blockMid = blockAt(player.x + player.mask_w / 2, player.y + (player.vsp > 0 ? player.mask_h : 0) + player.vsp);
+			var blockRight = blockAt(player.x + player.mask_w, player.y + (player.vsp > 0 ? player.mask_h : 0) + player.vsp);
 			
 			// Move until flush against contact
-			var xPos = blockLeft != 0 ? player.x : blockMid != 0 ? player.x + player.mask_w / 2 : blockRight != 0 ? player.x + player.mask_w : -1024;
-			
+			var xPos = isSolid(blockLeft) ? player.x : isSolid(blockMid) ? player.x + player.mask_w / 2 : isSolid(blockRight) ? player.x + player.mask_w: -1024;
 			if(xPos >= 0) { // There is a collision
-				while(blockAt(xPos, player.y + player.mask_h + 1) == 0)
-					player.y++;
-				
+				while(!isSolid(blockAt(xPos, player.y + (player.vsp > 0 ? player.mask_h : 0) + Math.sign(player.vsp))))
+					player.y += Math.sign(player.vsp);
+			
 				player.vsp = 0;
 				player.grounded = true;
 			} else
 				player.grounded = false;
-		} else if(player.vsp < 0) { // Jumping
-			if(player.y + player.vsp < 0) {
-				player.y = 0;
-				player.vsp = 0;
-			} else {
-				// Check in 3 warning zones for collision
-				var blockLeft = blockAt(player.x, player.y + player.vsp);
-				var blockMid = blockAt(player.x + player.mask_w / 2, player.y + player.vsp);
-				var blockRight = blockAt(player.x + player.mask_w, player.y + player.vsp);
-				
-				// Move until flush against contact
-				var xPos = blockLeft != 0 ? player.x : blockMid != 0 ? player.x + player.mask_w / 2 : blockRight != 0 ? player.x + player.mask_w : -1024;
-				if(xPos >= 0) { // There is a collision
-					while(blockAt(xPos, player.y - 1) == 0)
-						player.y--;
-				
-					player.vsp = 0;
-				}
-			}
 		}
 		
 		// Check x collision
@@ -122,9 +116,9 @@ function Update() {
 			var blockLow = blockAt(player.x + (player.hsp >= 0 ? player.mask_w : 0) + player.hsp, player.y + player.mask_h);
 			
 			// Move until flush against contact
-			var yPos = blockTop != 0 ? player.y + 1 : blockMid != 0 ? player.y + player.mask_h / 2 : blockLow != 0 ? player.y + player.mask_h - 1 : -1024;
+			var yPos = isSolid(blockTop) ? player.y: isSolid(blockMid)? player.y + player.mask_h / 2 : isSolid(blockLow) ? player.y + player.mask_h : -1024;
 			if(yPos >= 0) { // There is a collision
-				while(blockAt(player.x + (player.hsp > 0 ? player.mask_w : 0) + Math.sign(player.hsp), yPos) == 0)
+				while(!isSolid(blockAt(player.x + (player.hsp > 0 ? player.mask_w : 0) + Math.sign(player.hsp), yPos)))
 					player.x += Math.sign(player.hsp);
 			
 				player.hsp = 0;
@@ -137,13 +131,19 @@ function Update() {
 			
 			player.x += player.hsp;
 			
-			if(player.x + player.mask_w / 2 > 400 && player.x + player.mask_w / 2 < 64 * current_level[0].length - 400)
-				ctx.translate(-player.hsp, 0);
+			/*if(player.x + player.mask_w / 2 > 400 && player.x + player.mask_w / 2 < 64 * current_level[0].length - 400)
+				ctx.translate(-player.hsp, 0);*/
 		}
 		
 		player.y += player.vsp;
-		if(player.y + player.mask_h / 2 < 64 * current_level.length - 300 && player.y + player.mask_h / 2 > 300)
-			ctx.translate(0, -player.vsp);
+		/*if(player.y + player.mask_h / 2 > 300 && player.y + player.mask_h / 2 < 64 * current_level.length - 300)
+			ctx.translate(0, -player.vsp);*/
+		
+		ctx.setTransform(1, 0, 0, 1, 
+		 	// 400 - nearest 4 to player middle
+			400 - (player.x + player.mask_w / 2),
+			// Same here but with 300
+			300 - (player.y + player.mask_h / 2));
 		
 		// Jump
 		if(key[up] && player.grounded && jump) {
@@ -159,6 +159,8 @@ function Update() {
 	}
 }
 
+var start = true;
+
 // Updates every frame (60 fps)
 function Render() {
 	switch(game_state) {
@@ -173,7 +175,7 @@ function Render() {
 		break;
 	
 	case GameState.Game: // Actual test code
-		ctx.fillStyle = "#FFFFFF";
+		ctx.fillStyle = "#0066CC"; // Dull blue
 		ctx.fillRect(player.x - (800 - player.mask_w), player.y - (600 - player.mask_h), 1600, 1200);
 		
 		// Draw level map
@@ -189,7 +191,11 @@ function Render() {
 				else // Falling
 					spr_chunks.draw(player.x, player.y, 64, 64, 2);
 			} else {
-				spr_chunks.draw(player.x, player.y, 64, 64, 0);
+				if(Math.abs(player.hsp) > 0) { // Moving
+					var walk_cycle_index = (animCounter / 8) % 4;
+					spr_chunks.draw(player.x, player.y, 64, 64, 3 + walk_cycle_index);
+				} else 
+					spr_chunks.draw(player.x, player.y, 64, 64, 0);
 			}
 		} else {
 			if(player.grounded == false) {
@@ -198,7 +204,11 @@ function Render() {
 				else // Falling
 					spr_chunks.draw(player.x, player.y, 64, 64, 2 + spr_chunks_num);
 			} else {
-				spr_chunks.draw(player.x, player.y, 64, 64, 0 + spr_chunks_num);
+				if(Math.abs(player.hsp) > 0) { // Moving
+					var walk_cycle_index = (animCounter / 8) % 4;
+					spr_chunks.draw(player.x, player.y, 64, 64, 3 + walk_cycle_index + spr_chunks_num);
+				} else 
+					spr_chunks.draw(player.x, player.y, 64, 64, 0 + spr_chunks_num);
 			}
 		}
 		

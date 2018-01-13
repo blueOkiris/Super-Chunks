@@ -5,6 +5,8 @@ var nextGameTick = (new Date).getTime();
 
 var initialDelay = 60;
 
+var onPage = true;
+
 // The set up for the game loop
 function start_game() {
 	document.addEventListener('keydown', OnKeyDown);
@@ -36,24 +38,27 @@ function start_game() {
 
 // The game loop
 function game_loop() {
-	var loops = 0;
+	if(onPage) {
+		var loops = 0;
 	
-	while((new Date).getTime() > nextGameTick && loops < maxFrameSkip) {
-		if(initialDelay  <= 0) {
-			if(imageCounter == 0) // all images have loaded
-				Update();
-		}
+		while((new Date).getTime() > nextGameTick && loops < maxFrameSkip) {
+			if(initialDelay  <= 0) {
+				if(imageCounter == 0) // all images have loaded
+					Update();
+			}
 		
-		nextGameTick += skipTicks;
-		loops ++;
-	}
-	
-	if(loops) {
-		if(initialDelay  > 0)
-			initialDelay--;
-		else {
-			if(imageCounter == 0) // all images have loaded
-				Render();
+			nextGameTick += skipTicks;
+			loops ++;
 		}
-	}
+	
+		if(loops) {
+			if(initialDelay  > 0)
+				initialDelay--;
+			else {
+				if(imageCounter == 0) // all images have loaded
+					Render();
+			}
+		}
+	} else
+		nextGameTick = (new Date).getTime();
 }
