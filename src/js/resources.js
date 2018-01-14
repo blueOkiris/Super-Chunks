@@ -21,6 +21,10 @@ var spr_chunks = new Sprite("images/spr_chunks_16x16_scaled.png", spr_chunks_loc
 
 var spr_grass_block = new Sprite("images/spr_block_1_16x16.png", [[0, 0], [64, 0]], [64, 64]);
 
+var spr_brocolli = new Sprite("images/brocolli.png");
+
+/* Level maps */
+
 /* Level data 
  * 0 - air
  * 1 - grass
