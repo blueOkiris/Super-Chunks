@@ -37,27 +37,28 @@ function Player(startx, starty, image_speed, move_speed, gravity, jumpSpeed, mas
 	this.doubleJumpUnlocked = false;
 }
 
-function Brocolli(startx, starty, grav) {
+function Enemy(startx, starty, grav, identifier) {
 	this.x = startx;
 	this.y = starty;
-	this.mask = function() {
-		return new Rect(this.x - 32, this.y - 32, 64, 64);
-	}
+	
 	this.dir = -1;
 	this.vsp = 0;
 	this.gravity = grav;
 	this.move_speed = 1;
 	
 	this.dead = false;
+	this.start = true;
+	
+	this.id = identifier;
 }
 
 var player = new Player(test_level_start[0], test_level_start[1], 1, 4, 0.4, 11, 48, 50);
-var test_level_brocollis = [new Brocolli(64 * 21, 64 * 11, player.grav),
-							new Brocolli(64 * 29, 64 * 10, player.grav),
-							new Brocolli(64 * 13, 64 * 14, player.grav)];
+var test_level_enemies = [new Enemy(64 * 21, 64 * 11, player.grav, 0),
+							new Enemy(64 * 29, 64 * 10, player.grav, 0),
+							new Enemy(64 * 13, 64 * 14, player.grav, 0)];
 
 var current_level = test_level;
-var brocollis = test_level_brocollis;
+var enemies = test_level_enemies;
 
 function blockAt(checkx, checky) {
 	return current_level[Math.floor(checky / 64)][Math.floor(checkx / 64)];
@@ -68,6 +69,8 @@ function isSolid(block_id) {
 	case 1: // Grass block
 		return true;
 	case 2: // Dirt block
+		return true;
+	case 3: // Stone block
 		return true;
 		
 	default:
@@ -184,45 +187,49 @@ function Update() {
 			jump = true;
 			
 		/* Enemy physics */
-		// Brocollis
-		for(var i = 0; i < brocollis.length; i++) {
-			if(brocollis[i].dead)
-				continue;
+		for(var i = 0; i < enemies.length; i++) {
+			if(enemies[i].id == 0) {
+				if(enemies[i].dead)
+					continue;
 				
-			var hsp = brocollis[i].move_speed * brocollis[i].dir;
+				var hsp = enemies[i].move_speed * enemies[i].dir;
 						
-			if(isSolid(blockAt(brocollis[i].x + hsp, brocollis[i].y + 32))
-			|| isSolid(blockAt(brocollis[i].x + 64 + hsp, brocollis[i].y + 32))) {
-				brocollis[i].dir = -brocollis[i].dir;
-				hsp = -hsp;
-			}
+				if(isSolid(blockAt(enemies[i].x + hsp, enemies[i].y + 32))
+				|| isSolid(blockAt(enemies[i].x + 64 + hsp, enemies[i].y + 32))) {
+					enemies[i].dir = -enemies[i].dir;
+					hsp = -hsp;
+				}
 			
-			brocollis[i].vsp += brocollis[i].gravity;
-			// Check y collision
-			var blockLeft = blockAt(brocollis[i].x, brocollis[i].y + 64 + brocollis[i].vsp);
-			var blockMid = blockAt(brocollis[i].x + 32, brocollis[i].y + 64 + brocollis[i].vsp);
-			var blockRight = blockAt(brocollis[i].x + 64, brocollis[i].y + 64 + brocollis[i].vsp);
+				enemies[i].vsp += enemies[i].gravity;
+				// Check y collision
+				var blockLeft = blockAt(enemies[i].x, enemies[i].y + 64 + enemies[i].vsp);
+				var blockMid = blockAt(enemies[i].x + 32, enemies[i].y + 64 + enemies[i].vsp);
+				var blockRight = blockAt(enemies[i].x + 64, enemies[i].y + 64 + enemies[i].vsp);
 		
-			// Move until flush against contact
-			var xPos = isSolid(blockLeft) ? brocollis[i].x : isSolid(blockMid) ? brocollis[i].x + 32 : isSolid(blockRight) ? brocollis[i].x + 64 : -1024;
-			if(xPos >= 0 && brocollis[i].vsp != 0) { // There is a collision
-				while(!isSolid(blockAt(xPos, brocollis[i].y + 64 + Math.sign(brocollis[i].vsp))))
-					brocollis[i].y += Math.sign(brocollis[i].vsp);
+				// Move until flush against contact
+				var xPos = isSolid(blockLeft) ? enemies[i].x : isSolid(blockMid) ? enemies[i].x + 32 : isSolid(blockRight) ? enemies[i].x + 64 : -1024;
+				if(xPos >= 0 && enemies[i].vsp != 0) { // There is a collision
+					while(!isSolid(blockAt(xPos, enemies[i].y + 64 + Math.sign(enemies[i].vsp))))
+						enemies[i].y += Math.sign(enemies[i].vsp);
 		
-				brocollis[i].vsp = 0;
-			}
+					enemies[i].vsp = 0;
+				}
 			
-			// Only move if player can see it
-			if(brocollis[i].x > player.x + player.mask_w / 2 + 400
-			|| brocollis[i].x + 64 < player.x + player.mask_w / 2 - 400
-			|| brocollis[i].y > player.y + player.mask_h / 2 + 300
-			|| brocollis[i].y + 64 < player.y + player.mask_h / 2 - 300) {
-				hsp = 0;
-				brocollis[i].vsp = 0;
-			}
+				// Only move if player can see it
+				if(enemies[i].start) {
+					if(enemies[i].x > player.x + player.mask_w / 2 + 400
+					|| enemies[i].x + 64 < player.x + player.mask_w / 2 - 400
+					|| enemies[i].y > player.y + player.mask_h / 2 + 300
+					|| enemies[i].y + 64 < player.y + player.mask_h / 2 - 300) {
+						hsp = 0;
+						enemies[i].vsp = 0;
+					} else
+						enemies[i].start = false;
+				}
 			
-			brocollis[i].x += hsp;
-			brocollis[i].y += brocollis[i].vsp;
+				enemies[i].x += hsp;
+				enemies[i].y += enemies[i].vsp;
+			}
 		}
 		
 		break;
@@ -283,11 +290,15 @@ function Render() {
 		}
 		
 		// Draw brocolli enemies
-		for(var i = 0; i < brocollis.length; i++) {
-			if(brocollis[i].dead)
+		for(var i = 0; i < enemies.length; i++) {
+			if(enemies[i].dead)
 				continue;
 			
-			spr_brocolli[i].draw(brocollis[i].x, brocollis[i].y, 64, 64, animCounter / 8);
+			switch(enemies[i].id) {
+				case 0:
+					spr_brocolli.draw(enemies[i].x, enemies[i].y, 64, 64, animCounter / 8);
+					break;
+			}
 		}
 		
 		break;
@@ -304,6 +315,10 @@ function draw_block(block_id, x, y) {
 		
 	case 2: // Dirt block
 		spr_grass_block.draw(x * 64, y * 64, 64, 64, 1);
+		break;
+		
+	case 3: // stone block
+		spr_stone_block.draw(x * 64, y * 64, 64, 64, 0);
 		break;
 	}
 }
