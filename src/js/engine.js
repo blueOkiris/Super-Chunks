@@ -46,7 +46,7 @@ function Brocolli(startx, starty, grav) {
 	this.gravity = grav;
 }
 
-var player = new Player(test_level_start[0], test_level_start[1], 1, 4, 0.5, 12, 48, 50);
+var player = new Player(test_level_start[0], test_level_start[1], 1, 2, 0.5, 12, 48, 50);
 var test_level_brocollis = [new Brocolli(64 * 21, 64 * 11, player.grav),
 							new Brocolli(64 * 29, 64 * 10, player.grav),
 							new Brocolli(64 * 13, 64 * 14, player.grav)];
