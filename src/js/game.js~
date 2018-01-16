@@ -49,6 +49,8 @@ function game_loop() {
 		nextGameTick += skipTicks;
 		loops ++;
 	}
+	
+	nextGameTick = (new Date).getTime();
 
 	if(loops) {
 		if(initialDelay  > 0)
