@@ -11,8 +11,7 @@ var GameState = {
 	MenuToGame: 1,
 	Game: 2,
 };
-
-var current_level = test_level;
+var game_state = GameState.MenuToGame;
 
 function Player(startx, starty, image_speed, move_speed, gravity, jumpSpeed, maskw, maskh) {
 	this.x = startx;
@@ -33,13 +32,27 @@ function Player(startx, starty, image_speed, move_speed, gravity, jumpSpeed, mas
 	this.dir = 1;
 	
 	this.grounded = false;
-	
-	this.collision = new Rect(this.x, this.y, 64, 64);
+	this.canDoubleJump = true;
 }
 
-var player = new Player(test_level_start[0], test_level_start[1], 1, 6, 0.7, 18, 48, 50);
+function Brocolli(startx, starty, grav) {
+	this.x = startx;
+	this.y = starty;
+	this.mask = function() {
+		return new Rect(this.x - 32, this.y - 32, 64, 64);
+	}
+	this.dir = -1;
+	this.vsp = 0;
+	this.gravity = grav;
+}
 
-var game_state = GameState.MenuToGame;
+var player = new Player(test_level_start[0], test_level_start[1], 1, 4, 0.5, 12, 48, 50);
+var test_level_brocollis = [new Brocolli(64 * 21, 64 * 11, player.grav),
+							new Brocolli(64 * 29, 64 * 10, player.grav),
+							new Brocolli(64 * 13, 64 * 14, player.grav)];
+
+var current_level = test_level;
+var brocollis = test_level_brocollis;
 
 function blockAt(checkx, checky) {
 	return current_level[Math.floor(checky / 64)][Math.floor(checkx / 64)];
@@ -96,7 +109,7 @@ function Update() {
 			
 			// Move until flush against contact
 			var xPos = isSolid(blockLeft) ? player.x : isSolid(blockMid) ? player.x + player.mask_w / 2 : isSolid(blockRight) ? player.x + player.mask_w: -1024;
-			if(xPos >= 0) { // There is a collision
+			if(xPos >= 0 && player.vsp != 0) { // There is a collision
 				while(!isSolid(blockAt(xPos, player.y + (player.vsp > 0 ? player.mask_h : 0) + Math.sign(player.vsp))))
 					player.y += Math.sign(player.vsp);
 			
@@ -117,7 +130,7 @@ function Update() {
 			
 			// Move until flush against contact
 			var yPos = isSolid(blockTop) ? player.y: isSolid(blockMid)? player.y + player.mask_h / 2 : isSolid(blockLow) ? player.y + player.mask_h : -1024;
-			if(yPos >= 0) { // There is a collision
+			if(yPos >= 0 && player.hsp != 0) { // There is a collision
 				while(!isSolid(blockAt(player.x + (player.hsp > 0 ? player.mask_w : 0) + Math.sign(player.hsp), yPos)))
 					player.x += Math.sign(player.hsp);
 			
@@ -146,15 +159,51 @@ function Update() {
 			300 - (player.y + player.mask_h / 2));
 		
 		// Jump
-		if(key[up] && player.grounded && jump) {
+		if(key[up] && jump && (player.grounded || player.canDoubleJump)) {
+			if(!player.grounded)
+				player.canDoubleJump = false;
+			
 			player.grounded = false;
-			player.vsp -= player.jmp_spd;
+			player.vsp = -player.jmp_spd;
 			
 			jump = false;
 		}
 		
+		if(player.grounded)
+			player.canDoubleJump = true;
+		
 		if(!key[up])
 			jump = true;
+			
+		/* Enemy physics */
+		// Brocollis
+		for(var i = 0; i < brocollis.length; i++) {
+			var hsp = 4 * brocollis[i].dir;
+			
+			if(isSolid(blockAt(brocollis[i].x + hsp, brocollis[i].y + 64))) {
+				brocollis[i].dir = -brocollis[i].dir;
+				hsp = -hsp;
+			}
+			
+			brocollis[i].vsp += brocollis[i].gravity;
+			// Check y collision
+			var blockLeft = blockAt(brocollis[i].x, brocollis[i].y + 64 + brocollis[i].vsp);
+			var blockMid = blockAt(brocollis[i].x + 32, brocollis[i].y + 64 + brocollis[i].vsp);
+			var blockRight = blockAt(brocollis[i].x + 64, brocollis[i].y + 64 + brocollis[i].vsp);
+		
+			// Move until flush against contact
+			var xPos = isSolid(blockLeft) ? brocollis[i].x : isSolid(blockMid) ? brocollis[i].x + 32 : isSolid(blockRight) ? brocollis[i].x + 64 : -1024;
+			if(xPos >= 0 && brocollis[i].vsp != 0) { // There is a collision
+				while(!isSolid(blockAt(xPos, brocollis[i].y + 64 + Math.sign(brocollis[i].vsp))))
+					brocollis[i].y += Math.sign(brocollis[i].vsp);
+		
+				brocollis[i].vsp = 0;
+			}
+			
+			brocollis[i].x += hsp;
+			brocollis[i].y += brocollis[i].vsp;
+		}
+		
 		break;
 	}
 }
@@ -210,6 +259,11 @@ function Render() {
 				} else 
 					spr_chunks.draw(player.x, player.y, 64, 64, 0 + spr_chunks_num);
 			}
+		}
+		
+		// Draw brocolli enemies
+		for(var i = 0; i < brocollis.length; i++) {
+			spr_brocolli[i].draw(brocollis[i].x, brocollis[i].y, 64, 64, animCounter / 8);
 		}
 		
 		break;
@@ -286,3 +340,4 @@ function OnMouseUp(event) {
 	mouse_x = event.clientX;
 	mouse_y = event.clientY;
 }
+

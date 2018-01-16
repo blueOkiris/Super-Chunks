@@ -21,7 +21,9 @@ var spr_chunks = new Sprite("images/spr_chunks_16x16_scaled.png", spr_chunks_loc
 
 var spr_grass_block = new Sprite("images/spr_block_1_16x16.png", [[0, 0], [64, 0]], [64, 64]);
 
-var spr_brocolli = new Sprite("images/brocolli.png");
+var spr_brocolli = [];// Allow for up to 100 brocollis per level
+for(var i = 0; i < 100; i++)
+	spr_brocolli[i] = new Sprite("images/brocolli.png", [[0, 0], [64, 0]], [64, 64]);
 
 /* Level maps */
 
@@ -36,6 +38,7 @@ var test_level = [ 	/* Note:
 					 * 6 to the left
 					 * 7 to the right
 					 */
+[2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2],
 [2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2],
 [2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2],
 [2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2],
@@ -56,7 +59,7 @@ var test_level = [ 	/* Note:
 [2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2],
 [2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2]
 ];
-var test_level_start = [64 * 7, 64 * 11];
+var test_level_start = [64 * 7, 64 * 14];
 /* Music files */
 //var bg_music = new Audio("sounds/ES_Chefs_From_Europe_2_-_Magnus_Ringblom.ogg");
 // bg_music.play() to play
