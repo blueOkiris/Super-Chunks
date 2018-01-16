@@ -17,13 +17,13 @@ var spr_chunks_locs = function() {
 	}
 	list.splice(0, 1);
 return list;}();
-var spr_chunks = new Sprite("images/spr_chunks_16x16_scaled.png", spr_chunks_locs, [64, 64]);
+var spr_chunks = new Sprite("src/images/spr_chunks_16x16_scaled.png", spr_chunks_locs, [64, 64]);
 
-var spr_grass_block = new Sprite("images/spr_block_1_16x16.png", [[0, 0], [64, 0]], [64, 64]);
+var spr_grass_block = new Sprite("src/images/spr_block_1_16x16.png", [[0, 0], [64, 0]], [64, 64]);
 
 var spr_brocolli = [];// Allow for up to 100 brocollis per level
 for(var i = 0; i < 100; i++)
-	spr_brocolli[i] = new Sprite("images/brocolli.png", [[0, 0], [64, 0]], [64, 64]);
+	spr_brocolli[i] = new Sprite("src/images/brocolli.png", [[0, 0], [64, 0]], [64, 64]);
 
 /* Level maps */
 
