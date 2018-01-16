@@ -59,7 +59,7 @@ var test_level = [ 	/* Note:
 [2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2],
 [2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2]
 ];
-var test_level_start = [64 * 7, 64 * 14];
+var test_level_start = [64 * 8, 64 * 14];
 /* Music files */
 //var bg_music = new Audio("sounds/ES_Chefs_From_Europe_2_-_Magnus_Ringblom.ogg");
 // bg_music.play() to play
