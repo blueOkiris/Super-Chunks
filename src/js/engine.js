@@ -33,6 +33,8 @@ function Player(startx, starty, image_speed, move_speed, gravity, jumpSpeed, mas
 	
 	this.grounded = false;
 	this.canDoubleJump = true;
+	
+	this.doubleJumpUnlocked = false;
 }
 
 function Brocolli(startx, starty, grav) {
@@ -49,7 +51,7 @@ function Brocolli(startx, starty, grav) {
 	this.dead = false;
 }
 
-var player = new Player(test_level_start[0], test_level_start[1], 1, 2, 0.4, 11, 48, 50);
+var player = new Player(test_level_start[0], test_level_start[1], 1, 4, 0.4, 11, 48, 50);
 var test_level_brocollis = [new Brocolli(64 * 21, 64 * 11, player.grav),
 							new Brocolli(64 * 29, 64 * 10, player.grav),
 							new Brocolli(64 * 13, 64 * 14, player.grav)];
@@ -162,6 +164,9 @@ function Update() {
 			300 - (player.y + player.mask_h / 2));
 		
 		// Jump
+		if(!player.doubleJumpUnlocked)
+			player.canDoubleJump = false;
+		
 		if(key[up] && jump && (player.grounded || player.canDoubleJump)) {
 			if(!player.grounded)
 				player.canDoubleJump = false;
