@@ -44,9 +44,12 @@ function Brocolli(startx, starty, grav) {
 	this.dir = -1;
 	this.vsp = 0;
 	this.gravity = grav;
+	this.move_speed = 1;
+	
+	this.dead = false;
 }
 
-var player = new Player(test_level_start[0], test_level_start[1], 1, 2, 0.5, 12, 48, 50);
+var player = new Player(test_level_start[0], test_level_start[1], 1, 2, 0.4, 11, 48, 50);
 var test_level_brocollis = [new Brocolli(64 * 21, 64 * 11, player.grav),
 							new Brocolli(64 * 29, 64 * 10, player.grav),
 							new Brocolli(64 * 13, 64 * 14, player.grav)];
@@ -178,9 +181,13 @@ function Update() {
 		/* Enemy physics */
 		// Brocollis
 		for(var i = 0; i < brocollis.length; i++) {
-			var hsp = 4 * brocollis[i].dir;
-			
-			if(isSolid(blockAt(brocollis[i].x + hsp, brocollis[i].y + 64))) {
+			if(brocollis[i].dead)
+				continue;
+				
+			var hsp = brocollis[i].move_speed * brocollis[i].dir;
+						
+			if(isSolid(blockAt(brocollis[i].x + hsp, brocollis[i].y + 32))
+			|| isSolid(blockAt(brocollis[i].x + 64 + hsp, brocollis[i].y + 32))) {
 				brocollis[i].dir = -brocollis[i].dir;
 				hsp = -hsp;
 			}
@@ -197,6 +204,15 @@ function Update() {
 				while(!isSolid(blockAt(xPos, brocollis[i].y + 64 + Math.sign(brocollis[i].vsp))))
 					brocollis[i].y += Math.sign(brocollis[i].vsp);
 		
+				brocollis[i].vsp = 0;
+			}
+			
+			// Only move if player can see it
+			if(brocollis[i].x > player.x + player.mask_w / 2 + 400
+			|| brocollis[i].x + 64 < player.x + player.mask_w / 2 - 400
+			|| brocollis[i].y > player.y + player.mask_h / 2 + 300
+			|| brocollis[i].y + 64 < player.y + player.mask_h / 2 - 300) {
+				hsp = 0;
 				brocollis[i].vsp = 0;
 			}
 			
@@ -263,6 +279,9 @@ function Render() {
 		
 		// Draw brocolli enemies
 		for(var i = 0; i < brocollis.length; i++) {
+			if(brocollis[i].dead)
+				continue;
+			
 			spr_brocolli[i].draw(brocollis[i].x, brocollis[i].y, 64, 64, animCounter / 8);
 		}
 		
