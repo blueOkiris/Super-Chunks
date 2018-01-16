@@ -11,7 +11,7 @@ var GameState = {
 	MenuToGame: 1,
 	Game: 2,
 };
-var game_state = GameState.MenuToGame;
+var game_state = GameState.Menu;
 
 function Player(startx, starty, image_speed, move_speed, gravity, jumpSpeed, maskw, maskh) {
 	this.x = startx;
@@ -52,6 +52,11 @@ function Enemy(startx, starty, grav, identifier) {
 	this.id = identifier;
 }
 
+function UnlockDouble(xpos, ypos) {
+	this.x = xpos;
+	this.y = ypos;
+}
+
 var player = new Player(test_level_start[0], test_level_start[1], 1, 4, 0.4, 11, 48, 50);
 var test_level_enemies = [new Enemy(64 * 21, 64 * 11, player.grav, 0),
 							new Enemy(64 * 29, 64 * 10, player.grav, 0),
@@ -59,6 +64,7 @@ var test_level_enemies = [new Enemy(64 * 21, 64 * 11, player.grav, 0),
 
 var current_level = test_level;
 var enemies = test_level_enemies;
+var test_level_
 
 function blockAt(checkx, checky) {
 	return current_level[Math.floor(checky / 64)][Math.floor(checkx / 64)];

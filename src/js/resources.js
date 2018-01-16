@@ -19,6 +19,8 @@ var spr_chunks_locs = function() {
 return list;}();
 var spr_chunks = new Sprite("src/images/spr_chunks_16x16_scaled.png", spr_chunks_locs, [64, 64]);
 
+var spr_special_move = new Sprite("src/images/spr_special_move.png", [[0, 0]], [64, 64]);
+
 var spr_grass_block = new Sprite("src/images/spr_block_1_16x16.png", [[0, 0], [64, 0]], [64, 64]);
 var spr_stone_block = new Sprite("src/images/spr_block_2.png", [[0, 0]], [64, 64]);
 

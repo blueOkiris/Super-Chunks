@@ -1,9 +1,7 @@
 /* Set up vars for the loop */
 var skipTicks = 1000/60; // 60 fps
-var maxFrameSkip = 20;
+var maxFrameSkip = 2;
 var nextGameTick = (new Date).getTime();
-
-var initialDelay = 10;
 
 var onPage = true;
 
@@ -41,22 +39,16 @@ function game_loop() {
 	var loops = 0;
 
 	while((new Date).getTime() > nextGameTick && loops < maxFrameSkip) {
-		if(initialDelay  <= 0) {
-			if(imageCounter == 0) // all images have loaded
-				Update();
-		}
-	
+		if(imageCounter == 0) // all images have loaded
+			Update();
+		
 		nextGameTick += skipTicks;
 		loops ++;
 	}
 
 	if(loops) {
-		if(initialDelay  > 0)
-			initialDelay--;
-		else {
-			if(imageCounter == 0) // all images have loaded
-				Render();
-		}
+		if(imageCounter == 0) // all images have loaded
+			Render();
 	}
 }
 
