@@ -1,6 +1,7 @@
 /* Set up vars for the loop */
 var skipTicks = 1000/60; // 60 fps
 var maxFrameSkip = 2;
+var maxTimeDifference = 30; // If it's a second behind just start from scratch
 var nextGameTick = (new Date).getTime();
 
 var onPage = true;
@@ -37,13 +38,18 @@ function start_game() {
 // The game loop
 function game_loop() {
 	var loops = 0;
-
-	while((new Date).getTime() > nextGameTick && loops < maxFrameSkip) {
-		if(imageCounter == 0) // all images have loaded
-			Update();
+	
+	var time = (new Date).getTime();
+	if(time < nextGameTick + maxTimeDifference) {
+		while(time > nextGameTick && loops < maxFrameSkip) {
+			if(imageCounter == 0) // all images have loaded
+				Update();
 		
-		nextGameTick += skipTicks;
-		loops ++;
+			nextGameTick += skipTicks;
+			loops ++;
+		}
+	} else {
+		nextGameTick = time;
 	}
 
 	if(loops) {

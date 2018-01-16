@@ -60,11 +60,13 @@ function UnlockDouble(xpos, ypos) {
 var player = new Player(test_level_start[0], test_level_start[1], 1, 4, 0.4, 11, 48, 50);
 var test_level_enemies = [new Enemy(64 * 21, 64 * 11, player.grav, 0),
 							new Enemy(64 * 29, 64 * 10, player.grav, 0),
-							new Enemy(64 * 13, 64 * 14, player.grav, 0)];
+							new Enemy(64 * 13, 64 * 14, player.grav, 0),
+							new Enemy(64 * 22, 64 * 11, player.grav, 0)];
+	test_level_enemies[3].dir = 1;
 
 var current_level = test_level;
 var enemies = test_level_enemies;
-var test_level_
+var doubleJumpScroll = new UnlockDouble(8 * 64, 11 * 64);
 
 function blockAt(checkx, checky) {
 	return current_level[Math.floor(checky / 64)][Math.floor(checkx / 64)];
@@ -150,6 +152,17 @@ function Update() {
 			
 				player.hsp = 0;
 			}
+		}
+		
+		// Check if double jump is unlocked
+		if(!player.doubleJumpUnlocked
+		&& player.x + player.mask_w / 2 > doubleJumpScroll.x && player.x + player.mask_w / 2 < doubleJumpScroll.x + 64
+		&& player.y + player.mask_h / 2 > doubleJumpScroll.y && player.y + player.mask_h / 2 < doubleJumpScroll.y + 64) {
+			player.doubleJumpUnlocked = true;
+			
+			alert("Congratulations!\nYou have now unlocked the air jump!\nPress <up> once while in the air to gain a boost of height");
+			player.hsp = 0;
+			player.vsp = 0;
 		}
 		
 		if(Math.sign(player.hsp) != 0) {
@@ -246,18 +259,22 @@ var start = true;
 
 // Updates every frame (60 fps)
 function Render() {
+	
 	switch(game_state) {
 	case GameState.Menu:
 	case GameState.MenuToGame:// start screen
 		// Make a little button
-		ctx.fillStyle = "#FF0000";
+		ctx.fillStyle = "#0066CC";
+		ctx.fillRect(0, 0, 800, 600);
+		ctx.fillStyle = "#CC6600";
 		ctx.fillRect(300, 275, 200, 50);
 		ctx.font = "30px Arial";
-		ctx.fillStyle = "#FFFFFF";
+		ctx.fillStyle = "#CCCCCC";
 		ctx.fillText("Click to play!", 312, 310);
 		break;
 	
 	case GameState.Game: // Actual test code
+		// Draw background
 		ctx.fillStyle = "#0066CC"; // Dull blue
 		ctx.fillRect(player.x - (800 - player.mask_w), player.y - (600 - player.mask_h), 1600, 1200);
 		
@@ -265,6 +282,22 @@ function Render() {
 		for(var y = 0; y < current_level.length; y++)
 			for(var x = 0; x < current_level[y].length; x++)
 				draw_block(current_level[y][x], x, y);
+		
+		// Draw brocolli enemies
+		for(var i = 0; i < enemies.length; i++) {
+			if(enemies[i].dead)
+				continue;
+			
+			switch(enemies[i].id) {
+				case 0:
+					spr_brocolli.draw(enemies[i].x, enemies[i].y, 64, 64, animCounter / 8);
+					break;
+			}
+		}
+		
+		// Draw unlockable moves
+		if(current_level == test_level && !player.doubleJumpUnlocked)
+			spr_special_move.draw(doubleJumpScroll.x, doubleJumpScroll.y, 64, 64, 0);
 		
 		// Draw player
 		if(player.dir == 1) {
@@ -292,18 +325,6 @@ function Render() {
 					spr_chunks.draw(player.x, player.y, 64, 64, 3 + walk_cycle_index + spr_chunks_num);
 				} else 
 					spr_chunks.draw(player.x, player.y, 64, 64, 0 + spr_chunks_num);
-			}
-		}
-		
-		// Draw brocolli enemies
-		for(var i = 0; i < enemies.length; i++) {
-			if(enemies[i].dead)
-				continue;
-			
-			switch(enemies[i].id) {
-				case 0:
-					spr_brocolli.draw(enemies[i].x, enemies[i].y, 64, 64, animCounter / 8);
-					break;
 			}
 		}
 		
