@@ -318,6 +318,9 @@ function Render() {
 		break;
 	
 	case GameState.Game: // Actual test code
+		if(!isPlaying(bg_music))
+			bg_music.play();
+		
 		// Draw background
 		ctx.fillStyle = "#5522A9"; // Dull blue
 		ctx.fillRect(player.x - (800 - player.mask_w), player.y - (600 - player.mask_h), 1600, 1200);
