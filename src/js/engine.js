@@ -1,7 +1,7 @@
 var animCounter = 0;// Controls the updating of animations
 // Keyboard stuff
-var key = [false,false,false,false]; //  Up, down, left, right
-var up = 0, down = 1, left = 2, right = 3;
+var key = [false, false, false, false, false, false, false, false, false, false]; //  Up, down, left, right, space, z, w, a, s, d
+var up = 0, down = 1, left = 2, right = 3, space = 4, z_key = 5, w_key = 6, a_key = 7, s_key = 8, d_key = 9;
 // Mouse stuff
 var mouse_x = 0, mouse_y = 0, mouse_pressed = false;
 
@@ -13,12 +13,13 @@ var GameState = {
 };
 var game_state = GameState.Menu;
 
-function Player(startx, starty, image_speed, move_speed, gravity, jumpSpeed, maskw, maskh) {
+function Player(startx, starty, image_speed, move_speed, punch_speed, gravity, jumpSpeed, maskw, maskh) {
 	this.x = startx;
 	this.y = starty;
 	
 	this.img_spd = image_speed;
 	this.mv_spd = move_speed;
+	this.pnc_spd = punch_speed;
 	
 	this.grav = gravity;
 	this.jmp_spd = jumpSpeed;
@@ -33,8 +34,12 @@ function Player(startx, starty, image_speed, move_speed, gravity, jumpSpeed, mas
 	
 	this.grounded = false;
 	this.canDoubleJump = true;
+	this.punching = false;
+	this.punched = false;
+	this.punchStart = 0;
 	
 	this.doubleJumpUnlocked = false;
+	this.punchUnlocked = false;
 }
 
 function Enemy(startx, starty, grav, identifier) {
@@ -57,7 +62,12 @@ function UnlockDouble(xpos, ypos) {
 	this.y = ypos;
 }
 
-var player = new Player(test_level_start[0], test_level_start[1], 1, 4, 0.4, 11, 48, 50);
+function UnlockPunch(xpos, ypos) {
+	this.x = xpos;
+	this.y = ypos;
+}
+
+var player = new Player(test_level_start[0], test_level_start[1], 1, 4, 10, 0.4, 11, 48, 50);
 var test_level_enemies = [new Enemy(64 * 21, 64 * 11, player.grav, 0),
 							new Enemy(64 * 29, 64 * 10, player.grav, 0),
 							new Enemy(64 * 13, 64 * 14, player.grav, 0),
@@ -66,7 +76,8 @@ var test_level_enemies = [new Enemy(64 * 21, 64 * 11, player.grav, 0),
 
 var current_level = test_level;
 var enemies = test_level_enemies;
-var doubleJumpScroll = new UnlockDouble(8 * 64, 11 * 64);
+var doubleJumpScroll = new UnlockDouble(8 * 64, 10.5 * 64);
+var punchScroll = new UnlockDouble(32 * 64, 9.5 * 64);
 
 function blockAt(checkx, checky) {
 	return current_level[Math.floor(checky / 64)][Math.floor(checkx / 64)];
@@ -92,15 +103,12 @@ var jump = false;
 function Update() {
 	switch(game_state) {
 	case GameState.Menu: // Click to start
-		if(mouse_pressed &&
-			(mouse_x >= 300 && mouse_x <= 500 &&
-			 mouse_y >= 275 && mouse_y <= 325)) { // Mouse is in box
+		if(key[space])
 			game_state = GameState.MenuToGame; // Wait for release
-		}
 		break;
 	
 	case GameState.MenuToGame:
-		if(!mouse_pressed) {
+		if(!key[space]) {
 			game_state = GameState.Game;
 			// Play music in the background
 			//bg_music.play();
@@ -109,10 +117,26 @@ function Update() {
 	
 	case GameState.Game: // play the game
 		// Player physics
-		var move = key[right] - key[left];
+		var move = key[d_key] - key[a_key];
 		player.hsp = player.mv_spd * move;
 		
-		player.vsp += player.grav;
+		player.vsp += player.punching ? player.grav / 2 : player.grav;
+		
+		/* Punching physics */
+		if(player.punching && ((animCounter - player.punchStart) % 20 == 0)) {
+			player.punching = false;
+		} else if(!player.punching) {
+			if(key[space] && !player.punched && player.punchUnlocked) {
+				player.punching = true;
+				player.punchStart = animCounter;
+				player.punched = true;
+			}
+		} else
+			player.hsp = player.dir * player.pnc_spd;
+		
+		if(player.punched)
+			if(!key[space])
+				player.punched = false;
 		
 		// Check y collision
 		if(player.y + player.vsp < 0) {
@@ -154,15 +178,33 @@ function Update() {
 			}
 		}
 		
+		/* Unlockable check */
 		// Check if double jump is unlocked
 		if(!player.doubleJumpUnlocked
 		&& player.x + player.mask_w / 2 > doubleJumpScroll.x && player.x + player.mask_w / 2 < doubleJumpScroll.x + 64
 		&& player.y + player.mask_h / 2 > doubleJumpScroll.y && player.y + player.mask_h / 2 < doubleJumpScroll.y + 64) {
 			player.doubleJumpUnlocked = true;
 			
-			alert("Congratulations!\nYou have now unlocked the air jump!\nPress <up> once while in the air to gain a boost of height");
+			alert("Congratulations!\nYou have now learned how to air jump!\nPress <up> once while in the air to gain a boost of height");
 			player.hsp = 0;
 			player.vsp = 0;
+			
+			for(var i = 0; i < key.length; i++)
+				key[i] = false;
+		}
+		
+		// Check if punch is unlocked
+		if(!player.punchUnlocked
+		&& player.x + player.mask_w / 2 > punchScroll.x && player.x + player.mask_w / 2 < punchScroll.x + 64
+		&& player.y + player.mask_h / 2 > punchScroll.y && player.y + player.mask_h / 2 < punchScroll.y + 64) {
+			player.punchUnlocked = true;
+			
+			alert("Congratulations!\nYou have now learned how to punch!\nPress <z> and you will fly towards and hit foes");
+			player.hsp = 0;
+			player.vsp = 0;
+			
+			for(var i = 0; i < key.length; i++)
+				key[i] = false;
 		}
 		
 		if(Math.sign(player.hsp) != 0) {
@@ -189,7 +231,7 @@ function Update() {
 		if(!player.doubleJumpUnlocked)
 			player.canDoubleJump = false;
 		
-		if(key[up] && jump && (player.grounded || player.canDoubleJump)) {
+		if(key[w_key] && jump && (player.grounded || player.canDoubleJump)) {
 			if(!player.grounded)
 				player.canDoubleJump = false;
 			
@@ -202,7 +244,7 @@ function Update() {
 		if(player.grounded)
 			player.canDoubleJump = true;
 		
-		if(!key[up])
+		if(!key[w_key])
 			jump = true;
 			
 		/* Enemy physics */
@@ -267,10 +309,10 @@ function Render() {
 		ctx.fillStyle = "#0066CC";
 		ctx.fillRect(0, 0, 800, 600);
 		ctx.fillStyle = "#CC6600";
-		ctx.fillRect(300, 275, 200, 50);
+		ctx.fillRect(290, 275, 220, 50);
 		ctx.font = "30px Arial";
 		ctx.fillStyle = "#CCCCCC";
-		ctx.fillText("Click to play!", 312, 310);
+		ctx.fillText("Press <space>!", 294, 310);
 		break;
 	
 	case GameState.Game: // Actual test code
@@ -298,10 +340,14 @@ function Render() {
 		// Draw unlockable moves
 		if(current_level == test_level && !player.doubleJumpUnlocked)
 			spr_special_move.draw(doubleJumpScroll.x, doubleJumpScroll.y, 64, 64, 0);
+		if(current_level == test_level && !player.punchUnlocked)
+			spr_special_move.draw(punchScroll.x, punchScroll.y, 64, 64, 0);
 		
 		// Draw player
 		if(player.dir == 1) {
-			if(player.grounded == false) {
+			if(player.punching) {
+				spr_chunks.draw(player.x, player.y, 64, 64, 7);
+			} else if(!player.grounded) {
 				if(player.vsp <= 0) // Jumping
 					spr_chunks.draw(player.x, player.y, 64, 64, 1);
 				else // Falling
@@ -314,7 +360,9 @@ function Render() {
 					spr_chunks.draw(player.x, player.y, 64, 64, 0);
 			}
 		} else {
-			if(player.grounded == false) {
+			if(player.punching) {
+				spr_chunks.draw(player.x, player.y, 64, 64, 7 + spr_chunks_num);
+			} else if(!player.grounded) {
 				if(player.vsp <= 0) // Jumping
 					spr_chunks.draw(player.x, player.y, 64, 64, 1 + spr_chunks_num);
 				else // Falling
@@ -368,6 +416,30 @@ function OnKeyDown(event) {
 		case 39:
 			key[right] = true;
 			break;
+		
+		case 32:
+			key[space] = true;
+			break;
+			
+		case 90:
+			key[z_key] = true;
+			break;
+		
+		case 87:
+			key[w_key] = true;
+			break;
+		
+		case 65:
+			key[a_key] = true;
+			break;
+			
+		case 83:
+			key[s_key] = true;
+			break;
+			
+		case 68:
+			key[d_key] = true;
+			break;
 	}
 }
 
@@ -388,6 +460,30 @@ function OnKeyUp(event) {
 			
 		case 39:
 			key[right] = false;
+			break;
+		
+		case 32:
+			key[space] = false;
+			break;
+		
+		case 90:
+			key[z_key] = false;
+			break;
+		
+		case 87:
+			key[w_key] = false;
+			break;
+		
+		case 65:
+			key[a_key] = false;
+			break;
+			
+		case 83:
+			key[s_key] = false;
+			break;
+			
+		case 68:
+			key[d_key] = false;
 			break;
 	}
 }
