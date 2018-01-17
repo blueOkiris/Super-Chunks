@@ -111,7 +111,7 @@ function Update() {
 		if(!key[space]) {
 			game_state = GameState.Game;
 			// Play music in the background
-			//bg_music.play();
+			bg_music.play();
 		}
 		break;
 	
@@ -201,7 +201,7 @@ function Update() {
 		&& player.y + player.mask_h / 2 > punchScroll.y && player.y + player.mask_h / 2 < punchScroll.y + 64) {
 			player.punchUnlocked = true;
 			
-			alert("Congratulations!\nYou have now learned how to punch!\nPress <SPACE> and you will fly towards and hit foes");
+			alert("Congratulations!\nYou have now learned how to punch!\nPress <SPACE> and you will fly towards and hit foes, but be wary because you can only punch once in mid-air!");
 			player.hsp = 0;
 			player.vsp = 0;
 			
@@ -319,8 +319,10 @@ function Render() {
 	
 	case GameState.Game: // Actual test code
 		// Draw background
-		ctx.fillStyle = "#0066CC"; // Dull blue
+		ctx.fillStyle = "#5522A9"; // Dull blue
 		ctx.fillRect(player.x - (800 - player.mask_w), player.y - (600 - player.mask_h), 1600, 1200);
+		
+		//bg_image.draw(0, 0, 5120, 2880, 0);
 		
 		// Draw level map
 		for(var y = 0; y < current_level.length; y++)

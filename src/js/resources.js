@@ -26,6 +26,8 @@ var spr_stone_block = new Sprite("src/images/spr_block_2.png", [[0, 0]], [64, 64
 
 var spr_brocolli = new Sprite("src/images/brocolli.png", [[0, 0], [64, 0]], [64, 64]);
 
+var bg_image = new Sprite("src/images/space_back.png", [[0, 0]], [5120, 2880]);
+
 /* Level maps */
 
 /* Level data 
@@ -68,7 +70,8 @@ var test_level = [ 	/* Note:
 [2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2]
 ];
 var test_level_start = [64 * 8, 64 * 14];
+
 /* Music files */
-//var bg_music = new Audio("sounds/ES_Chefs_From_Europe_2_-_Magnus_Ringblom.ogg");
+var bg_music = new Audio("src/sounds/test_music.ogg");
 // bg_music.play() to play
 
