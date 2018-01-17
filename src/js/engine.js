@@ -110,8 +110,6 @@ function Update() {
 	case GameState.MenuToGame:
 		if(!key[space]) {
 			game_state = GameState.Game;
-			// Play music in the background
-			bg_music.play();
 		}
 		break;
 	
@@ -318,7 +316,7 @@ function Render() {
 		break;
 	
 	case GameState.Game: // Actual test code
-		if(!isPlaying(bg_music))
+		if(myAudio.duration <= 0 || myAudio.paused)
 			bg_music.play();
 		
 		// Draw background
