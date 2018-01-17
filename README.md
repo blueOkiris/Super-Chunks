@@ -8,4 +8,7 @@ The evil King Veggie has taken over the world. You are Chunks, a chunk of meat w
 ## Running
 Open src/index.html in your web browser (Ideally Firefox or Chrome)
 
-
+## Credits
+Game Engine - Dylan Turner
+Lead Programmer - Dylan Turner
+Alpha Tester - Nicklas Carpenter
