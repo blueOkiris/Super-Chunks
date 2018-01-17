@@ -316,7 +316,7 @@ function Render() {
 		break;
 	
 	case GameState.Game: // Actual test code
-		if(myAudio.duration <= 0 || myAudio.paused)
+		if(bg_music.duration <= 0 || bg_music.paused)
 			bg_music.play();
 		
 		// Draw background
