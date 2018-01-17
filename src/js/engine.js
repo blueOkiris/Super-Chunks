@@ -135,7 +135,7 @@ function Update() {
 			player.hsp = player.dir * player.pnc_spd;
 		
 		if(player.punched)
-			if(!key[space])
+			if(!key[space] && player.grounded)
 				player.punched = false;
 		
 		// Check y collision
@@ -153,8 +153,10 @@ function Update() {
 				while(!isSolid(blockAt(xPos, player.y + (player.vsp > 0 ? player.mask_h : 0) + Math.sign(player.vsp))))
 					player.y += Math.sign(player.vsp);
 			
+				if(player. vsp >= 0)
+					player.grounded = true;
+				
 				player.vsp = 0;
-				player.grounded = true;
 			} else
 				player.grounded = false;
 		}
@@ -185,7 +187,7 @@ function Update() {
 		&& player.y + player.mask_h / 2 > doubleJumpScroll.y && player.y + player.mask_h / 2 < doubleJumpScroll.y + 64) {
 			player.doubleJumpUnlocked = true;
 			
-			alert("Congratulations!\nYou have now learned how to air jump!\nPress <up> once while in the air to gain a boost of height");
+			alert("Congratulations!\nYou have now learned how to air jump!\nPress <W> once while in the air to gain a boost of height");
 			player.hsp = 0;
 			player.vsp = 0;
 			
@@ -199,7 +201,7 @@ function Update() {
 		&& player.y + player.mask_h / 2 > punchScroll.y && player.y + player.mask_h / 2 < punchScroll.y + 64) {
 			player.punchUnlocked = true;
 			
-			alert("Congratulations!\nYou have now learned how to punch!\nPress <z> and you will fly towards and hit foes");
+			alert("Congratulations!\nYou have now learned how to punch!\nPress <SPACE> and you will fly towards and hit foes");
 			player.hsp = 0;
 			player.vsp = 0;
 			
@@ -309,10 +311,10 @@ function Render() {
 		ctx.fillStyle = "#0066CC";
 		ctx.fillRect(0, 0, 800, 600);
 		ctx.fillStyle = "#CC6600";
-		ctx.fillRect(290, 275, 220, 50);
+		ctx.fillRect(280, 275, 240, 50);
 		ctx.font = "30px Arial";
 		ctx.fillStyle = "#CCCCCC";
-		ctx.fillText("Press <space>!", 294, 310);
+		ctx.fillText("Press <SPACE>!", 285, 310);
 		break;
 	
 	case GameState.Game: // Actual test code
