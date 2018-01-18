@@ -1,4 +1,6 @@
 var animCounter = 0;// Controls the updating of animations
+var spaceCounter = 0;
+
 // Keyboard stuff
 var key = [false, false, false, false, false, false, false, false, false, false]; //  Up, down, left, right, space, z, w, a, s, d
 var up = 0, down = 1, left = 2, right = 3, space = 4, z_key = 5, w_key = 6, a_key = 7, s_key = 8, d_key = 9;
@@ -120,22 +122,6 @@ function Update() {
 		
 		player.vsp += player.punching ? player.grav / 2 : player.grav;
 		
-		/* Punching physics */
-		if(player.punching && ((animCounter - player.punchStart) % 20 == 0)) {
-			player.punching = false;
-		} else if(!player.punching) {
-			if(key[space] && !player.punched && player.punchUnlocked) {
-				player.punching = true;
-				player.punchStart = animCounter;
-				player.punched = true;
-			}
-		} else
-			player.hsp = player.dir * player.pnc_spd;
-		
-		if(player.punched)
-			if(!key[space] && player.grounded)
-				player.punched = false;
-		
 		// Check y collision
 		if(player.y + player.vsp < 0) {
 			player.y = 0;
@@ -158,6 +144,26 @@ function Update() {
 			} else
 				player.grounded = false;
 		}
+		
+		/* Punching physics */
+		if(player.punching && ((animCounter - player.punchStart) % 15 == 0)) {
+			player.punching = false;
+		} else if(!player.punching) {
+			if(key[space] && !player.punched && player.punchUnlocked) {
+				player.punching = true;
+				player.punchStart = animCounter;
+				player.punched = true;
+			}
+		} else {
+			player.hsp = player.dir * player.pnc_spd;
+			
+			if((animCounter - player.punchStart) % 20 > 12)
+				player.hsp = 0;
+		}
+		
+		if(player.punched)
+			if(!key[space] && player.grounded)
+				player.punched = false;
 		
 		// Check x collision
 		if(player.x + player.hsp < 0) {
@@ -301,7 +307,6 @@ var start = true;
 
 // Updates every frame (60 fps)
 function Render() {
-	
 	switch(game_state) {
 	case GameState.Menu:
 	case GameState.MenuToGame:// start screen
@@ -385,6 +390,7 @@ function Render() {
 	}
 	
 	animCounter++; //  Update the animation for all sprites every frame
+	spaceCounter++;
 }
 
 function draw_block(block_id, x, y) {
@@ -423,7 +429,8 @@ function OnKeyDown(event) {
 			break;
 		
 		case 32:
-			key[space] = true;
+			if(spaceCounter > 7)
+				key[space] = true;
 			break;
 			
 		case 90:
@@ -469,6 +476,7 @@ function OnKeyUp(event) {
 		
 		case 32:
 			key[space] = false;
+			spaceCounter = 0;
 			break;
 		
 		case 90:
