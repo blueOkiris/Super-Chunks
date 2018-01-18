@@ -12,6 +12,7 @@ var GameState = {
 	Menu: 0,
 	MenuToGame: 1,
 	Game: 2,
+	GameOver: 3,
 };
 var game_state = GameState.Menu;
 
@@ -44,14 +45,28 @@ function Player(startx, starty, image_speed, move_speed, punch_speed, gravity, j
 	this.punchUnlocked = false;
 	this.poundUnlocked = false;
 	
+	this.restart = function() {
+		this.x = startx;
+		this.y = starty;
+		this.hsp = 0;
+		this.vsp = 0;
+		this.grounded = false;
+		this.canDoubleJump = true;
+		this.punching = false;
+		this.punched = false;
+		this.punchStart = 0;
+		this.dead = false;
+	}
+	
+	this.dead = false;	
 	this.lives = 3;
 }
 
-function Enemy(startx, starty, grav, identifier) {
+function Enemy(startx, starty, grav, identifier, start_dir) {
 	this.x = startx;
 	this.y = starty;
 	
-	this.dir = -1;
+	this.dir = start_dir;
 	this.vsp = 0;
 	this.gravity = grav;
 	this.move_speed = 1;
@@ -60,6 +75,18 @@ function Enemy(startx, starty, grav, identifier) {
 	this.start = true;
 	
 	this.id = identifier;
+	
+	this.restart = function() {
+		this.x = startx;
+		this.y = starty;
+		
+		this.vsp = 0;
+		
+		this.dead = false;
+		this.start = true;
+		
+		this.dir = start_dir;
+	}
 }
 
 function Unlockable(xpos, ypos) {
@@ -67,19 +94,19 @@ function Unlockable(xpos, ypos) {
 	this.y = ypos;
 }
 
-var player = new Player(test_level_start[0], test_level_start[1], 1, 4, 10, 0.4, 11, 48, 50);
-var test_level_enemies = [new Enemy(64 * 21, 64 * 11, player.grav, 0),
-							new Enemy(64 * 29, 64 * 10, player.grav, 1),
-							new Enemy(64 * 13, 64 * 14, player.grav, 0),
-							new Enemy(64 * 22, 64 * 11, player.grav, 0),
-							new Enemy(64 * 54, 64 * 17, player.grav, 1)];
+var player = new Player(test_level_start[0], test_level_start[1], 1, 4, 10, 0.4, 11, 46, 50);
+var test_level_enemies = [new Enemy(64 * 21, 64 * 15, player.grav, 1, -1),
+							new Enemy(64 * 29, 64 * 14, player.grav, 1, -1),
+							new Enemy(64 * 13, 64 * 18, player.grav, 0, -1),
+							new Enemy(64 * 22, 64 * 15, player.grav, 0, 1),
+							new Enemy(64 * 54, 64 * 21, player.grav, 1, -1)];
 	test_level_enemies[3].dir = 1;
 
 var current_level = test_level;
 var enemies = test_level_enemies;
-var doubleJumpScroll = new Unlockable(8 * 64, 10.5 * 64);
-var punchScroll = new Unlockable(32 * 64, 9.5 * 64);
-var poundScroll = new Unlockable(45 * 64, 9.5 * 64);
+var doubleJumpScroll = new Unlockable(8 * 64, 14.5 * 64);
+var punchScroll = new Unlockable(32 * 64, 13.5 * 64);
+var poundScroll = new Unlockable(45 * 64, 13.5 * 64);
 
 function blockAt(checkx, checky) {
 	return current_level[Math.floor(checky / 64)][Math.floor(checkx / 64)];
@@ -111,6 +138,8 @@ function Update() {
 	
 	case GameState.MenuToGame:
 		if(!key[space]) {
+			death_sound.play();
+			bg_music.play();
 			game_state = GameState.Game;
 		}
 		break;
@@ -120,23 +149,24 @@ function Update() {
 		var move = key[d_key] - key[a_key];
 		player.hsp = player.mv_spd * move;
 		
-		player.vsp += player.punching ? player.grav / 2 : (key[s_key] && player.poundUnlocked) ? player.grav * 8 : player.grav;
-		if(key[s_key]) {
+		player.vsp += !player.dead && player.punching ? player.grav / 2 : !player.dead && (key[s_key] && player.poundUnlocked) ? player.grav * 8 : player.grav;
+		if(key[s_key] && !player.dead) {
 			if(pound_sound.duration <= 0 || pound_sound.paused && !player.grounded && player.poundUnlocked)
 				pound_sound.play();
 		}
 		
-		// Check y collision
+		if(!player.dead) {
+		// Check y collision if not dead
 		if(player.y + player.vsp < 0) {
 			player.y = 0;
 			player.vsp = 0;
 		} else {
-			var blockLeft = blockAt(player.x, player.y + (player.vsp > 0 ? player.mask_h : 0) + player.vsp);
+			var blockLeft = blockAt(player.x + 4, player.y + (player.vsp > 0 ? player.mask_h : 0) + player.vsp);
 			var blockMid = blockAt(player.x + player.mask_w / 2, player.y + (player.vsp > 0 ? player.mask_h : 0) + player.vsp);
-			var blockRight = blockAt(player.x + player.mask_w, player.y + (player.vsp > 0 ? player.mask_h : 0) + player.vsp);
+			var blockRight = blockAt(player.x + player.mask_w - 4, player.y + (player.vsp > 0 ? player.mask_h : 0) + player.vsp);
 			
 			// Move until flush against contact
-			var xPos = isSolid(blockLeft) ? player.x : isSolid(blockMid) ? player.x + player.mask_w / 2 : isSolid(blockRight) ? player.x + player.mask_w: -1024;
+			var xPos = isSolid(blockLeft) ? player.x + 4 : isSolid(blockMid) ? player.x + player.mask_w / 2 : isSolid(blockRight) ? player.x + player.mask_w - 4: -1024;
 			if(xPos >= 0 && player.vsp != 0) { // There is a collision
 				while(!isSolid(blockAt(xPos, player.y + (player.vsp > 0 ? player.mask_h : 0) + Math.sign(player.vsp))))
 					player.y += Math.sign(player.vsp);
@@ -176,14 +206,14 @@ function Update() {
 			player.x = 0;
 			player.hsp = 0;
 		} else {
-			var blockTop = blockAt(player.x + (player.hsp >= 0 ? player.mask_w : 0) + player.hsp, player.y);
-			var blockMid = blockAt(player.x + (player.hsp >= 0 ? player.mask_w : 0) + player.hsp, player.y + player.mask_h / 2);
-			var blockLow = blockAt(player.x + (player.hsp >= 0 ? player.mask_w : 0) + player.hsp, player.y + player.mask_h);
+			var blockTop = blockAt(player.x + (player.hsp >= 0 ? player.mask_w - 4 : 4) + player.hsp, player.y);
+			var blockMid = blockAt(player.x + (player.hsp >= 0 ? player.mask_w - 4 : 4) + player.hsp, player.y + player.mask_h / 2);
+			var blockLow = blockAt(player.x + (player.hsp >= 0 ? player.mask_w - 4 : 4) + player.hsp, player.y + player.mask_h);
 			
 			// Move until flush against contact
 			var yPos = isSolid(blockTop) ? player.y: isSolid(blockMid)? player.y + player.mask_h / 2 : isSolid(blockLow) ? player.y + player.mask_h : -1024;
 			if(yPos >= 0 && player.hsp != 0) { // There is a collision
-				while(!isSolid(blockAt(player.x + (player.hsp > 0 ? player.mask_w : 0) + Math.sign(player.hsp), yPos)))
+				while(!isSolid(blockAt(player.x + (player.hsp > 0 ? player.mask_w - 4 : 4) + Math.sign(player.hsp), yPos)))
 					player.x += Math.sign(player.hsp);
 			
 				player.hsp = 0;
@@ -232,6 +262,8 @@ function Update() {
 			for(var i = 0; i < key.length; i++)
 				key[i] = false;
 		}
+		} else
+			player.hsp = 0;
 		
 		if(Math.sign(player.hsp) != 0) {
 			if(player.dir != Math.sign(player.hsp))
@@ -325,19 +357,46 @@ function Update() {
 			enemies[i].y += enemies[i].vsp;
 			
 			/* Enemy collisions */
-			if (enemies[i].x < player.x + player.mask_w
-			 && enemies[i].x + 64 > player.x 
-			 && enemies[i].y < player.y + player.mask_h
-			 && 64 + enemies[i].y > player.y) {
-				if(player.punching || (key[s_key] && player.poundUnlocked)) {
-					enemies[i].dead = true;
+			if(!player.dead) {
+				if (enemies[i].x < player.x + player.mask_w + 4
+				 && enemies[i].x + 64 > player.x + 4
+				 && enemies[i].y < player.y + player.mask_h
+				 && 64 + enemies[i].y > player.y) {
+					if(player.punching || (key[s_key] && player.poundUnlocked)) {
+						enemies[i].dead = true;
 					
-					player.vsp = -player.jmp_spd / 2;
-					jump_sound.play();
+						player.vsp = -player.jmp_spd / 2;
+						jump_sound.play();
+					} else {
+						player.vsp = -player.jmp_spd * 1.5;
+						player.dead = true;
+						player.lives--;
+						death_sound.play();
+						bg_music.currentTime = 0;
+						bg_music.pause();
+						
+						setTimeout(function() { 
+							ctx.fillRect(0, 0, 800, 600);
+							for(var j = 0; j < enemies.length; j++)
+								enemies[j].restart();
+							player.restart();
+							if(current_level == test_level) {
+								player.doubleJumpUnlocked = false;
+								player.punchUnlocked = false;
+								player.poundUnlocked = false;
+							}
+						}, 1000);
+					}
 				}
 			}
 		}
 		
+		if(player.lives < 0)
+			game_state = GameState.GameOver;
+		
+		break;
+		
+	case GameState.GameOver:
 		break;
 	}
 }
@@ -349,6 +408,7 @@ function Render() {
 	switch(game_state) {
 	case GameState.Menu:
 	case GameState.MenuToGame:// start screen
+		ctx.setTransform(1, 0, 0, 1, 0, 0);
 		// Make a little button
 		ctx.fillStyle = "#0066CC";
 		ctx.fillRect(0, 0, 800, 600);
@@ -360,7 +420,7 @@ function Render() {
 		break;
 	
 	case GameState.Game: // Actual test code
-		if(bg_music.duration <= 0 || bg_music.paused)
+		if(bg_music.duration <= 0 || bg_music.paused && !player.dead)
 			bg_music.play();
 		
 		// Draw background
@@ -399,35 +459,39 @@ function Render() {
 			spr_special_move.draw(poundScroll.x, poundScroll.y, 64, 64, 0);
 		
 		// Draw player
-		if(player.dir == 1) {
-			if(player.punching) {
-				spr_chunks.draw(player.x, player.y, 64, 64, 7);
-			} else if(!player.grounded) {
-				if(player.vsp <= 0) // Jumping
-					spr_chunks.draw(player.x, player.y, 64, 64, 1);
-				else // Falling
-					spr_chunks.draw(player.x, player.y, 64, 64, 2);
-			} else {
-				if(Math.abs(player.hsp) > 0) { // Moving
-					var walk_cycle_index = (animCounter / 8) % 4;
-					spr_chunks.draw(player.x, player.y, 64, 64, 3 + walk_cycle_index);
-				} else 
-					spr_chunks.draw(player.x, player.y, 64, 64, 0);
-			}
+		if(player.dead) {
+			spr_chunks.draw(player.x, player.y, 64, 64, 8);
 		} else {
-			if(player.punching) {
-				spr_chunks.draw(player.x, player.y, 64, 64, 7 + spr_chunks_num);
-			} else if(!player.grounded) {
-				if(player.vsp <= 0) // Jumping
-					spr_chunks.draw(player.x, player.y, 64, 64, 1 + spr_chunks_num);
-				else // Falling
-					spr_chunks.draw(player.x, player.y, 64, 64, 2 + spr_chunks_num);
+			if(player.dir == 1) {
+				if(player.punching) {
+					spr_chunks.draw(player.x, player.y, 64, 64, 7);
+				} else if(!player.grounded) {
+					if(player.vsp <= 0) // Jumping
+						spr_chunks.draw(player.x, player.y, 64, 64, 1);
+					else // Falling
+						spr_chunks.draw(player.x, player.y, 64, 64, 2);
+				} else {
+					if(Math.abs(player.hsp) > 0) { // Moving
+						var walk_cycle_index = (animCounter / 8) % 4;
+						spr_chunks.draw(player.x, player.y, 64, 64, 3 + walk_cycle_index);
+					} else 
+						spr_chunks.draw(player.x, player.y, 64, 64, 0);
+				}
 			} else {
-				if(Math.abs(player.hsp) > 0) { // Moving
-					var walk_cycle_index = (animCounter / 8) % 4;
-					spr_chunks.draw(player.x, player.y, 64, 64, 3 + walk_cycle_index + spr_chunks_num);
-				} else 
-					spr_chunks.draw(player.x, player.y, 64, 64, 0 + spr_chunks_num);
+				if(player.punching) {
+					spr_chunks.draw(player.x, player.y, 64, 64, 7 + spr_chunks_num);
+				} else if(!player.grounded) {
+					if(player.vsp <= 0) // Jumping
+						spr_chunks.draw(player.x, player.y, 64, 64, 1 + spr_chunks_num);
+					else // Falling
+						spr_chunks.draw(player.x, player.y, 64, 64, 2 + spr_chunks_num);
+				} else {
+					if(Math.abs(player.hsp) > 0) { // Moving
+						var walk_cycle_index = (animCounter / 8) % 4;
+						spr_chunks.draw(player.x, player.y, 64, 64, 3 + walk_cycle_index + spr_chunks_num);
+					} else 
+						spr_chunks.draw(player.x, player.y, 64, 64, 0 + spr_chunks_num);
+				}
 			}
 		}
 		
@@ -436,6 +500,17 @@ function Render() {
 		ctx.fillStyle = "#FFFFFF";
 		ctx.fillText(" x " + player.lives, player.x + player.mask_w / 2 - 350, player.y + player.mask_h / 2 - 260);
 		
+		/*ctx.fillStyle = "#000000";
+		ctx.fillRect(player.x + 4, player.y, player.mask_w, player.mask_h);*/
+		
+		break;
+		
+	case GameState.GameOver:
+		ctx.setTransform(1, 0, 0, 1, 0, 0);
+		ctx.fillStyle = "#000000";
+		ctx.fillRect(0, 0, 800, 600);
+		ctx.fillStyle = "#FFFFFF";
+		ctx.fillText("GAME OVER", 320, 280);
 		break;
 	}
 	

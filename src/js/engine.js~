@@ -42,6 +42,9 @@ function Player(startx, starty, image_speed, move_speed, punch_speed, gravity, j
 	
 	this.doubleJumpUnlocked = false;
 	this.punchUnlocked = false;
+	this.poundUnlocked = false;
+	
+	this.lives = 3;
 }
 
 function Enemy(startx, starty, grav, identifier) {
@@ -59,27 +62,24 @@ function Enemy(startx, starty, grav, identifier) {
 	this.id = identifier;
 }
 
-function UnlockDouble(xpos, ypos) {
-	this.x = xpos;
-	this.y = ypos;
-}
-
-function UnlockPunch(xpos, ypos) {
+function Unlockable(xpos, ypos) {
 	this.x = xpos;
 	this.y = ypos;
 }
 
 var player = new Player(test_level_start[0], test_level_start[1], 1, 4, 10, 0.4, 11, 48, 50);
 var test_level_enemies = [new Enemy(64 * 21, 64 * 11, player.grav, 0),
-							new Enemy(64 * 29, 64 * 10, player.grav, 0),
+							new Enemy(64 * 29, 64 * 10, player.grav, 1),
 							new Enemy(64 * 13, 64 * 14, player.grav, 0),
-							new Enemy(64 * 22, 64 * 11, player.grav, 0)];
+							new Enemy(64 * 22, 64 * 11, player.grav, 0),
+							new Enemy(64 * 54, 64 * 17, player.grav, 1)];
 	test_level_enemies[3].dir = 1;
 
 var current_level = test_level;
 var enemies = test_level_enemies;
-var doubleJumpScroll = new UnlockDouble(8 * 64, 10.5 * 64);
-var punchScroll = new UnlockDouble(32 * 64, 9.5 * 64);
+var doubleJumpScroll = new Unlockable(8 * 64, 10.5 * 64);
+var punchScroll = new Unlockable(32 * 64, 9.5 * 64);
+var poundScroll = new Unlockable(45 * 64, 9.5 * 64);
 
 function blockAt(checkx, checky) {
 	return current_level[Math.floor(checky / 64)][Math.floor(checkx / 64)];
@@ -120,7 +120,11 @@ function Update() {
 		var move = key[d_key] - key[a_key];
 		player.hsp = player.mv_spd * move;
 		
-		player.vsp += player.punching ? player.grav / 2 : player.grav;
+		player.vsp += player.punching ? player.grav / 2 : (key[s_key] && player.poundUnlocked) ? player.grav * 8 : player.grav;
+		if(key[s_key]) {
+			if(pound_sound.duration <= 0 || pound_sound.paused && !player.grounded && player.poundUnlocked)
+				pound_sound.play();
+		}
 		
 		// Check y collision
 		if(player.y + player.vsp < 0) {
@@ -153,6 +157,8 @@ function Update() {
 				player.punching = true;
 				player.punchStart = animCounter;
 				player.punched = true;
+				
+				punch_sound.play();
 			}
 		} else {
 			player.hsp = player.dir * player.pnc_spd;
@@ -213,6 +219,20 @@ function Update() {
 				key[i] = false;
 		}
 		
+		// Check if pound is unlocked
+		if(!player.poundUnlocked
+		&& player.x + player.mask_w / 2 > poundScroll.x && player.x + player.mask_w / 2 < poundScroll.x + 64
+		&& player.y + player.mask_h / 2 > poundScroll.y && player.y + player.mask_h / 2 < poundScroll.y + 64) {
+			player.poundUnlocked = true;
+			
+			alert("Congratulations!\nYou have now learned how to ground pound!\nPress <S> and you will stomp down towards the ground!");
+			player.hsp = 0;
+			player.vsp = 0;
+			
+			for(var i = 0; i < key.length; i++)
+				key[i] = false;
+		}
+		
 		if(Math.sign(player.hsp) != 0) {
 			if(player.dir != Math.sign(player.hsp))
 				player.dir = Math.sign(player.hsp);
@@ -238,6 +258,9 @@ function Update() {
 			player.canDoubleJump = false;
 		
 		if(key[w_key] && jump && (player.grounded || player.canDoubleJump)) {
+			jump_sound.pause();
+			jump_sound.current_time = 0;
+			
 			if(!player.grounded)
 				player.canDoubleJump = false;
 			
@@ -245,6 +268,8 @@ function Update() {
 			player.vsp = -player.jmp_spd;
 			
 			jump = false;
+			
+			jump_sound.play();
 		}
 		
 		if(player.grounded)
@@ -255,47 +280,61 @@ function Update() {
 			
 		/* Enemy physics */
 		for(var i = 0; i < enemies.length; i++) {
-			if(enemies[i].id == 0) {
-				if(enemies[i].dead)
-					continue;
-				
-				var hsp = enemies[i].move_speed * enemies[i].dir;
-						
-				if(isSolid(blockAt(enemies[i].x + hsp, enemies[i].y + 32))
-				|| isSolid(blockAt(enemies[i].x + 64 + hsp, enemies[i].y + 32))) {
-					enemies[i].dir = -enemies[i].dir;
-					hsp = -hsp;
-				}
+			if(enemies[i].dead)
+				continue;
 			
-				enemies[i].vsp += enemies[i].gravity;
-				// Check y collision
-				var blockLeft = blockAt(enemies[i].x, enemies[i].y + 64 + enemies[i].vsp);
-				var blockMid = blockAt(enemies[i].x + 32, enemies[i].y + 64 + enemies[i].vsp);
-				var blockRight = blockAt(enemies[i].x + 64, enemies[i].y + 64 + enemies[i].vsp);
+			var hsp = enemies[i].move_speed * enemies[i].dir;
+					
+			if(isSolid(blockAt(enemies[i].x + hsp, enemies[i].y + 32))
+			|| isSolid(blockAt(enemies[i].x + 64 + hsp, enemies[i].y + 32))) {
+				enemies[i].dir = -enemies[i].dir;
+				hsp = -hsp;
+			}
 		
-				// Move until flush against contact
-				var xPos = isSolid(blockLeft) ? enemies[i].x : isSolid(blockMid) ? enemies[i].x + 32 : isSolid(blockRight) ? enemies[i].x + 64 : -1024;
-				if(xPos >= 0 && enemies[i].vsp != 0) { // There is a collision
-					while(!isSolid(blockAt(xPos, enemies[i].y + 64 + Math.sign(enemies[i].vsp))))
-						enemies[i].y += Math.sign(enemies[i].vsp);
-		
+			enemies[i].vsp += enemies[i].gravity;
+			// Check y collision
+			var blockLeft = blockAt(enemies[i].x, enemies[i].y + 64 + enemies[i].vsp);
+			var blockMid = blockAt(enemies[i].x + 32, enemies[i].y + 64 + enemies[i].vsp);
+			var blockRight = blockAt(enemies[i].x + 64, enemies[i].y + 64 + enemies[i].vsp);
+	
+			// Move until flush against contact
+			var xPos = isSolid(blockLeft) ? enemies[i].x : isSolid(blockMid) ? enemies[i].x + 32 : isSolid(blockRight) ? enemies[i].x + 64 : -1024;
+			if(xPos >= 0 && enemies[i].vsp != 0) { // There is a collision
+				while(!isSolid(blockAt(xPos, enemies[i].y + 64 + Math.sign(enemies[i].vsp))))
+					enemies[i].y += Math.sign(enemies[i].vsp);
+					
+				if(enemies[i].vsp >= 0 && enemies[i].id == 1) // jump if a brussel sprout hits the ground
+					enemies[i].vsp = -player.jmp_spd;
+				else
 					enemies[i].vsp = 0;
-				}
+			}
+		
+			// Only move if player can see it
+			if(enemies[i].start) {
+				if(enemies[i].x > player.x + player.mask_w / 2 + 400
+				|| enemies[i].x + 64 < player.x + player.mask_w / 2 - 400
+				|| enemies[i].y > player.y + player.mask_h / 2 + 300
+				|| enemies[i].y + 64 < player.y + player.mask_h / 2 - 300) {
+					hsp = 0;
+					enemies[i].vsp = 0;
+				} else
+					enemies[i].start = false;
+			}
+		
+			enemies[i].x += hsp;
+			enemies[i].y += enemies[i].vsp;
 			
-				// Only move if player can see it
-				if(enemies[i].start) {
-					if(enemies[i].x > player.x + player.mask_w / 2 + 400
-					|| enemies[i].x + 64 < player.x + player.mask_w / 2 - 400
-					|| enemies[i].y > player.y + player.mask_h / 2 + 300
-					|| enemies[i].y + 64 < player.y + player.mask_h / 2 - 300) {
-						hsp = 0;
-						enemies[i].vsp = 0;
-					} else
-						enemies[i].start = false;
+			/* Enemy collisions */
+			if (enemies[i].x < player.x + player.mask_w
+			 && enemies[i].x + 64 > player.x 
+			 && enemies[i].y < player.y + player.mask_h
+			 && 64 + enemies[i].y > player.y) {
+				if(player.punching || (key[s_key] && player.poundUnlocked)) {
+					enemies[i].dead = true;
+					
+					player.vsp = -player.jmp_spd / 2;
+					jump_sound.play();
 				}
-			
-				enemies[i].x += hsp;
-				enemies[i].y += enemies[i].vsp;
 			}
 		}
 		
@@ -344,6 +383,10 @@ function Render() {
 				case 0:
 					spr_brocolli.draw(enemies[i].x, enemies[i].y, 64, 64, animCounter / 8);
 					break;
+					
+				case 1:
+					spr_brussel_sprout.draw(enemies[i].x, enemies[i].y, 64, 64, (animCounter / 8) % 4);
+					break;
 			}
 		}
 		
@@ -352,6 +395,8 @@ function Render() {
 			spr_special_move.draw(doubleJumpScroll.x, doubleJumpScroll.y, 64, 64, 0);
 		if(current_level == test_level && !player.punchUnlocked)
 			spr_special_move.draw(punchScroll.x, punchScroll.y, 64, 64, 0);
+		if(current_level == test_level && !player.poundUnlocked)
+			spr_special_move.draw(poundScroll.x, poundScroll.y, 64, 64, 0);
 		
 		// Draw player
 		if(player.dir == 1) {
@@ -385,6 +430,11 @@ function Render() {
 					spr_chunks.draw(player.x, player.y, 64, 64, 0 + spr_chunks_num);
 			}
 		}
+		
+		// Draw lives overlay
+		spr_chunks.draw(player.x + player.mask_w / 2 - 380, player.y + player.mask_h / 2 - 280, 32, 32, 0);
+		ctx.fillStyle = "#FFFFFF";
+		ctx.fillText(" x " + player.lives, player.x + player.mask_w / 2 - 350, player.y + player.mask_h / 2 - 260);
 		
 		break;
 	}

@@ -4,7 +4,7 @@
 // is the location of the  sub images
 //var bomb_locs = function() {var list = [[]];for(var i = 0; i < 13; i++)list.push([i*32, 0]);return list;}();
 //var bomb = new Sprite("images/Hyptosis/BombExploding.png", bomb_locs, [32, 64]);
-var spr_chunks_num = 8;
+var spr_chunks_num = 9;
 var spr_chunks_locs = function() {
 	var list = [[]];
 	/*for(var j = 0; j < 2; j++) {
@@ -37,11 +37,15 @@ var spr_brussel_sprout = new Sprite("src/images/spr_brussel_sprout.png", [[0, 0]
  * 2 - dirt
  */
 var test_level = [ 	/* Note:
-					 * 9 squares from heighest platform if open,
+					 * 13 squares from heighest platform if open,
 					 * 4 from ground
 					 * 6 to the left
 					 * 7 to the right
 					 */
+[2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2],
+[2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2],
+[2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2],
+[2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2],
 [2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2],
 [2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2],
 [2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2],
@@ -70,7 +74,7 @@ var test_level = [ 	/* Note:
 [2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2],
 [2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2],
 ];
-var test_level_start = [64 * 8, 64 * 14];
+var test_level_start = [64 * 8, 64 * 18];
 
 /* Music files */
 var bg_music = new Audio("src/sounds/test_music.ogg");
@@ -79,6 +83,7 @@ bg_music.volume = 0.45;
 var jump_sound = new Audio("src/sounds/270337__littlerobotsoundfactory__pickup-00.wav");
 var punch_sound = new Audio("src/sounds/270327__littlerobotsoundfactory__hit-00.wav");
 var pound_sound = new Audio("src/sounds/270310__littlerobotsoundfactory__explosion-04.wav");
+var death_sound = new Audio("src/sounds/270328__littlerobotsoundfactory__hero-death-00.wav");
 
 
 

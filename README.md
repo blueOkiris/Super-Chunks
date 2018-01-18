@@ -12,3 +12,9 @@ Open src/index.html in your web browser (Ideally Firefox or Chrome)
 Game Engine - Dylan Turner
 Lead Programmer - Dylan Turner
 Alpha Tester - Nicklas Carpenter
+
+Sound Effects - LittleRobotSoundFactory from freesound.org/people/LittleRobotSoundFactory/packs/16681
+Test Background Music - Dylan Turner
+
+Sprites - Dylan Turner
+
