@@ -9,7 +9,7 @@
 		<script src="src/js/game.js" type="text/Javascript"></script>
 	</head>
 	<body bgcolor="#053630">
-		<h1> <font color="#FFFFFF";"> SUPER-CHUNKS </font></h1>
+		<h1> <font color="#FFFFFF";"> Super-Chunks </font></h1>
 		
 		<canvas id="game_screen" width="800" height="600">
 			No canvas support

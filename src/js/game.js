@@ -1,6 +1,6 @@
 /* Set up vars for the loop */
 var skipTicks = 1000/60; // 60 fps
-var maxFrameSkip = 20;
+var maxFrameSkip = 60;
 var maxTimeDifference = 30; // If it's a second behind just start from scratch
 var nextGameTick = (new Date).getTime();
 

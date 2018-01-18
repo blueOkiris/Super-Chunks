@@ -2,8 +2,8 @@ var animCounter = 0;// Controls the updating of animations
 var spaceCounter = 0;
 
 // Keyboard stuff
-var key = [false, false, false, false, false, false, false, false, false, false, false]; //  Up, down, left, right, space, z, w, a, s, d, escape
-var up = 0, down = 1, left = 2, right = 3, space = 4, z_key = 5, w_key = 6, a_key = 7, s_key = 8, d_key = 9, esc = 10;
+var key = [false, false, false, false, false, false, false, false, false, false, false, false]; //  Up, down, left, right, space, z, w, a, s, d, escape, enter
+var up = 0, down = 1, left = 2, right = 3, space = 4, z_key = 5, w_key = 6, a_key = 7, s_key = 8, d_key = 9, esc = 10, enter = 11;
 // Mouse stuff
 var mouse_x = 0, mouse_y = 0, mouse_pressed = false;
 
@@ -14,6 +14,7 @@ var GameState = {
 	Game: 2,
 	GameOver: 3,
 	Paused: 4,
+	Popup: 5,
 };
 var game_state = GameState.Menu;
 
@@ -130,7 +131,9 @@ function isSolid(block_id) {
 var jump = false;
 
 var game_canpause = true;
-var game_pause_msg = ["","","","", "", "", "", "PRESS ESCAPE TO RESUME"];
+var game_popup = true;
+var game_pause_msg = ["", "", "", "PAUSED", "", "", "", "PRESS P OR ESCAPE TO RESUME"];
+var game_popup_msg = ["", "", "", "", "", "", "", "PRESS ENTER TO RESUME"];
 
 // Updates whenever possible (to be fast)
 function Update() {
@@ -231,13 +234,13 @@ function Update() {
 		&& player.y + player.mask_h / 2 > doubleJumpScroll.y && player.y + player.mask_h / 2 < doubleJumpScroll.y + 64) {
 			player.doubleJumpUnlocked = true;
 			
-			game_state = GameState.Paused;
-			game_pause_msg[0] = "";
-			game_pause_msg[1] = "";
-			game_pause_msg[2] = "CONGRATULATIONS!";
-			game_pause_msg[3] = "YOU HAVE LEARNED HOW TO AIR JUMP!";
-			game_pause_msg[4] = "PRESS W IN THE AIR TO";
-			game_pause_msg[5] = "GAIN A BOOST IN HEIGHT!";
+			game_state = GameState.Popup;
+			game_popup_msg[0] = "";
+			game_popup_msg[1] = "CONGRATULATIONS!";
+			game_popup_msg[2] = "YOU HAVE LEARNED HOW TO AIR JUMP!";
+			game_popup_msg[3] = "PRESS W IN THE AIR TO";
+			game_popup_msg[4] = "GAIN A BOOST IN HEIGHT!";
+			game_popup_msg[5] = "";
 		}
 		
 		// Check if punch is unlocked
@@ -246,13 +249,13 @@ function Update() {
 		&& player.y + player.mask_h / 2 > punchScroll.y && player.y + player.mask_h / 2 < punchScroll.y + 64) {
 			player.punchUnlocked = true;
 			
-			game_state = GameState.Paused;
-			game_pause_msg[0] = "CONGRATULATIONS!";
-			game_pause_msg[1] = "YOU HAVE LEARNED TO PUNCH!";
-			game_pause_msg[2] = "PRESS SPACE AND YOU WILL";
-			game_pause_msg[3] = "FLY TOWARDS ENEMIES,";
-			game_pause_msg[4] = "BUT BE WARY BECAUSE YOU CAN";
-			game_pause_msg[5] + "ONLY PUNCH ONCE IN MID-AIR!";
+			game_state = GameState.Popup;
+			game_popup_msg[0] = "CONGRATULATIONS!";
+			game_popup_msg[1] = "YOU HAVE LEARNED TO PUNCH!";
+			game_popup_msg[2] = "PRESS SPACE AND YOU WILL";
+			game_popup_msg[3] = "FLY TOWARDS ENEMIES,";
+			game_popup_msg[4] = "BUT BE WARY BECAUSE YOU CAN";
+			game_popup_msg[5] = "ONLY PUNCH ONCE IN MID-AIR!";
 		}
 		
 		// Check if pound is unlocked
@@ -261,13 +264,13 @@ function Update() {
 		&& player.y + player.mask_h / 2 > poundScroll.y && player.y + player.mask_h / 2 < poundScroll.y + 64) {
 			player.poundUnlocked = true;
 			
-			game_state = GameState.Paused;
-			game_pause_msg[0] = "CONGRATULATIONS";
-			game_pause_msg[1] = "YOU HAVE LEARNED HOW TO!";
-			game_pause_msg[2] = "GROUND POUND!";
-			game_pause_msg[3] = "PRESS S AND YOU WILL STOMP";
-			game_pause_msg[4] = "DOWN TOWARDS THE GROUND!";
-			game_pause_msg[5] = "";
+			game_state = GameState.Popup;
+			game_popup_msg[0] = "CONGRATULATIONS!";
+			game_popup_msg[1] = "YOU HAVE LEARNED HOW TO!";
+			game_popup_msg[2] = "GROUND POUND!";
+			game_popup_msg[3] = "PRESS S AND YOU WILL STOMP";
+			game_popup_msg[4] = "DOWN TOWARDS THE GROUND!";
+			game_popup_msg[5] = "";
 		}
 		} else
 			player.hsp = 0;
@@ -421,6 +424,13 @@ function Update() {
 			game_state = GameState.Game;
 		}
 		break;
+	
+	case GameState.Popup:
+		if(key[enter] && game_popup) {
+			game_popup = false;
+			game_state = GameState.Game;
+		}
+		break;
 	}
 }
 
@@ -440,7 +450,7 @@ function Render() {
 		ctx.fillStyle = "#CCCCCC";
 		ctx.textAlign = "center";
 		ctx.font = "18px Pixeled";
-		ctx.fillText("Press SPACE!", 400, 300);
+		ctx.fillText("PRESS SPACE!", 400, 300);
 		break;
 	
 	case GameState.Game: // Actual test code
@@ -544,6 +554,7 @@ function Render() {
 		ctx.fillText("GAME OVER", 320, 280);
 		break;
 	
+	case GameState.Popup:
 	case GameState.Paused:
 		if(bg_music.duration <= 0 || bg_music.paused && !player.dead)
 			bg_music.play();
@@ -563,9 +574,17 @@ function Render() {
 		
 		ctx.textAlign = "center";
 		ctx.fillStyle = "#CCCCCC";
-		for(var i = 0; i < game_pause_msg.length; i++)
-			ctx.fillText(game_pause_msg[i], player.x + player.mask_w / 2, player.y + player.mask_h / 2 + i * 30 - 100);
-		
+		for(var i = 0; i < game_pause_msg.length; i++) {
+			switch(game_state) {
+			case GameState.Paused:
+				ctx.fillText(game_pause_msg[i], player.x + player.mask_w / 2, player.y + player.mask_h / 2 + i * 30 - 100);
+				break;
+			
+			case GameState.Popup:
+				ctx.fillText(game_popup_msg[i], player.x + player.mask_w / 2, player.y + player.mask_h / 2 + i * 30 - 100);
+				break;
+			}
+		}
 		break;
 	}
 	
@@ -632,7 +651,12 @@ function OnKeyDown(event) {
 		case 68:
 			key[d_key] = true;
 			break;
+			
+		case 13:
+			key[enter] = true;
+			break;
 		
+		case 80:
 		case 27:
 			key[esc] = true;
 			break;
@@ -683,6 +707,12 @@ function OnKeyUp(event) {
 			key[d_key] = false;
 			break;
 		
+		case 13:
+			key[enter] = false;
+			game_popup = true;
+			break;
+			
+		case 80:
 		case 27:
 			key[esc] = false;
 			game_canpause = true;
