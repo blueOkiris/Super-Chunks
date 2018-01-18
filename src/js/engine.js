@@ -384,15 +384,15 @@ function Update() {
 								player.doubleJumpUnlocked = false;
 								player.punchUnlocked = false;
 								player.poundUnlocked = false;
+		
+								if(player.lives < 0)
+									game_state = GameState.GameOver;
 							}
 						}, 1000);
 					}
 				}
 			}
 		}
-		
-		if(player.lives < 0)
-			game_state = GameState.GameOver;
 		
 		break;
 		
@@ -414,9 +414,9 @@ function Render() {
 		ctx.fillRect(0, 0, 800, 600);
 		ctx.fillStyle = "#CC6600";
 		ctx.fillRect(280, 275, 240, 50);
-		ctx.font = "30px Arial";
 		ctx.fillStyle = "#CCCCCC";
-		ctx.fillText("Press <SPACE>!", 285, 310);
+		ctx.font = "18px Pixeled";
+		ctx.fillText("Press < SPACE >!", 285, 310);
 		break;
 	
 	case GameState.Game: // Actual test code
@@ -496,9 +496,9 @@ function Render() {
 		}
 		
 		// Draw lives overlay
-		spr_chunks.draw(player.x + player.mask_w / 2 - 380, player.y + player.mask_h / 2 - 280, 32, 32, 0);
+		spr_chunks_lives.draw(player.x + player.mask_w / 2 - 380, player.y + player.mask_h / 2 - 280, 48, 48, 0);
 		ctx.fillStyle = "#FFFFFF";
-		ctx.fillText(" x " + player.lives, player.x + player.mask_w / 2 - 350, player.y + player.mask_h / 2 - 260);
+		ctx.fillText(" x " + player.lives, player.x + player.mask_w / 2 - 350, player.y + player.mask_h / 2 - 255);
 		
 		/*ctx.fillStyle = "#000000";
 		ctx.fillRect(player.x + 4, player.y, player.mask_w, player.mask_h);*/

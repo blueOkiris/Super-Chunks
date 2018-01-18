@@ -1,5 +1,11 @@
+@font-face {
+  font-family: 'Pixeled';
+  src: url('./Pixeled.ttf');
+}
+
 * { /* Put  the canvas up right next to everything else */
 	margin: 0;
 	padding: 0;
+	font-family: 'Pixeled', serif;
 }
 

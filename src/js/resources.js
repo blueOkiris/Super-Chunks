@@ -18,13 +18,14 @@ var spr_chunks_locs = function() {
 	list.splice(0, 1);
 return list;}();
 var spr_chunks = new Sprite("src/images/spr_chunks.png", spr_chunks_locs, [64, 64]);
+var spr_chunks_lives = new Sprite("src/images/spr_chunks_lives.png", [[0, 0]], [48, 48]);
 
 var spr_special_move = new Sprite("src/images/spr_special_move.png", [[0, 0]], [64, 64]);
 
 var spr_grass_block = new Sprite("src/images/spr_block_1_16x16.png", [[0, 0], [64, 0]], [64, 64]);
 var spr_stone_block = new Sprite("src/images/spr_block_2.png", [[0, 0]], [64, 64]);
 
-var spr_brocolli = new Sprite("src/images/brocolli.png", [[0, 0], [64, 0]], [64, 64]);
+var spr_brocolli = new Sprite("src/images/spr_brocolli.png", [[0, 0], [64, 0]], [64, 64]);
 var spr_brussel_sprout = new Sprite("src/images/spr_brussel_sprout.png", [[0, 0], [64, 0], [128, 0], [192, 0]], [64, 64])
 
 //var bg_image = new Sprite("src/images/space_back.png", [[0, 0]], [5120, 2880]);
