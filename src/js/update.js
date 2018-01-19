@@ -49,27 +49,39 @@ function Update() {
 				player.grounded = false;
 		}
 		
+		/*console.log("Space: " + key[space] + ", Unlock: " + player.punchUnlocked + 
+		", Can Punch: " + player.canPunch + ", Punching: " + player.punching + ", Air: " + player.airPunch);*/
+		
 		/* Punching physics */
-		if(player.punching && ((animCounter - player.punchStart) % 15 == 0)) {
+		if(player.punching && player.punchStart > 20) { // Finished punching
 			player.punching = false;
 		} else if(!player.punching) {
-			if(key[space] && !player.punched && player.punchUnlocked) {
-				player.punching = true;
-				player.punchStart = animCounter;
-				player.punched = true;
+			if(!player.canPunch && player.punchStart > 22) { // Allow for next punch (spam preventer)
+				player.canPunch = true;
+				player.punchStart = 0;
+			} else if(key[space] && space_released && player.punchUnlocked && player.canPunch) { // Actually punch
+				if(player.grounded || !player.airPunch) {
+					if(!player.grounded)
+						player.airPunch = true;
+					
+					player.punching = true;
+					player.punchStart = 0;
+					player.canPunch = false;
+					
+					space_released = false;
 				
-				punch_sound.play();
+					punch_sound.play();
+				}
 			}
-		} else {
+		} else { // During the punch
 			player.hsp = player.dir * player.pnc_spd;
 			
-			if((animCounter - player.punchStart) % 20 > 12)
+			if(player.punchStart > 10)
 				player.hsp = 0;
 		}
 		
-		if(player.punched)
-			if(!key[space] && player.grounded)
-				player.punched = false;
+		if(player.airPunch && player.grounded)
+			player.airPunch = false;
 		
 		// Check x collision
 		if(player.x + player.hsp < 0) {

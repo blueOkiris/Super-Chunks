@@ -1,7 +1,4 @@
 var animCounter = 0;// Controls the updating of animations
-var spaceCounter = 0;
-
-var start = true;
 
 // Keyboard stuff
 var key = [false, false, false, false, false, false, false, false, false, false, false, false]; //  Up, down, left, right, space, z, w, a, s, d, escape, enter
@@ -40,10 +37,13 @@ function Player(startx, starty, image_speed, move_speed, punch_speed, gravity, j
 	this.dir = 1;
 	
 	this.grounded = false;
+	
 	this.canDoubleJump = true;
+	
 	this.punching = false;
-	this.punched = false;
 	this.punchStart = 0;
+	this.canPunch = true;
+	this.airPunch = false;
 	
 	this.doubleJumpUnlocked = false;
 	this.punchUnlocked = false;
@@ -57,10 +57,12 @@ function Player(startx, starty, image_speed, move_speed, punch_speed, gravity, j
 		this.grounded = false;
 		this.canDoubleJump = true;
 		this.punching = false;
-		this.punched = false;
+		this.canPunch = true;
+		this.airPunch = false;
 		this.punchStart = 0;
 		this.dead = false;
-	}
+		this.airPunched = false;
+	};
 	
 	this.dead = false;	
 	this.lives = 3;

@@ -60,7 +60,9 @@ function Render() {
 		if(player.dead) {
 			spr_chunks.draw(player.x, player.y, 64, 64, 8);
 		} else {
-			if(player.dir == 1) {
+			if(!player.dead && (key[s_key] && player.poundUnlocked) && !player.grounded)
+				spr_chunks.draw(player.x, player.y, 64, 64, 18);
+			else if(player.dir == 1) {
 				if(player.punching) {
 					spr_chunks.draw(player.x, player.y, 64, 64, 7);
 				} else if(!player.grounded) {
@@ -153,7 +155,9 @@ function Render() {
 	}
 	
 	animCounter++; //  Update the animation for all sprites every frame
-	spaceCounter++;
+	if(!player.canPunch) {
+		player.punchStart++;
+	}
 }
 
 function draw_block(block_id, x, y) {

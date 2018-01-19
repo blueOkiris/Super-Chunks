@@ -87,8 +87,7 @@ function OnKeyDown(event) {
 			break;
 		
 		case 32:
-			if(spaceCounter > 7)
-				key[space] = true;
+			key[space] = true;
 			break;
 			
 		case 90:
@@ -142,7 +141,7 @@ function OnKeyUp(event) {
 		
 		case 32:
 			key[space] = false;
-			spaceCounter = 0;
+			space_released = true;
 			break;
 		
 		case 90:
