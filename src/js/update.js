@@ -243,7 +243,6 @@ function Update() {
 					} else {
 						player.vsp = -player.jmp_spd * 1.5;
 						player.dead = true;
-						player.lives--;
 						death_sound.play();
 						bg_music.currentTime = 0;
 						bg_music.pause();
@@ -256,6 +255,8 @@ function Update() {
 								player.doubleJumpUnlocked = false;
 								player.punchUnlocked = false;
 								player.poundUnlocked = false;
+								
+								player.lives--;
 		
 								if(player.lives < 0)
 									game_state = GameState.GameOver;
