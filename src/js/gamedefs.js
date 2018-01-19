@@ -101,6 +101,9 @@ function Unlockable(xpos, ypos) {
 }
 
 var player = new Player(test_level_start[0], test_level_start[1], 1, 4, 10, 0.4, 11, 46, 50);
+var current_level = test_level;
+var enemies = test_level_enemies;
+
 var test_level_enemies = [new Enemy(64 * 21, 64 * 15, player.grav, 1, -1),
 							new Enemy(64 * 29, 64 * 14, player.grav, 1, -1),
 							new Enemy(64 * 13, 64 * 18, player.grav, 0, -1),
@@ -108,8 +111,6 @@ var test_level_enemies = [new Enemy(64 * 21, 64 * 15, player.grav, 1, -1),
 							new Enemy(64 * 54, 64 * 21, player.grav, 1, -1)];
 	test_level_enemies[3].dir = 1;
 
-var current_level = test_level;
-var enemies = test_level_enemies;
 var doubleJumpScroll = new Unlockable(8 * 64, 14.5 * 64);
 var punchScroll = new Unlockable(32 * 64, 13.5 * 64);
 var poundScroll = new Unlockable(45 * 64, 13.5 * 64);

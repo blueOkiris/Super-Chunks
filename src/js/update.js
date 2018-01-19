@@ -8,6 +8,10 @@ function Update() {
 	
 	case GameState.MenuToGame:
 		if(!key[space]) {
+			player = new Player(test_level_start[0], test_level_start[1], 1, 4, 10, 0.4, 11, 46, 50);
+			current_level = test_level;
+			enemies = test_level_enemies;
+			
 			death_sound.play();
 			bg_music.play();
 			game_state = GameState.Game;
@@ -270,8 +274,10 @@ function Update() {
 								
 								player.lives--;
 		
-								if(player.lives < 0)
+								if(player.lives < 0) {
+									space_released = false;
 									game_state = GameState.GameOver;
+								}
 							}
 						}, 1000);
 					}
@@ -292,6 +298,8 @@ function Update() {
 		break;
 		
 	case GameState.GameOver:
+		if(space_released)
+			game_state = GameState.Menu; // Wait for release
 		break;
 	
 	case GameState.Paused:

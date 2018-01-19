@@ -116,8 +116,18 @@ function Render() {
 		ctx.setTransform(1, 0, 0, 1, 0, 0);
 		ctx.fillStyle = "#000000";
 		ctx.fillRect(0, 0, 800, 600);
+		
+		ctx.textAlign = "center";
 		ctx.fillStyle = "#FFFFFF";
-		ctx.fillText("GAME OVER", 320, 280);
+		ctx.fillText("GAME OVER", 400, 280);
+		
+		ctx.fillStyle = "#FFFFFF";
+		ctx.fillRect(280, 345, 240, 50);
+		ctx.fillStyle = "#000000";
+		ctx.fillRect(264, 349, 272, 42);
+		ctx.fillStyle = "#CCCCCC";
+		ctx.font = "18px Pixeled";
+		ctx.fillText("SPACE TO RESTART!", 400, 380);
 		break;
 	
 	case GameState.Popup:
