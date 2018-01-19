@@ -5,11 +5,13 @@
 		
 		<script src="src/js/draw.js" type="text/Javascript"></script>
 		<script src="src/js/resources.js" type="text/Javascript"></script>
-		<script src="src/js/engine.js" type="text/Javascript"></script>
+		<script src="src/js/gamedefs.js" type="text/Javascript"></script>
+		<script src="src/js/update.js" type="text/Javascript"></script>
+		<script src="src/js/render.js" type="text/Javascript"></script>
 		<script src="src/js/game.js" type="text/Javascript"></script>
 	</head>
 	<body bgcolor="#053630">
-		<h1> <font color="#FFFFFF";"> Super-Chunks </font></h1>
+		<!-- <h1> <font color="#FFFFFF";"> SUPER-CHUNKS </font></h1> -->
 		
 		<canvas id="game_screen" width="800" height="600">
 			No canvas support
@@ -19,7 +21,10 @@
 			var canvas = document.getElementById('game_screen'); // Get the canvas
 			var ctx = canvas.getContext('2d'); // and the context
 			
-			start_game();
+			ctx.fillStyle = "#FFFFFF";
+			spr_splash.draw(0, 0, 800, 600);
+			
+			setTimeout(start_game, 3000); // Add delay to make sure files load
 		</script>
 	</body>
 </html>

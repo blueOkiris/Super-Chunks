@@ -21,7 +21,10 @@
 			var canvas = document.getElementById('game_screen'); // Get the canvas
 			var ctx = canvas.getContext('2d'); // and the context
 			
-			start_game();
+			ctx.fillStyle = "#FFFFFF";
+			spr_splash.draw(0, 0, 800, 600, 0);
+			
+			setTimeout(start_game, 7000); // Add delay to make sure files load
 		</script>
 	</body>
 </html>

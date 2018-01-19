@@ -243,9 +243,9 @@ function Update() {
 					} else {
 						player.vsp = -player.jmp_spd * 1.5;
 						player.dead = true;
-						death_sound.play();
 						bg_music.currentTime = 0;
 						bg_music.pause();
+						death_sound.play();
 						
 						setTimeout(function() {
 							for(var j = 0; j < enemies.length; j++)
