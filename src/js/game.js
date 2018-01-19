@@ -35,26 +35,35 @@ function start_game() {
 	window.onEachFrame(game_loop);
 }
 
+var hasStarted = false;
 // The game loop
 function game_loop() {
-	var loops = 0;
-	
-	var time = (new Date).getTime();
-	if(time < nextGameTick + maxTimeDifference) {
-		while(time > nextGameTick && loops < maxFrameSkip) {
-			if(imageCounter == 0) // all images have loaded
-				Update();
-		
-			nextGameTick += skipTicks;
-			loops ++;
+	if(!hasStarted) {
+		if(imageCounter == 0) {
+			spr_splash.draw(0, 0, 800, 600, 0);
+			
+			setTimeout(function() { hasStarted = true; }, 5000);
 		}
 	} else {
-		nextGameTick = time;
-	}
+		var loops = 0;
+	
+		var time = (new Date).getTime();
+		if(time < nextGameTick + maxTimeDifference) {
+			while(time > nextGameTick && loops < maxFrameSkip) {
+				if(imageCounter == 0) // all images have loaded
+					Update();
+		
+				nextGameTick += skipTicks;
+				loops ++;
+			}
+		} else {
+			nextGameTick = time;
+		}
 
-	if(loops) {
-		if(imageCounter == 0) // all images have loaded
-			Render();
+		if(loops) {
+			if(imageCounter == 0) // all images have loaded
+				Render();
+		}
 	}
 }
 
