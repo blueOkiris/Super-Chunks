@@ -15,7 +15,7 @@ Lead Programmer - Dylan Turner
 
 Alpha Tester - Nicklas Carpenter
 
-Sound Effects - LittleRobotSoundFactory from freesound.org/people/LittleRobotSoundFactory/packs/16681
+Sound Effects - LittleRobotSoundFactory from https://www.freesound.org/people/LittleRobotSoundFactory/packs/16681
 
 Test Background Music - Dylan Turner
 
