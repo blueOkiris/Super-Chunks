@@ -178,7 +178,7 @@ function Update() {
 		if(!player.doubleJumpUnlocked)
 			player.canDoubleJump = false;
 		
-		if(key[w_key] && jump && (player.grounded || player.canDoubleJump)) {
+		if(key[w_key] && jump && (player.grounded || player.canDoubleJump) && !player.dead) {
 			jump_sound.pause();
 			jump_sound.current_time = 0;
 			
