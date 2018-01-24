@@ -22,7 +22,7 @@ function Render() {
 			bg_music.play();
 		
 		// Draw background
-		ctx.fillStyle = "#5522A9"; // Dull blue
+		ctx.fillStyle = current_level_bg; // Dull blue
 		ctx.fillRect(player.x - (800 - player.mask_w), player.y - (600 - player.mask_h), 1600, 1200);
 		
 		//bg_image.draw(0, 0, 5120, 2880, 0);

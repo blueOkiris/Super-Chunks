@@ -8,9 +8,10 @@ function Update() {
 	
 	case GameState.MenuToGame:
 		if(!key[space]) {
-			player = new Player(test_level_start[0], test_level_start[1], 1, 4, 10, 0.4, 11, 46, 50);
-			current_level = test_level;
-			enemies = test_level_enemies;
+			player = new Player(intro_level_start[0], intro_level_start[1], 1, 4, 10, 0.4, 11, 46, 50, 0);
+			current_level = intro_level;
+			enemies = intro_level_enemies;
+			current_level_bg = intro_level_bg;
 			
 			death_sound.play();
 			bg_music.play();

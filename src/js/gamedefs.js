@@ -17,7 +17,7 @@ var GameState = {
 };
 var game_state = GameState.Menu;
 
-function Player(startx, starty, image_speed, move_speed, punch_speed, gravity, jumpSpeed, maskw, maskh) {
+function Player(startx, starty, image_speed, move_speed, punch_speed, gravity, jumpSpeed, maskw, maskh, unlock) {
 	this.x = startx;
 	this.y = starty;
 	
@@ -45,9 +45,19 @@ function Player(startx, starty, image_speed, move_speed, punch_speed, gravity, j
 	this.canPunch = true;
 	this.airPunch = false;
 	
-	this.doubleJumpUnlocked = false;
-	this.punchUnlocked = false;
-	this.poundUnlocked = false;
+	/* Unlock Codes:
+	 * 0 -> none
+	 * 1 -> double
+	 * 2 -> punch
+	 * 3 -> pound 
+	 * 4 -> double punch 
+	 * 5 -> double pound
+	 * 6 -> punch pound 
+	 * 7 -> double punch pound
+	 */
+	this.doubleJumpUnlocked = unlock == 1 || unlock == 3 || unlock == 4 || unlock == 7;
+	this.punchUnlocked = unlock == 2 || unlock == 4 || unlock == 6 || unlock == 7;
+	this.poundUnlocked = unlock == 3 || unlock == 5 || unlock == 6 || unlock == 7;
 	
 	this.restart = function() {
 		this.x = startx;
@@ -100,7 +110,7 @@ function Unlockable(xpos, ypos) {
 	this.y = ypos;
 }
 
-var player = new Player(test_level_start[0], test_level_start[1], 1, 4, 10, 0.4, 11, 46, 50);
+var player = new Player(test_level_start[0], test_level_start[1], 1, 4, 10, 0.4, 11, 46, 50, 0);
 var current_level = test_level;
 var enemies = test_level_enemies;
 
@@ -110,6 +120,10 @@ var test_level_enemies = [new Enemy(64 * 21, 64 * 15, player.grav, 1, -1),
 							new Enemy(64 * 22, 64 * 15, player.grav, 0, 1),
 							new Enemy(64 * 54, 64 * 21, player.grav, 1, -1)];
 	test_level_enemies[3].dir = 1;
+var test_level_bg = "#5522A9";
+	
+var intro_level_enemies = [];
+var current_level_bg = test_level_bg;
 
 var doubleJumpScroll = new Unlockable(8 * 64, 14.5 * 64);
 var punchScroll = new Unlockable(32 * 64, 13.5 * 64);
