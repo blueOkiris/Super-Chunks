@@ -59,6 +59,12 @@ function Player(startx, starty, image_speed, move_speed, punch_speed, gravity, j
 	this.punchUnlocked = unlock == 2 || unlock == 4 || unlock == 6 || unlock == 7;
 	this.poundUnlocked = unlock == 3 || unlock == 5 || unlock == 6 || unlock == 7;
 	
+	this.setUnlock = function(x) {
+		this.doubleJumpUnlocked = x == 1 || x == 3 || x == 4 || x == 7;
+		this.punchUnlocked = x == 2 || x == 4 || x == 6 || x == 7;
+		this.poundUnlocked = x == 3 || x == 5 || x == 6 || x == 7;
+	}
+	
 	this.restart = function() {
 		this.x = startx;
 		this.y = starty;
@@ -122,8 +128,26 @@ var test_level_enemies = [new Enemy(64 * 21, 64 * 15, player.grav, 1, -1),
 	test_level_enemies[3].dir = 1;
 var test_level_bg = "#5522A9";
 	
-var intro_level_enemies = [];
+var intro_level_enemies = [ // First set of spikes
+							new Enemy(23 * 64, 25 * 64, 0, 2, 1),
+							new Enemy(24 * 64, 25 * 64, 0, 2, 1),
+							new Enemy(25 * 64, 25 * 64, 0, 2, 1),
+							new Enemy(26 * 64, 25 * 64, 0, 2, 1),
+							new Enemy(27 * 64, 25 * 64, 0, 2, 1),
+							new Enemy(28 * 64, 25 * 64, 0, 2, 1),
+							new Enemy(29 * 64, 25 * 64, 0, 2, 1),
+							
+							// Brocolis
+							new Enemy(39 * 64, 21 * 64, player.grav, 0, -1),
+							new Enemy(40 * 64, 21 * 64, player.grav, 0, -1),
+							new Enemy(47 * 64, 20 * 64, player.grav, 0, -1),
+							
+							// Brussel Sprouts
+							new Enemy(52 * 64, 23 * 64, player.grav, 1, -1),
+							new Enemy(57 * 64, 23 * 64, player.grav, 1, 1),
+						];
 var current_level_bg = test_level_bg;
+var current_unlock = 0;
 
 var doubleJumpScroll = new Unlockable(8 * 64, 14.5 * 64);
 var punchScroll = new Unlockable(32 * 64, 13.5 * 64);

@@ -45,6 +45,10 @@ function Render() {
 				case 1:
 					spr_brussel_sprout.draw(enemies[i].x, enemies[i].y, 64, 64, (animCounter / 8) % 4);
 					break;
+					
+				case 2:
+					spr_spike.draw(enemies[i].x, enemies[i].y, 64, 64, 0);
+					break;
 			}
 		}
 		

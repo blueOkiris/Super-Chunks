@@ -12,9 +12,10 @@ function Update() {
 			current_level = intro_level;
 			enemies = intro_level_enemies;
 			current_level_bg = intro_level_bg;
+			current_unlock = 0;
 			
 			death_sound.play();
-			bg_music.play();
+			//bg_music.play();
 			game_state = GameState.Game;
 		}
 		break;
@@ -242,7 +243,10 @@ function Update() {
 				} else
 					enemies[i].start = false;
 			}
-		
+			
+			if(enemies[i].id == 2) // Don't let the spikes move
+				hsp = 0;
+			
 			enemies[i].x += hsp;
 			enemies[i].y += enemies[i].vsp;
 			
@@ -268,17 +272,13 @@ function Update() {
 							for(var j = 0; j < enemies.length; j++)
 								enemies[j].restart();
 							player.restart();
-							if(current_level == test_level) {
-								player.doubleJumpUnlocked = false;
-								player.punchUnlocked = false;
-								player.poundUnlocked = false;
+							player.setUnlock(current_unlock);
 								
-								player.lives--;
-		
-								if(player.lives < 0) {
-									space_released = false;
-									game_state = GameState.GameOver;
-								}
+							player.lives--;
+	
+							if(player.lives < 0) {
+								space_released = false;
+								game_state = GameState.GameOver;
 							}
 						}, 1000);
 					}
