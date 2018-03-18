@@ -116,9 +116,9 @@ var intro_level_bg = "#1030FF";
 
 /* Music files */
 var bg_music = new Audio("src/sounds/Chunks-Intro-Level.wav");
-bg_music.volume = 0.25;
+bg_music.volume = 0.45;
 var menu_music = new Audio("src/sounds/Chunks-Title.wav");
-menu_music.volume = 0.25;
+menu_music.volume = 0.55;
 // bg_music.play() to play
 var jump_sound = new Audio("src/sounds/270337__littlerobotsoundfactory__pickup-00.wav");
 var punch_sound = new Audio("src/sounds/270327__littlerobotsoundfactory__hit-00.wav");
