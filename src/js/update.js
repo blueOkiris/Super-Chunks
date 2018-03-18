@@ -13,10 +13,12 @@ function Update() {
 			enemies = intro_level_enemies;
 			current_level_bg = intro_level_bg;
 			current_unlock = 0;
+			curr_lev_music = intro_level_music;
 			
-			menu_music.pause();
+			bg_music[0].pause();
+			bg_music[0].duration = 0;
 			death_sound.play();
-			bg_music.play();
+			bg_music[curr_lev_music].play();
 			game_state = GameState.Game;
 		}
 		break;
@@ -263,11 +265,12 @@ function Update() {
 						player.vsp = -player.jmp_spd / 2;
 						jump_sound.play();
 					} else {
+						death_sound.play();
+						
 						player.vsp = -player.jmp_spd * 1.5;
 						player.dead = true;
-						bg_music.currentTime = 0;
-						bg_music.pause();
-						death_sound.play();
+						bg_music[curr_lev_music].currentTime = 0;
+						bg_music[curr_lev_music].pause();
 						
 						setTimeout(function() {
 							for(var j = 0; j < enemies.length; j++)

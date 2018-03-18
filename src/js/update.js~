@@ -14,8 +14,9 @@ function Update() {
 			current_level_bg = intro_level_bg;
 			current_unlock = 0;
 			
+			menu_music.pause();
 			death_sound.play();
-			//bg_music.play();
+			bg_music.play();
 			game_state = GameState.Game;
 		}
 		break;

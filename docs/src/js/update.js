@@ -14,6 +14,7 @@ function Update() {
 			current_level_bg = test_level_bg;
 			
 			menu_music.pause();
+			menu_music.duration = 0;
 			death_sound.play();
 			bg_music.play();
 			game_state = GameState.Game;
@@ -263,7 +264,6 @@ function Update() {
 						player.dead = true;
 						bg_music.currentTime = 0;
 						bg_music.pause();
-						death_sound.play();
 						
 						setTimeout(function() {
 							for(var j = 0; j < enemies.length; j++)

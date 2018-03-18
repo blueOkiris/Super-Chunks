@@ -148,6 +148,7 @@ var intro_level_enemies = [ // First set of spikes
 						];
 var current_level_bg = test_level_bg;
 var current_unlock = 0;
+var curr_lev_music = intro_level_music;
 
 var doubleJumpScroll = new Unlockable(8 * 64, 14.5 * 64);
 var punchScroll = new Unlockable(32 * 64, 13.5 * 64);

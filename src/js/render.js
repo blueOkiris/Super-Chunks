@@ -2,8 +2,8 @@
 function Render() {
 	switch(game_state) {
 	case GameState.Menu:
-		if(menu_music.duration <= 0 || menu_music.paused && !player.dead)
-			menu_music.play();
+		if(bg_music[0].duration <= 0 || bg_music[0].paused && !player.dead)
+			bg_music[0].play();
 			
 	case GameState.MenuToGame:// start screen
 		ctx.setTransform(1, 0, 0, 1, 0, 0);
@@ -21,8 +21,8 @@ function Render() {
 		break;
 	
 	case GameState.Game: // Actual test code
-		if(bg_music.duration <= 0 || bg_music.paused && !player.dead)
-			bg_music.play();
+		if(bg_music[curr_lev_music].duration <= 0 || bg_music[curr_lev_music].paused && !player.dead)
+			bg_music[curr_lev_music].play();
 		
 		// Draw background
 		ctx.fillStyle = current_level_bg; // Dull blue

@@ -115,7 +115,7 @@ var intro_level_start = [7*64, 20 * 64];
 var intro_level_bg = "#1030FF";
 
 /* Music files */
-var bg_music = new Audio("src/sounds/test_music.ogg");
+var bg_music = new Audio("src/sounds/Chunks-Intro-Level.wav");
 bg_music.volume = 0.45;
 var menu_music = new Audio("src/sounds/Chunks-Title.wav");
 menu_music.volume = 0.45;
