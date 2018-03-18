@@ -13,6 +13,7 @@ function Update() {
 			enemies = test_level_enemies;
 			current_level_bg = test_level_bg;
 			
+			menu_music.pause();
 			death_sound.play();
 			bg_music.play();
 			game_state = GameState.Game;

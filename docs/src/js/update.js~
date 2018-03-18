@@ -8,13 +8,11 @@ function Update() {
 	
 	case GameState.MenuToGame:
 		if(!key[space]) {
-			player = new Player(intro_level_start[0], intro_level_start[1], 1, 4, 10, 0.4, 11, 46, 50, 0);
-			current_level = intro_level;
-			enemies = intro_level_enemies;
-			current_level_bg = intro_level_bg;
-			current_unlock = 0;
+			player = new Player(test_level_start[0], test_level_start[1], 1, 4, 10, 0.4, 11, 46, 50, 0);
+			current_level = test_level;
+			enemies = test_level_enemies;
+			current_level_bg = test_level_bg;
 			
-			menu_music.pause();
 			death_sound.play();
 			bg_music.play();
 			game_state = GameState.Game;
@@ -244,10 +242,7 @@ function Update() {
 				} else
 					enemies[i].start = false;
 			}
-			
-			if(enemies[i].id == 2) // Don't let the spikes move
-				hsp = 0;
-			
+		
 			enemies[i].x += hsp;
 			enemies[i].y += enemies[i].vsp;
 			
@@ -273,13 +268,17 @@ function Update() {
 							for(var j = 0; j < enemies.length; j++)
 								enemies[j].restart();
 							player.restart();
-							player.setUnlock(current_unlock);
+							if(current_level == test_level) {
+								player.doubleJumpUnlocked = false;
+								player.punchUnlocked = false;
+								player.poundUnlocked = false;
 								
-							player.lives--;
-	
-							if(player.lives < 0) {
-								space_released = false;
-								game_state = GameState.GameOver;
+								player.lives--;
+		
+								if(player.lives < 0) {
+									space_released = false;
+									game_state = GameState.GameOver;
+								}
 							}
 						}, 1000);
 					}
