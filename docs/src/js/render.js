@@ -2,6 +2,9 @@
 function Render() {
 	switch(game_state) {
 	case GameState.Menu:
+		if(menu_music.duration <= 0 || menu_music.paused && !player.dead)
+			menu_music.play();
+			
 	case GameState.MenuToGame:// start screen
 		ctx.setTransform(1, 0, 0, 1, 0, 0);
 		// Make a little button
