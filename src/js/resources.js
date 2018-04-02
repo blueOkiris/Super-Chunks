@@ -30,7 +30,7 @@ var spr_spike = new Sprite("src/images/spr_spike.png", [[0, 0]], [64, 64]);
 var spr_brussel_sprout = new Sprite("src/images/spr_brussel_sprout.png", [[0, 0], [64, 0], [128, 0], [192, 0]], [64, 64])
 
 var spr_message_box = new Sprite("src/images/spr_message_box.png", [[0, 0]], [624, 376]);
-var spr_splash = new Sprite("src/images/blueOkirisLoading.png", [[0, 0]], [800, 600]);
+var spr_splash = new Sprite("src/images/blueokirislogo-2018.png", [[0, 0]], [800, 600]);
 //var bg_image = new Sprite("src/images/space_back.png", [[0, 0]], [5120, 2880]);
 
 /* Level maps */
