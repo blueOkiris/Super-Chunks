@@ -8,8 +8,17 @@ function Update() {
 	
 	case GameState.MenuToGame:
 		if(!key[space]) {
+			player = new Player(intro_level_start[0], intro_level_start[1], 1, 4, 10, 0.4, 11, 46, 50, 0);
+			current_level = intro_level;
+			enemies = intro_level_enemies;
+			current_level_bg = intro_level_bg;
 			current_unlock = 0;
-			changeLevel(intro_level, intro_level_bg, intro_level_enemies, intro_level_start, intro_level_music);
+			curr_lev_music = intro_level_music;
+			
+			bg_music[0].pause();
+			bg_music[0].duration = 0;
+			death_sound.play();
+			bg_music[curr_lev_music].play();
 			game_state = GameState.Game;
 		}
 		break;
@@ -187,9 +196,6 @@ function Update() {
 			jump = false;
 			
 			jump_sound.play();
-		} else if(key[w_key] && blockAt(player.x, player.y) == 4) { // Go through level end door
-			if(current_level == intro_level)
-				changeLevel(test_level, test_level_bg, test_level_enemies, test_level_start, -1);
 		}
 		
 		if(player.grounded)
@@ -297,10 +303,8 @@ function Update() {
 		break;
 		
 	case GameState.GameOver:
-		if(space_released) {
-			bg_music[0].duration = 0;
+		if(space_released)
 			game_state = GameState.Menu; // Wait for release
-		}
 		break;
 	
 	case GameState.Paused:
@@ -318,27 +322,3 @@ function Update() {
 		break;
 	}
 }
-
-/*function changeLevel(levelData, backgroundColor, newEnemies, startLocation) {
-	player = new Player(startLocation[0], startLocation[1], 1, 4, 10, 0.4, 11, 46, 50, 0);
-	current_level = levelData;
-	enemies = newEnemies;
-	current_level_bg = backgroundColor;
-	player.saveUnlock();
-}*/
-
-function changeLevel(levelData, backgroundColor, newEnemies, startLocation, newMusic) {
-	player = new Player(startLocation[0], startLocation[1], 1, 4, 10, 0.4, 11, 46, 50, 0);
-	current_level = levelData;
-	enemies = newEnemies;
-	current_level_bg = backgroundColor;
-	player.saveUnlock();
-	
-	if(newMusic != -1) {
-		bg_music[curr_lev_music].pause();
-		bg_music[curr_lev_music].duration = 0;
-		curr_lev_music = newMusic;
-		bg_music[curr_lev_music].play();
-	}
-}
-

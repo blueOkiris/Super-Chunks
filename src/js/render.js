@@ -139,8 +139,8 @@ function Render() {
 	
 	case GameState.Popup:
 	case GameState.Paused:
-		if(bg_music.duration <= 0 || bg_music.paused && !player.dead)
-			bg_music.play();
+		if(bg_music[curr_lev_music].duration <= 0 || bg_music[curr_lev_music].paused && !player.dead)
+			bg_music[curr_lev_music].play();
 		
 		// Draw background
 		ctx.fillStyle = "#5522A9"; // Dull blue
