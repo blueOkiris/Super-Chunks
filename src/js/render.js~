@@ -190,10 +190,6 @@ function draw_block(block_id, x, y) {
 	case 3: // stone block
 		spr_stone_block.draw(x * 64, y * 64, 64, 64, 0);
 		break;
-	
-	case 4: // black block (next level)
-		spr_black_block.draw(x * 64, y * 64, 64, 64, 0);
-		break;
 	}
 }
 
