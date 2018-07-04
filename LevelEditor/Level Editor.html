@@ -3,6 +3,13 @@
 	<head>
   		<meta http-equiv="X-UA-Compatible" content="IE=9" >
 		<link rel="stylesheet" type="text/css" href="editor.css">
+		<script type="text/Javascript">
+			var dirtBlock = new Image();
+			dirtBlock.src = "images/spr_block_1_16x16.png";
+			
+			var stoneBlock = new Image();
+			stoneBlock.src = "images/spr_block_2.png";
+		</script>
 	</head>
 	<body>
 		<div class="screen">
@@ -12,7 +19,7 @@
 					<button class="up_btn" id="up_button">&Hat;</button>
 				</div>
 				
-				<canvas id="level_canvas" class="level_canvas">Upgrade your dang browser</canvas>
+				<canvas id="level_canvas" width="800" height="600" class="level_canvas">Upgrade your dang browser</canvas>
 				
 				<div class="menu_bar">
 					<button class="down_btn" id="down_btn">v</button>
@@ -36,6 +43,11 @@
 				<div class="left_bottom_corner"></div>
    				<div class="right_top_corner"></div>
    				<div class="right_bottom_corner"></div>
+			</div>
+			
+			<div class="tile_window">
+				<div class="pure_text" style="font-size: 11pt;"> TILE CHOOSER </div>
+				<canvas id="tile_canvas" class="tile_canvas" width="196" height="733">Upgrade your dang browser</canvas>
 			</div>
 		</div>
 	</body>

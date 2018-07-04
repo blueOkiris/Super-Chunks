@@ -10,12 +10,26 @@ body {
 .screen {
 	/* Set up the grid system to make placing things easier */
 	display: grid;
-	grid-template-columns: 1fr 2fr 1fr;
-	grid-template-rows: 1fr 2fr 1fr;
+	grid-template-columns: 0.7fr 0.3fr 2fr 1fr;
+	grid-template-rows: 0.05fr 2fr 0.05fr;
 	grid-template-areas:
-		"lwspc tpspc rwspc"
-		"lwspc windw rwspc"
-		"lwspc btspc rwspc";
+		"lwspc tpspc tpspc rwspc"
+		"lwspc tilew windw rwspc"
+		"lwspc bwspc bwspc rwspc";
+}
+
+.tile_window {
+	border-width: 10px;
+	border-style: solid;
+	border-color: black;	
+	background-color: #AAAAAA;
+	
+	/* Set grid position */
+	grid-area: tilew;
+	
+	display: grid;
+	grid-template-columns: 1fr;
+	grid-template-rows: 0.05fr 1fr;
 }
 
 .user_window {
@@ -38,7 +52,7 @@ body {
 	grid-area: windw;
 	
 	display: grid;
-	grid-template-columns: 40px 810px 40px;
+	grid-template-columns: 5fr 810px 5fr;
 	grid-template-rows: 95px 610px 0.5fr;
 	grid-template-areas:
 		"lt_crn titleb rt_crn"
@@ -120,10 +134,17 @@ body {
 	border-color: black;
 }
 
+.tile_canvas {
+	/* Make it look nice and be correct sizing and junk
+	width: 800px;
+	height: 600px;*/
+	border-width: 5px;
+	border-style: solid;
+	border-color: black;
+}
+
 .level_canvas {
 	/* Make it look nice and be correct sizing and junk */
-	width: 800px;
-	height: 600px;
 	border-width: 5px;
 	border-style: solid;
 	border-color: black;
