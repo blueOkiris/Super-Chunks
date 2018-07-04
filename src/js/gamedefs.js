@@ -14,6 +14,7 @@ var GameState = {
 	GameOver: 3,
 	Paused: 4,
 	Popup: 5,
+	LevelChange: 6,
 };
 var game_state = GameState.Menu;
 
@@ -167,4 +168,5 @@ var game_popup = true;
 var game_pause_msg = ["", "", "", "PAUSED", "", "", "", "PRESS P OR ESCAPE TO RESUME"];
 var game_popup_msg = ["", "", "", "", "", "", "", "PRESS ENTER TO RESUME"];
 
+var change_level = false;
 

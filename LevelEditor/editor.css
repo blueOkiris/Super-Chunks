@@ -7,30 +7,143 @@ body {
 	background-color: #053630;
 }
 
-#windowObj {
+.screen {
+	/* Set up the grid system to make placing things easier */
+	display: grid;
+	grid-template-columns: 1fr 2fr 1fr;
+	grid-template-rows: 1fr 2fr 1fr;
+	grid-template-areas:
+		"lwspc tpspc rwspc"
+		"lwspc windw rwspc"
+		"lwspc btspc rwspc";
+}
+
+.user_window {
+	/* Define the window position as centered 
 	margin: 0;
 	padding: 0;
 	position: fixed;
 	top: 50%;
 	left: 50%;
 	transform: translate(-50%, -50%);
+	/*height: 90vh;*/
 	
+	/* Draw a border and fill in the area with a nice gray */
 	border-width: 10px;
 	border-style: solid;
-	border-color: black;
-	
+	border-color: black;	
 	background-color: #AAAAAA;
+	
+	/* Set grid position */
+	grid-area: windw;
+	
+	display: grid;
+	grid-template-columns: 40px 810px 40px;
+	grid-template-rows: 95px 610px 0.5fr;
+	grid-template-areas:
+		"lt_crn titleb rt_crn"
+		"lsideb canvas rsideb"
+		"lb_crn bottmb rb_crn";
 }
 
-h1 {
+.pure_text {
 	text-align: center;
 	font-family: 'Pixeled', serif;
 }
 
-canvas {
+.title_bar {
+	margin: auto;
+	width: 100%;
+	grid-area: titleb;
+	
+  	display: grid;
+  	grid-template-columns: 1fr;
+  	grid-template-rows: 1fr 1fr;
+}
+
+.menu_bar {
+	grid-area: bottmb;
+	
+	display: grid;
+	grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr;
+	grid-template-rows: 1fr 1fr;
+}
+
+.menu_btn {
+	/*font-family: 'Pixeled', serif;*/
+	height: 90%;
+	margin: auto;
+	font-size: 9pt;
+}
+
+.up_btn {
+	grid-column: 1;
+	grid-row: 2;
+	
+	border-width: 2px;
+	border-style: solid;
+	border-color: black;
+	
+	height: 35px;
+}
+
+.down_btn {
+	grid-column: 1/7;
+	grid-row: 1;
+	
+	border-width: 2px;
+	border-style: solid;
+	border-color: black;
+}
+
+.menu_txt {
+	/*font-family: 'Pixeled', serif;*/
+	height: 50%;
+	margin: auto;
+	font-size: 9pt;
+}
+
+.lt_side_bar {
+	grid-area: lsideb;
+}
+
+.rt_side_bar {
+	grid-area: rsideb;
+}
+
+.side_btn {
+	height: 100%;
+	width: 100%;
+	
+	border-width: 2px;
+	border-style: solid;
+	border-color: black;
+}
+
+.level_canvas {
+	/* Make it look nice and be correct sizing and junk */
 	width: 800px;
 	height: 600px;
 	border-width: 5px;
 	border-style: solid;
 	border-color: black;
+	
+	grid-area: canvas;
 }
+
+.left_top_corner {
+	grid-area: lt_crn;
+}
+
+.left_bottom_corner {
+	grid-area: lb_crn;
+}
+
+.right_top_corner {
+	grid-area: rt_crn;
+}
+
+.right_bottom_corner {
+	grid-area: rb_crn;
+}
+

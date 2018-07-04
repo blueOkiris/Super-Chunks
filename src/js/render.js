@@ -20,6 +20,11 @@ function Render() {
 		ctx.fillText("PRESS SPACE!", 400, 380);
 		break;
 	
+	case GameState.LevelChange:
+		ctx.fillStyle = "#FFFFFF";
+		ctx.fillRect(0, 0, 800, 600);
+		break;
+	
 	case GameState.Game: // Actual test code
 		if(bg_music[current_music].duration <= 0 || bg_music[current_music].paused && !player.dead)
 			bg_music[current_music].play();

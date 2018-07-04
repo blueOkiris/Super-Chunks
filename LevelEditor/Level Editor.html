@@ -5,11 +5,38 @@
 		<link rel="stylesheet" type="text/css" href="editor.css">
 	</head>
 	<body>
-		<div id="windowObj">
-			<h1>Super Chunks Level Editor</h1>
-			<canvas id="levelCanvas">
-				Your browser does not support HTML Canvas. Upgrade... Seriously... Firefox Quantum is the fastest #NotSponsored
-			</canvas>
+		<div class="screen">
+			<div class="user_window">
+				<div class="title_bar">
+					<div class="pure_text" style="font-size: 16pt;"> SUPER CHUNKS LEVEL EDITOR </div>
+					<button class="up_btn" id="up_button">&Hat;</button>
+				</div>
+				
+				<canvas id="level_canvas" class="level_canvas">Upgrade your dang browser</canvas>
+				
+				<div class="menu_bar">
+					<button class="down_btn" id="down_btn">v</button>
+					<button class="menu_btn" id="new_btn">New</button>
+					<button class="menu_btn" id="resize_btn">Resize</button>
+					<div class="pure_text" style="font-size: 9pt;"> WIDTH: </div>
+					<input class="menu_txt" type="text" name="width">
+					<div class="pure_text" style="font-size: 9pt;"> HEIGHT: </div>
+ 					<input class="menu_txt" type="text" name="height">
+				</div>
+				
+				<div class="lt_side_bar">
+					<button class="side_btn">&lt;</button>
+				</div>
+				
+				<div class="rt_side_bar">
+					<button class="side_btn">&gt;</button>
+				</div>
+				
+				<div class="left_top_corner"></div>
+				<div class="left_bottom_corner"></div>
+   				<div class="right_top_corner"></div>
+   				<div class="right_bottom_corner"></div>
+			</div>
 		</div>
 	</body>
 	<footer>

@@ -15,6 +15,16 @@ function Update() {
 		}
 		break;
 	
+	case GameState.LevelChange:
+		bg_music[current_music].pause();
+		
+		if(change_level) {
+			game_state = GameState.Game;
+			change_level = true;
+		}
+		
+		break;
+	
 	case GameState.Game: // play the game
 		movementPhysics();
 		punchingPhysics();
