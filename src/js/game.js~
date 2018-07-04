@@ -1,4 +1,4 @@
-function movementPhysics() {
+function runGame() {
 	// Player physics
 	var move = key[d_key] - key[a_key];
 	player.hsp = player.mv_spd * move;
@@ -10,135 +10,127 @@ function movementPhysics() {
 	}
 	
 	if(!player.dead) {
-		// Check y collision if not dead
-		if(player.y + player.vsp < 0) {
-			player.y = 0;
+	// Check y collision if not dead
+	if(player.y + player.vsp < 0) {
+		player.y = 0;
+		player.vsp = 0;
+	} else {
+		var blockLeft = blockAt(player.x + 4, player.y + (player.vsp > 0 ? player.mask_h : 0) + player.vsp);
+		var blockMid = blockAt(player.x + player.mask_w / 2, player.y + (player.vsp > 0 ? player.mask_h : 0) + player.vsp);
+		var blockRight = blockAt(player.x + player.mask_w - 4, player.y + (player.vsp > 0 ? player.mask_h : 0) + player.vsp);
+		
+		// Move until flush against contact
+		var xPos = isSolid(blockLeft) ? player.x + 4 : isSolid(blockMid) ? player.x + player.mask_w / 2 : isSolid(blockRight) ? player.x + player.mask_w - 4: -1024;
+		if(xPos >= 0 && player.vsp != 0) { // There is a collision
+			while(!isSolid(blockAt(xPos, player.y + (player.vsp > 0 ? player.mask_h : 0) + Math.sign(player.vsp))))
+				player.y += Math.sign(player.vsp);
+		
+			if(player. vsp >= 0)
+				player.grounded = true;
+			
 			player.vsp = 0;
-		} else {
-			var blockLeft = blockAt(player.x + 4, player.y + (player.vsp > 0 ? player.mask_h : 0) + player.vsp);
-			var blockMid = blockAt(player.x + player.mask_w / 2, player.y + (player.vsp > 0 ? player.mask_h : 0) + player.vsp);
-			var blockRight = blockAt(player.x + player.mask_w - 4, player.y + (player.vsp > 0 ? player.mask_h : 0) + player.vsp);
-			
-			// Move until flush against contact
-			var xPos = isSolid(blockLeft) ? player.x + 4 : isSolid(blockMid) ? player.x + player.mask_w / 2 : isSolid(blockRight) ? player.x + player.mask_w - 4: -1024;
-			if(xPos >= 0 && player.vsp != 0) { // There is a collision
-				while(!isSolid(blockAt(xPos, player.y + (player.vsp > 0 ? player.mask_h : 0) + Math.sign(player.vsp))))
-					player.y += Math.sign(player.vsp);
-			
-				if(player. vsp >= 0)
-					player.grounded = true;
-				
-				player.vsp = 0;
-			} else
-				player.grounded = false;
-		}
+		} else
+			player.grounded = false;
 	}
-}
-
-function punchingPhysics() {
+	
 	/*console.log("Space: " + key[space] + ", Unlock: " + player.punchUnlocked + 
 	", Can Punch: " + player.canPunch + ", Punching: " + player.punching + ", Air: " + player.airPunch);*/
 	
-	if(!player.dead) {
-		/* Punching physics */
-		if(player.punching && player.punchStart > 20) { // Finished punching
-			player.punching = false;
-		} else if(!player.punching) {
-			if(!player.canPunch && player.punchStart > 22) { // Allow for next punch (spam preventer)
-				player.canPunch = true;
-				player.punchStart = 0;
-			} else if(key[space] && space_released && player.punchUnlocked && player.canPunch) { // Actually punch
-				if(player.grounded || !player.airPunch) {
-					if(!player.grounded)
-						player.airPunch = true;
-					
-					player.punching = true;
-					player.punchStart = 0;
-					player.canPunch = false;
-					
-					space_released = false;
+	/* Punching physics */
+	if(player.punching && player.punchStart > 20) { // Finished punching
+		player.punching = false;
+	} else if(!player.punching) {
+		if(!player.canPunch && player.punchStart > 22) { // Allow for next punch (spam preventer)
+			player.canPunch = true;
+			player.punchStart = 0;
+		} else if(key[space] && space_released && player.punchUnlocked && player.canPunch) { // Actually punch
+			if(player.grounded || !player.airPunch) {
+				if(!player.grounded)
+					player.airPunch = true;
 				
-					punch_sound.play();
-				}
-			}
-		} else { // During the punch
-			player.hsp = player.dir * player.pnc_spd;
+				player.punching = true;
+				player.punchStart = 0;
+				player.canPunch = false;
+				
+				space_released = false;
 			
-			if(player.punchStart > 10)
-				player.hsp = 0;
+				punch_sound.play();
+			}
 		}
+	} else { // During the punch
+		player.hsp = player.dir * player.pnc_spd;
 		
-		if(player.airPunch && player.grounded)
-			player.airPunch = false;
-	}
-}
-
-function collisionChecks() {
-	if(!player.dead) {
-		// Check x collision
-		if(player.x + player.hsp < 0) {
-			player.x = 0;
+		if(player.punchStart > 10)
 			player.hsp = 0;
-		} else {
-			var blockTop = blockAt(player.x + (player.hsp >= 0 ? player.mask_w - 4 : 4) + player.hsp, player.y);
-			var blockMid = blockAt(player.x + (player.hsp >= 0 ? player.mask_w - 4 : 4) + player.hsp, player.y + player.mask_h / 2);
-			var blockLow = blockAt(player.x + (player.hsp >= 0 ? player.mask_w - 4 : 4) + player.hsp, player.y + player.mask_h);
-			
-			// Move until flush against contact
-			var yPos = isSolid(blockTop) ? player.y: isSolid(blockMid)? player.y + player.mask_h / 2 : isSolid(blockLow) ? player.y + player.mask_h : -1024;
-			if(yPos >= 0 && player.hsp != 0) { // There is a collision
-				while(!isSolid(blockAt(player.x + (player.hsp > 0 ? player.mask_w - 4 : 4) + Math.sign(player.hsp), yPos)))
-					player.x += Math.sign(player.hsp);
-			
-				player.hsp = 0;
-			}
-		}
+	}
+	
+	if(player.airPunch && player.grounded)
+		player.airPunch = false;
+	
+	// Check x collision
+	if(player.x + player.hsp < 0) {
+		player.x = 0;
+		player.hsp = 0;
+	} else {
+		var blockTop = blockAt(player.x + (player.hsp >= 0 ? player.mask_w - 4 : 4) + player.hsp, player.y);
+		var blockMid = blockAt(player.x + (player.hsp >= 0 ? player.mask_w - 4 : 4) + player.hsp, player.y + player.mask_h / 2);
+		var blockLow = blockAt(player.x + (player.hsp >= 0 ? player.mask_w - 4 : 4) + player.hsp, player.y + player.mask_h);
 		
-		/* Unlockable check */
-		// Check if double jump is unlocked
-		if(!player.doubleJumpUnlocked
-		&& player.x + player.mask_w / 2 > doubleJumpScroll.x && player.x + player.mask_w / 2 < doubleJumpScroll.x + 64
-		&& player.y + player.mask_h / 2 > doubleJumpScroll.y && player.y + player.mask_h / 2 < doubleJumpScroll.y + 64) {
-			player.doubleJumpUnlocked = true;
-			
-			game_state = GameState.Popup;
-			game_popup_msg[0] = "";
-			game_popup_msg[1] = "CONGRATULATIONS!";
-			game_popup_msg[2] = "YOU HAVE LEARNED HOW TO AIR JUMP!";
-			game_popup_msg[3] = "PRESS W IN THE AIR TO";
-			game_popup_msg[4] = "GAIN A BOOST IN HEIGHT!";
-			game_popup_msg[5] = "";
-		}
+		// Move until flush against contact
+		var yPos = isSolid(blockTop) ? player.y: isSolid(blockMid)? player.y + player.mask_h / 2 : isSolid(blockLow) ? player.y + player.mask_h : -1024;
+		if(yPos >= 0 && player.hsp != 0) { // There is a collision
+			while(!isSolid(blockAt(player.x + (player.hsp > 0 ? player.mask_w - 4 : 4) + Math.sign(player.hsp), yPos)))
+				player.x += Math.sign(player.hsp);
 		
-		// Check if punch is unlocked
-		if(!player.punchUnlocked
-		&& player.x + player.mask_w / 2 > punchScroll.x && player.x + player.mask_w / 2 < punchScroll.x + 64
-		&& player.y + player.mask_h / 2 > punchScroll.y && player.y + player.mask_h / 2 < punchScroll.y + 64) {
-			player.punchUnlocked = true;
-			
-			game_state = GameState.Popup;
-			game_popup_msg[0] = "CONGRATULATIONS!";
-			game_popup_msg[1] = "YOU HAVE LEARNED TO PUNCH!";
-			game_popup_msg[2] = "PRESS SPACE AND YOU WILL";
-			game_popup_msg[3] = "FLY TOWARDS ENEMIES,";
-			game_popup_msg[4] = "BUT BE WARY BECAUSE YOU CAN";
-			game_popup_msg[5] = "ONLY PUNCH ONCE IN MID-AIR!";
+			player.hsp = 0;
 		}
+	}
+	
+	/* Unlockable check */
+	// Check if double jump is unlocked
+	if(!player.doubleJumpUnlocked
+	&& player.x + player.mask_w / 2 > doubleJumpScroll.x && player.x + player.mask_w / 2 < doubleJumpScroll.x + 64
+	&& player.y + player.mask_h / 2 > doubleJumpScroll.y && player.y + player.mask_h / 2 < doubleJumpScroll.y + 64) {
+		player.doubleJumpUnlocked = true;
 		
-		// Check if pound is unlocked
-		if(!player.poundUnlocked
-		&& player.x + player.mask_w / 2 > poundScroll.x && player.x + player.mask_w / 2 < poundScroll.x + 64
-		&& player.y + player.mask_h / 2 > poundScroll.y && player.y + player.mask_h / 2 < poundScroll.y + 64) {
-			player.poundUnlocked = true;
-			
-			game_state = GameState.Popup;
-			game_popup_msg[0] = "CONGRATULATIONS!";
-			game_popup_msg[1] = "YOU HAVE LEARNED HOW TO!";
-			game_popup_msg[2] = "GROUND POUND!";
-			game_popup_msg[3] = "PRESS S AND YOU WILL STOMP";
-			game_popup_msg[4] = "DOWN TOWARDS THE GROUND!";
-			game_popup_msg[5] = "";
-		}
+		game_state = GameState.Popup;
+		game_popup_msg[0] = "";
+		game_popup_msg[1] = "CONGRATULATIONS!";
+		game_popup_msg[2] = "YOU HAVE LEARNED HOW TO AIR JUMP!";
+		game_popup_msg[3] = "PRESS W IN THE AIR TO";
+		game_popup_msg[4] = "GAIN A BOOST IN HEIGHT!";
+		game_popup_msg[5] = "";
+	}
+	
+	// Check if punch is unlocked
+	if(!player.punchUnlocked
+	&& player.x + player.mask_w / 2 > punchScroll.x && player.x + player.mask_w / 2 < punchScroll.x + 64
+	&& player.y + player.mask_h / 2 > punchScroll.y && player.y + player.mask_h / 2 < punchScroll.y + 64) {
+		player.punchUnlocked = true;
+		
+		game_state = GameState.Popup;
+		game_popup_msg[0] = "CONGRATULATIONS!";
+		game_popup_msg[1] = "YOU HAVE LEARNED TO PUNCH!";
+		game_popup_msg[2] = "PRESS SPACE AND YOU WILL";
+		game_popup_msg[3] = "FLY TOWARDS ENEMIES,";
+		game_popup_msg[4] = "BUT BE WARY BECAUSE YOU CAN";
+		game_popup_msg[5] = "ONLY PUNCH ONCE IN MID-AIR!";
+	}
+	
+	// Check if pound is unlocked
+	if(!player.poundUnlocked
+	&& player.x + player.mask_w / 2 > poundScroll.x && player.x + player.mask_w / 2 < poundScroll.x + 64
+	&& player.y + player.mask_h / 2 > poundScroll.y && player.y + player.mask_h / 2 < poundScroll.y + 64) {
+		player.poundUnlocked = true;
+		
+		game_state = GameState.Popup;
+		game_popup_msg[0] = "CONGRATULATIONS!";
+		game_popup_msg[1] = "YOU HAVE LEARNED HOW TO!";
+		game_popup_msg[2] = "GROUND POUND!";
+		game_popup_msg[3] = "PRESS S AND YOU WILL STOMP";
+		game_popup_msg[4] = "DOWN TOWARDS THE GROUND!";
+		game_popup_msg[5] = "";
+	}
 	} else
 		player.hsp = 0;
 	
@@ -189,9 +181,7 @@ function collisionChecks() {
 	
 	if(!key[w_key])
 		jump = true;
-}
-
-function enemyCollisions() {
+		
 	/* Enemy physics */
 	for(var i = 0; i < current_level.enemies.length; i++) {
 		if(current_level.enemies[i].dead)
@@ -239,7 +229,7 @@ function enemyCollisions() {
 			hsp = 0;
 		
 		current_level.enemies[i].x += hsp;
-		current_level.enemies[i].y += current_level.enemies[i].vsp;
+		current_level.enemies[i].y += enemies[i].vsp;
 		
 		/* Enemy collisions */
 		if(!player.dead) {
@@ -261,7 +251,7 @@ function enemyCollisions() {
 					bg_music[current_music].pause();
 					
 					setTimeout(function() {
-						for(var j = 0; j < current_level.enemies.length; j++)
+						for(var j = 0; j < enemies.length; j++)
 							current_level.enemies[j].restart();
 						player.restart();
 						player.setUnlock(current_unlock);
@@ -270,7 +260,6 @@ function enemyCollisions() {
 	
 						if(player.lives < 0) {
 							space_released = false;
-							current_music = 0;
 							game_state = GameState.GameOver;
 						}
 					}, 1000);
@@ -278,6 +267,14 @@ function enemyCollisions() {
 			}
 		}
 	}
+		
+	if(key[esc] && game_canpause && !player.dead) {
+		game_canpause = false;
+		game_state = GameState.Paused;
+		game_pause_msg[1] = "";
+		game_pause_msg[2] = "";
+		game_pause_msg[3] = "PAUSED";
+		game_pause_msg[4] = "";
+		game_pause_msg[5] = "";
+	}
 }
-
-

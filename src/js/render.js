@@ -21,36 +21,36 @@ function Render() {
 		break;
 	
 	case GameState.Game: // Actual test code
-		if(bg_music[curr_lev_music].duration <= 0 || bg_music[curr_lev_music].paused && !player.dead)
-			bg_music[curr_lev_music].play();
+		if(bg_music[current_music].duration <= 0 || bg_music[current_music].paused && !player.dead)
+			bg_music[current_music].play();
 		
 		// Draw background
-		ctx.fillStyle = current_level_bg; // Dull blue
+		ctx.fillStyle = current_level.background; // Dull blue
 		ctx.fillRect(player.x - (800 - player.mask_w), player.y - (600 - player.mask_h), 1600, 1200);
 		
 		//bg_image.draw(0, 0, 5120, 2880, 0);
 		
 		// Draw level map
-		for(var y = 0; y < current_level.length; y++)
-			for(var x = 0; x < current_level[y].length; x++)
-				draw_block(current_level[y][x], x, y);
+		for(var y = 0; y < current_level.data.length; y++)
+			for(var x = 0; x < current_level.data[y].length; x++)
+				draw_block(current_level.data[y][x], x, y);
 		
 		// Draw brocolli enemies
-		for(var i = 0; i < enemies.length; i++) {
-			if(enemies[i].dead)
+		for(var i = 0; i < current_level.enemies.length; i++) {
+			if(current_level.enemies[i].dead)
 				continue;
 			
-			switch(enemies[i].id) {
+			switch(current_level.enemies[i].id) {
 				case 0:
-					spr_brocolli.draw(enemies[i].x, enemies[i].y, 64, 64, animCounter / 8);
+					spr_brocolli.draw(current_level.enemies[i].x, current_level.enemies[i].y, 64, 64, animCounter / 8);
 					break;
 					
 				case 1:
-					spr_brussel_sprout.draw(enemies[i].x, enemies[i].y, 64, 64, (animCounter / 8) % 4);
+					spr_brussel_sprout.draw(current_level.enemies[i].x, current_level.enemies[i].y, 64, 64, (animCounter / 8) % 4);
 					break;
 					
 				case 2:
-					spr_spike.draw(enemies[i].x, enemies[i].y, 64, 64, 0);
+					spr_spike.draw(current_level.enemies[i].x, current_level.enemies[i].y, 64, 64, 0);
 					break;
 			}
 		}
@@ -139,8 +139,8 @@ function Render() {
 	
 	case GameState.Popup:
 	case GameState.Paused:
-		if(bg_music[curr_lev_music].duration <= 0 || bg_music[curr_lev_music].paused && !player.dead)
-			bg_music[curr_lev_music].play();
+		if(bg_music[current_music].duration <= 0 || bg_music[current_music].paused && !player.dead)
+			bg_music[current_music].play();
 		
 		// Draw background
 		ctx.fillStyle = "#5522A9"; // Dull blue
@@ -149,9 +149,9 @@ function Render() {
 		//bg_image.draw(0, 0, 5120, 2880, 0);
 		
 		// Draw level map
-		for(var y = 0; y < current_level.length; y++)
-			for(var x = 0; x < current_level[y].length; x++)
-				draw_block(current_level[y][x], x, y);
+		for(var y = 0; y < current_level.data.length; y++)
+			for(var x = 0; x < current_level.data[y].length; x++)
+				draw_block(current_level.data[y][x], x, y);
 				
 		spr_message_box.draw(player.x + player.mask_w / 2 - 312, player.y + player.mask_h / 2 - 376/2, 624, 376, 0);
 		

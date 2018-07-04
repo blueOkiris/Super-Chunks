@@ -17,6 +17,13 @@ var GameState = {
 };
 var game_state = GameState.Menu;
 
+function Level(layout, bg_color, enemy_location, start_location) {
+	this.data = layout;
+	this.background = bg_color;
+	this.enemies = enemy_location;
+	this.start = start_location;
+}
+
 function Player(startx, starty, image_speed, move_speed, punch_speed, gravity, jumpSpeed, maskw, maskh, unlock) {
 	this.x = startx;
 	this.y = starty;
@@ -120,46 +127,21 @@ function Unlockable(xpos, ypos) {
 	this.y = ypos;
 }
 
-var player = new Player(test_level_start[0], test_level_start[1], 1, 4, 10, 0.4, 11, 46, 50, 0);
-var current_level = test_level;
-var enemies = test_level_enemies;
+var player = new Player(0, 0, 1, 4, 10, 0.4, 11, 46, 50, 0);
 
-var test_level_enemies = [new Enemy(64 * 21, 64 * 15, player.grav, 1, -1),
-							new Enemy(64 * 29, 64 * 14, player.grav, 1, -1),
-							new Enemy(64 * 13, 64 * 18, player.grav, 0, -1),
-							new Enemy(64 * 22, 64 * 15, player.grav, 0, 1),
-							new Enemy(64 * 54, 64 * 21, player.grav, 1, -1)];
-	test_level_enemies[3].dir = 1;
-var test_level_bg = "#5522A9";
-	
-var intro_level_enemies = [ // First set of spikes
-							new Enemy(23 * 64, 25 * 64, 0, 2, 1),
-							new Enemy(24 * 64, 25 * 64, 0, 2, 1),
-							new Enemy(25 * 64, 25 * 64, 0, 2, 1),
-							new Enemy(26 * 64, 25 * 64, 0, 2, 1),
-							new Enemy(27 * 64, 25 * 64, 0, 2, 1),
-							new Enemy(28 * 64, 25 * 64, 0, 2, 1),
-							new Enemy(29 * 64, 25 * 64, 0, 2, 1),
-							
-							// Brocolis
-							new Enemy(39 * 64, 21 * 64, player.grav, 0, -1),
-							new Enemy(40 * 64, 21 * 64, player.grav, 0, -1),
-							new Enemy(47 * 64, 20 * 64, player.grav, 0, -1),
-							
-							// Brussel Sprouts
-							new Enemy(52 * 64, 23 * 64, player.grav, 1, -1),
-							new Enemy(57 * 64, 23 * 64, player.grav, 1, 1),
-						];
-var current_level_bg = test_level_bg;
 var current_unlock = 0;
-var curr_lev_music = 0;
+
+var menu_music = 0;
+var intro_level_music = 1;
+
+var current_music = menu_music;
 
 var doubleJumpScroll = new Unlockable(8 * 64, 14.5 * 64);
 var punchScroll = new Unlockable(32 * 64, 13.5 * 64);
 var poundScroll = new Unlockable(45 * 64, 13.5 * 64);
 
 function blockAt(checkx, checky) {
-	return current_level[Math.floor(checky / 64)][Math.floor(checkx / 64)];
+	return current_level.data[Math.floor(checky / 64)][Math.floor(checkx / 64)];
 }
 
 function isSolid(block_id) {
@@ -170,6 +152,8 @@ function isSolid(block_id) {
 		return true;
 	case 3: // Stone block
 		return true;
+	case 4: // Door (black) block
+		return false;
 		
 	default:
 		return false;
