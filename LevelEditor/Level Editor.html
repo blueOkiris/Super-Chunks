@@ -16,26 +16,46 @@
 			<div class="user_window">
 				<div class="title_bar">
 					<div class="pure_text" style="font-size: 16pt;"> SUPER CHUNKS LEVEL EDITOR </div>
-					<button class="up_btn" id="up_button">&Hat;</button>
+					<button class="up_btn" id="up_button" onclick="move(0, -1)">&Hat;</button>
 				</div>
 				
 				<canvas id="level_canvas" width="800" height="600" class="level_canvas">Upgrade your dang browser</canvas>
 				
 				<div class="menu_bar">
-					<button class="down_btn" id="down_btn">v</button>
-					<button class="menu_btn" id="new_btn">New</button>
-					<button class="menu_btn" id="resize_btn">Resize</button>
+					<button class="down_btn" id="down_btn" onclick="move(0, 1)">v</button>
+					
+					<button class="menu_btn" id="new_btn" onclick="reset()">New</button>
+					<button class="menu_btn" id="resize_btn" onclick="resize()">Resize</button>
+					
 					<div class="pure_text" style="font-size: 9pt;"> WIDTH: </div>
-					<input class="menu_txt" type="text" name="width">
+					<input class="menu_txt" type="text" id="width" value="14">
+					
 					<div class="pure_text" style="font-size: 9pt;"> HEIGHT: </div>
- 					<input class="menu_txt" type="text" name="height">
+ 					<input class="menu_txt" type="text" id="height" value="10">
+					
+					<button class="menu_btn2" id="lshift_btn"> &lt; </button>
+					
+					<div class="double_menu_btn">
+						<button id="ushift_btn"> &Hat; </button>
+						<button id="dshift_btn"> v </button>
+					</div>
+					
+					<button class="menu_btn2" id="rshift_btn"> &gt; </button>
+					
+					<div class="pure_text" style="font-size: 9pt; grid-row: 3;"> 
+						SHIFT&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+					</div>
+					
+					<div class="pure_text" style="font-size: 9pt; grid-row: 3;"></div>
+					
+					<button class="menu_btn2" id="rshift_btn" onclick="output()"> OUTPUT </button>
 				</div>
 				
 				<div class="lt_side_bar">
-					<button class="side_btn">&lt;</button>
+					<button class="side_btn" onclick="move(-1, 0)">&lt;</button>
 				</div>
 				
-				<div class="rt_side_bar">
+				<div class="rt_side_bar" onclick="move(1, 0)">
 					<button class="side_btn">&gt;</button>
 				</div>
 				
@@ -47,7 +67,7 @@
 			
 			<div class="tile_window">
 				<div class="pure_text" style="font-size: 11pt;"> TILE CHOOSER </div>
-				<canvas id="tile_canvas" class="tile_canvas" width="196" height="733">Upgrade your dang browser</canvas>
+				<canvas id="tile_canvas" class="tile_canvas" width="196" height="759">Upgrade your dang browser</canvas>
 			</div>
 		</div>
 	</body>

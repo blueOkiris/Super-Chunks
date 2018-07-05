@@ -1,6 +1,6 @@
 @font-face {
-  font-family: 'Pixeled';
-  src: url('./Pixeled.ttf');
+	font-family: 'Pixeled';
+	src: url('./Pixeled.ttf');
 }
 
 body {
@@ -23,10 +23,10 @@ body {
 	border-style: solid;
 	border-color: black;	
 	background-color: #AAAAAA;
-	
+
 	/* Set grid position */
 	grid-area: tilew;
-	
+
 	display: grid;
 	grid-template-columns: 1fr;
 	grid-template-rows: 0.05fr 1fr;
@@ -41,22 +41,23 @@ body {
 	left: 50%;
 	transform: translate(-50%, -50%);
 	/*height: 90vh;*/
-	
+
 	/* Draw a border and fill in the area with a nice gray */
 	border-width: 10px;
 	border-style: solid;
 	border-color: black;	
 	background-color: #AAAAAA;
-	
+
 	/* Set grid position */
 	grid-area: windw;
-	
+
 	display: grid;
 	grid-template-columns: 5fr 810px 5fr;
-	grid-template-rows: 95px 610px 0.5fr;
+	grid-template-rows: 85px 610px 0.01fr 0.01fr;
 	grid-template-areas:
 		"lt_crn titleb rt_crn"
 		"lsideb canvas rsideb"
+		"lb_crn bottmb rb_crn";
 		"lb_crn bottmb rb_crn";
 }
 
@@ -69,18 +70,29 @@ body {
 	margin: auto;
 	width: 100%;
 	grid-area: titleb;
-	
-  	display: grid;
-  	grid-template-columns: 1fr;
-  	grid-template-rows: 1fr 1fr;
+
+	display: grid;
+	grid-template-columns: 1fr;
+	grid-template-rows: 1fr 0.25fr;
+}
+
+.up_btn {
+	grid-column: 1;
+	grid-row: 2;
+
+	border-width: 2px;
+	border-style: solid;
+	border-color: black;
+
+	height: 23px;
 }
 
 .menu_bar {
 	grid-area: bottmb;
-	
+
 	display: grid;
 	grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr;
-	grid-template-rows: 1fr 1fr;
+	grid-template-rows: 0.5fr 1fr 1fr;
 }
 
 .menu_btn {
@@ -88,23 +100,30 @@ body {
 	height: 90%;
 	margin: auto;
 	font-size: 9pt;
+	grid-row: 2;
 }
 
-.up_btn {
-	grid-column: 1;
-	grid-row: 2;
+.menu_btn2 {
+	/*font-family: 'Pixeled', serif;*/
+	height: 90%;
+	margin: auto;
+	font-size: 9pt;
+	grid-row: 3;
+}
+
+.double_menu_btn {
+	grid-row: 3;
 	
-	border-width: 2px;
-	border-style: solid;
-	border-color: black;
+	display: grid;
 	
-	height: 35px;
+	grid-template-columns: 1fr;
+	grid-template-rows: 1fr 1fr;
 }
 
 .down_btn {
 	grid-column: 1/7;
 	grid-row: 1;
-	
+
 	border-width: 2px;
 	border-style: solid;
 	border-color: black;
@@ -128,7 +147,7 @@ body {
 .side_btn {
 	height: 100%;
 	width: 100%;
-	
+
 	border-width: 2px;
 	border-style: solid;
 	border-color: black;

@@ -3,10 +3,13 @@ var tile_canvas = document.getElementById("tile_canvas");
 var ctx = canvas.getContext('2d');
 var tile_ctx = tile_canvas.getContext('2d');
 
+document.getElementById("width").value = 14;
+document.getElementById("height").value = 10;
+
 ctx.fillStyle = "#FFFFFF";
 ctx.fillRect(0, 0, 800, 600);
 tile_ctx.fillStyle = "#606060";
-tile_ctx.fillRect(0, 0, 196, 733);
+tile_ctx.fillRect(0, 0, 196, 759);
 
 var width = 14;
 var height = 10;
@@ -52,39 +55,60 @@ dirtBlock.onload = dirtRead;
 stoneBlock.onload = stoneRead;
 
 function drawEditLevel() {
-	var i = 0, j = 0;
-	for(i = start_x; i < width; i++) {
-		for(j = start_y; j < height; j++) {
-			switch(level_data[j][i]) {
-				case 0:
-					ctx.fillStyle = "#000000";
-					ctx.fillRect((i - start_x) * 64 - 16, (j - start_y) * 64, 64, 64);
-					ctx.fillStyle = "#2490FF";
-					ctx.fillRect((i - start_x) * 64 - 14, (j - start_y) * 64 + 2, 60, 60);
-					break;
-				
-				case 1: // Grass
-					ctx.drawImage(dirtBlock, 
-								0, 0, 64, 64,
-								(i - start_x) * 64 - 16, (j - start_y) * 64, 64, 64);
-					break;
+	ctx.fillStyle = "#FFFFFF";
+	ctx.fillRect(0, 0, 800, 600);
+	
+	var xind = start_x;
+	while(xind < width + start_x) {
+		var yind = start_y;
+		while(yind < height + start_y) {
+			if(xind >= 0 && yind >= 0 && xind < width && yind < height) { // only draw if onscreen
+				switch(level_data[yind][xind]) {
+					case 0:
+						ctx.fillStyle = "#000000";
+						ctx.fillRect((xind - start_x) * 64 - 16, (yind - start_y) * 64, 64, 64);
+						ctx.fillStyle = "#2490FF";
+						ctx.fillRect((xind - start_x) * 64 - 14, (yind - start_y) * 64 + 2, 60, 60);
+						break;
 					
-				case 2: // Dirt
-					ctx.drawImage(dirtBlock, 
-								64, 0, 64, 64,
-								(i - start_x) * 64 - 16, (j - start_y) * 64, 64, 64);
-					break;
+					case 1: // Grass
+						ctx.drawImage(dirtBlock, 
+									0, 0, 64, 64,
+									(xind - start_x) * 64 - 16, (yind - start_y) * 64, 64, 64);
+						break;
+						
+					case 2: // Dirt
+						ctx.drawImage(dirtBlock, 
+									64, 0, 64, 64,
+									(xind - start_x) * 64 - 16, (yind - start_y) * 64, 64, 64);
+						break;
 
-				case 3: // Dirt
-					ctx.drawImage(stoneBlock, 
-								0, 0, 64, 64,
-								(i - start_x) * 64 - 16, (j - start_y) * 64, 64, 64);
-					break;
+					case 3: // Dirt
+						ctx.drawImage(stoneBlock, 
+									0, 0, 64, 64,
+									(xind - start_x) * 64 - 16, (yind - start_y) * 64, 64, 64);
+						break;
+				}
 			}
+			
+			yind++;
 		}
+		
+		xind++;
 	}
 	
 	//alert("Refreshed level!");
+}
+
+function reset() {
+	level_data = start_level_data;
+	width = 14;
+	height = 10;
+	
+	document.getElementById("width").value = 14;
+	document.getElementById("height").value = 10;
+	
+	drawEditLevel();
 }
 
 var current_tile = 0;
@@ -110,6 +134,7 @@ function drawTileMenu() {
 	//tile_ctx.fillRect(10, 264, 64, 64);
 	//tile_ctx.fillRect(112, 264, 64, 64);
 	//tile_ctx.fillRect(10, 348, 64, 64);
+	tile_ctx.fillRect(112, 348, 64, 64);
 	
 	tile_ctx.fillStyle = "#2490FF";
 	tile_ctx.fillRect(12, 182, 60, 60);
@@ -118,8 +143,111 @@ function drawTileMenu() {
 	tile_ctx.drawImage(stoneBlock, 0, 0, 64, 64, 10, 348, 64, 64);
 }
 
-function resize() {
+function move(x, y) {
+	start_x += x;
+	start_y += y;
+	
+	drawEditLevel();
+	
+	//alert(start_x);
+}
+
+function shift(x, y) {
 	
 }
 
-//document.body.onload = start();
+window.onkeydown = function(e) {
+	switch(e.key) {
+		case "ArrowLeft":
+			move(-1, 0);
+			break;
+			
+		case "ArrowRight":
+			move(1, 0);
+			break;
+		
+		case "ArrowUp":
+			move(0, -1);
+			break;
+		
+		case "ArrowDown":
+			move(0, 1);
+			break;
+	}
+}
+
+function resize() {
+	if(w < 5 || h < 5)
+		return;
+	
+	var w = parseInt(document.getElementById("width").value);
+	var h = parseInt(document.getElementById("height").value);
+	
+	if(w > width) {
+		if(width < start_level_data[0].length)
+			width = Math.min(start_level_data[0].length, w);
+		
+		var i, j;
+		for(i = 0; i < Math.max(height, start_level_data.length); i++) {
+			for(j = 0; j < w - width; j++)
+				start_level_data[i].push(0);
+			start_level_data[i].length = w;
+		}
+		
+		width = w;
+		
+		drawEditLevel();
+	}
+	
+	if(h > height) {
+		if(height < start_level_data.length)
+			height = Math.min(start_level_data.length, h);
+		
+		var newRow = [];
+		var i;
+		for(i = 0; i < Math.max(width, start_level_data[0].length); i++)
+			newRow.push(0);
+		newRow.length = width;
+		
+		for(i = 0; i < h - height; i++)
+			start_level_data.push(newRow);
+		
+		height = h;
+		
+		drawEditLevel();
+	}
+	
+	if(w < width) {
+		width = w;
+		drawEditLevel();
+	}
+	
+	if(h < height) {
+		height = h;
+		drawEditLevel();
+	}
+}
+
+function output() {
+	var level = "level = [\n";
+	
+	var i = 0;
+	while(i < height) {
+		level += "[";
+		
+		var j = 0;
+		while(j < width) {
+			level += level_data[i][j] + ",";
+			
+			j++;
+		}
+		
+		level += "],\n";
+		
+		i++;
+	}
+	
+	level += "];"
+	
+	alert(level);
+}
