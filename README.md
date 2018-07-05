@@ -8,6 +8,10 @@ The evil King Veggie has taken over the world. You are Chunks, a chunk of meat w
 ## Running
 Open index.html in your web browser (Ideally Firefox or Chrome)
 
+## Donate
+If you want to help keep me working on this project rather than other projects, you could donate to my sanity fund here:
+[![paypal](https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif)](https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=T4QAWP9ZC85PG&lc=US&item_name=Dylan%27s%20Super%2dChunks%20Sanity%20Fund&item_number=8675309&currency_code=USD&bn=PP%2dDonationsBF%3abtn_donate_SM%2egif%3aNonHosted)
+
 ## Credits
 Game Engine - Dylan Turner
 
