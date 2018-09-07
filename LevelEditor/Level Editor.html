@@ -33,14 +33,14 @@
 					<div class="pure_text" style="font-size: 9pt;"> HEIGHT: </div>
  					<input class="menu_txt" type="text" id="height" value="10">
 					
-					<button class="menu_btn2" id="lshift_btn"> &lt; </button>
+					<button class="menu_btn2" id="lshift_btn" onclick="shift(-1, 0)"> &lt; </button>
 					
 					<div class="double_menu_btn">
-						<button id="ushift_btn"> &Hat; </button>
-						<button id="dshift_btn"> v </button>
+						<button id="ushift_btn" onclick="shift(0, -1)"> &Hat; </button>
+						<button id="dshift_btn" onclick="shift(0, 1)"> v </button>
 					</div>
 					
-					<button class="menu_btn2" id="rshift_btn"> &gt; </button>
+					<button class="menu_btn2" id="rshift_btn" onclick="shift(1, 0)"> &gt; </button>
 					
 					<div class="pure_text" style="font-size: 9pt; grid-row: 3;"> 
 						SHIFT&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;

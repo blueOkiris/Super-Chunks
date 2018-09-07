@@ -17,6 +17,12 @@ var height = 10;
 var start_x = 0;
 var start_y = 0;
 
+function placeOrSelectBlock(e) {
+	//alert('click');
+}
+
+document.addEventListener("click", placeOrSelectBlock, false);
+
 var start_level_data = 
 [
 	[3,3,3,3,3,3,3,3,3,3,3,3,3,3],
@@ -32,6 +38,8 @@ var start_level_data =
 ];
 
 var level_data = start_level_data;
+
+var selectedBlock = 3;
 
 var images = 0;
 function dirtRead() {
@@ -128,7 +136,31 @@ function drawTileMenu() {
 	
 	tile_ctx.fillStyle = "#000000";
 	tile_ctx.fillText("CHOOSE TILE: ", 10, 160);
+
+	//  Draw selection
+	switch(selectedBlock) {
+		case 0: // Blank
+			tile_ctx.fillStyle = "#FFFF00";
+			tile_ctx.fillRect(8, 178, 68, 68);
+			break;
+		
+		case 1: // Grass
+			tile_ctx.fillStyle = "#FFFF00";
+			tile_ctx.fillRect(8, 262, 68, 68);
+			break;
+		
+		case 2: // DIrt
+			tile_ctx.fillStyle = "#FFFF00";
+			tile_ctx.fillRect(110, 262, 68, 68);
+			break;
+		
+		case 3: // Stone
+			tile_ctx.fillStyle = "#FFFF00";
+			tile_ctx.fillRect(8, 346, 68, 68);
+			break;
+	}
 	
+	tile_ctx.fillStyle = "#000000";
 	tile_ctx.fillRect(10, 180, 64, 64);
 	tile_ctx.fillRect(112, 180, 64, 64);
 	//tile_ctx.fillRect(10, 264, 64, 64);
@@ -153,7 +185,37 @@ function move(x, y) {
 }
 
 function shift(x, y) {
-	
+	// Resize to make room for new variables
+	if(x != 0) {
+		document.getElementById("width").value = parseInt(document.getElementById("width").value) + Math.abs(x);
+		resize();
+	}
+	if(y != 0) {
+		document.getElementById("height").value = parseInt(document.getElementById("height").value) + Math.abs(y);
+		resize();
+	}
+
+	var yind = 0, xind = 0;
+	if(x > 0) {
+		for(yind = 0; yind < level_data.length; yind++ ) { // On each row, shift everything right
+			for(xind = level_data[0].length - 2; xind >= 0; xind--)
+				level_data[yind][xind + 1] = level_data[yind][xind]; // first one level_data[level_data[0].length]
+			level_data[yind][0] = 0;
+		}
+
+		drawEditLevel();
+	} else if(x < 0)
+		move(-x, 0);
+
+	if(y > 0) {
+		for(yind = level_data.length - 2; yind >= 0; yind--)
+			level_data[yind + 1] = level_data[yind];
+		for(xind = 0; xind < level_data[0].length; xind++)
+			level_data[0][xind] =  0;
+		
+		drawEditLevel();
+	} else if(y < 0)
+		move(0, -y);
 }
 
 window.onkeydown = function(e) {
@@ -172,6 +234,22 @@ window.onkeydown = function(e) {
 		
 		case "ArrowDown":
 			move(0, 1);
+			break;
+		
+		case "a":
+			shift(-1, 0);
+			break;
+			
+		case "d":
+			shift(1, 0);
+			break;
+		
+		case "w":
+			shift(0, -1);
+			break;
+		
+		case "s":
+			shift(0, 1);
 			break;
 	}
 }
