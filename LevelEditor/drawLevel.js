@@ -17,11 +17,64 @@ var height = 10;
 var start_x = 0;
 var start_y = 0;
 
-function placeOrSelectBlock(e) {
-	//alert('click');
+// Take screen coordinates and convert them into the location in the level_data array
+function getArrayLocFromScreen(x, y) {
+	var actualStartX = start_x * 64, actualStartY = start_y * 64;
+	var location = [y + actualStartY, x + actualStartX];
+	location[0] = Math.floor(location[0] / 64);
+	location[1] = Math.floor(location[1] / 64);
+
+	return location;
 }
 
-document.addEventListener("click", placeOrSelectBlock, false);
+// Check if two points  are in a bounding box
+function RectContains(x, y, rx, ry, rw, rh) {
+	return !(x < rx || x > rx + rw || y < ry || y > ry + rh);
+}
+
+canvas.onmousedown = function(e) {
+	//alert('click');
+	// Get mouse locations
+	var mouse_x = e.pageX - this.offsetLeft;
+	var mouse_y = e.pageY - this.offsetTop;
+
+	// Change mouse coordinates into level coordinates
+	var dataPosition = getArrayLocFromScreen(mouse_x, mouse_y);
+	//alert("level_data[" + dataPosition[1] + "][" + dataPosition[0] + "]");
+
+	// Change the type of block to the selected block
+	level_data[dataPosition[0]][dataPosition[1]] = selectedBlock;
+	drawEditLevel();
+}
+
+tile_canvas.onmousedown = function(e) {
+	// Get mouse locations
+	var mouse_x = e.pageX - this.offsetLeft;
+	var mouse_y = e.pageY - this.offsetTop;
+
+	/* From Draw Tile Menu
+	 * 
+	 * tile_ctx.fillRect(12, 182, 60, 60);
+	 * tile_ctx.drawImage(dirtBlock, 0, 0, 64, 64, 10, 264, 64, 64);
+	 * tile_ctx.drawImage(dirtBlock, 64, 0, 64, 64, 112, 264, 64, 64);
+	 * tile_ctx.drawImage(stoneBlock, 0, 0, 64, 64, 10, 348, 64, 64); 
+	 * 
+	 */
+
+	// Choose an object type
+	if(RectContains(mouse_x, mouse_y, 12, 182, 64, 64)) // Check for empty space
+		selectedBlock = 0;
+	else if(RectContains(mouse_x, mouse_y, 10, 264, 64, 64)) // Check for grass
+		selectedBlock = 1;
+	else if(RectContains(mouse_x, mouse_y, 112, 264, 64, 64)) // Check for dirt
+		selectedBlock = 2;
+	else if(RectContains(mouse_x, mouse_y, 10, 348, 64, 64)) // Check for stone
+		selectedBlock = 3;
+	else
+		return;
+	
+	drawTileMenu();
+}
 
 var start_level_data = 
 [
@@ -122,6 +175,10 @@ function reset() {
 var current_tile = 0;
 
 function drawTileMenu() {
+	// Clear screen
+	tile_ctx.fillStyle = "#606060";
+	tile_ctx.fillRect(0, 0, 196, 759);
+
 	tile_ctx.fillStyle = "#000000";
 	tile_ctx.font = "12pt Pixeled";
 	tile_ctx.fillText("CURRENT TILE: ", 10, 30);

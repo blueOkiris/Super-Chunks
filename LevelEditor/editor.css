@@ -57,7 +57,7 @@ body {
 	grid-template-areas:
 		"lt_crn titleb rt_crn"
 		"lsideb canvas rsideb"
-		"lb_crn bottmb rb_crn";
+		"lb_crn bottmb rb_crn"
 		"lb_crn bottmb rb_crn";
 }
 
