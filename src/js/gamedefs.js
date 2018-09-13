@@ -45,7 +45,7 @@ function Player(startx, starty, image_speed, move_speed, punch_speed, gravity, j
 	this.dir = 1;
 	
 	this.grounded = false;
-	
+	this.climbing = false;
 	this.canDoubleJump = true;
 	
 	this.punching = false;
@@ -141,7 +141,11 @@ var doubleJumpScroll = new Unlockable(8 * 64, 14.5 * 64);
 var punchScroll = new Unlockable(32 * 64, 13.5 * 64);
 var poundScroll = new Unlockable(45 * 64, 13.5 * 64);
 
-function blockAt(checkx, checky) {
+function blockAt(checkx, checky, outMsg = "") {
+	if(outMsg != "") {
+		console.log(outMsg);
+		console.log("(" + Math.floor(checkx / 64), Math.floor(checky / 64) + ")");
+	}
 	return current_level.data[Math.floor(checky / 64)][Math.floor(checkx / 64)];
 }
 

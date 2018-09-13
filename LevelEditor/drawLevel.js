@@ -62,7 +62,7 @@ tile_canvas.onmousedown = function(e) {
 	 */
 
 	// Choose an object type
-	if(RectContains(mouse_x, mouse_y, 12, 182, 64, 64)) // Check for empty space
+	if(RectContains(mouse_x, mouse_y, 12, 180, 64, 64)) // Check for empty space
 		selectedBlock = 0;
 	else if(RectContains(mouse_x, mouse_y, 10, 264, 64, 64)) // Check for grass
 		selectedBlock = 1;
@@ -70,6 +70,10 @@ tile_canvas.onmousedown = function(e) {
 		selectedBlock = 2;
 	else if(RectContains(mouse_x, mouse_y, 10, 348, 64, 64)) // Check for stone
 		selectedBlock = 3;
+	else if(RectContains(mouse_x, mouse_y, 112, 348, 64, 64))
+		selectedBlock = 4;
+	else if(RectContains(mouse_x, mouse_y, 112, 180, 64, 64))
+		selectedBlock = 5;
 	else
 		return;
 	
@@ -92,13 +96,13 @@ var start_level_data =
 
 var level_data = start_level_data;
 
-var selectedBlock = 3;
+var selectedBlock = 0;
 
 var images = 0;
 function dirtRead() {
 	images++;
 	
-	if(images >= 2) {
+	if(images >= 3) {
 		drawEditLevel();
 		drawTileMenu();
 	}
@@ -106,7 +110,15 @@ function dirtRead() {
 function stoneRead() {
 	images++;
 	
-	if(images >= 2) {
+	if(images >= 3) {
+		drawEditLevel();
+		drawTileMenu();
+	}
+}
+function ladderRead() {
+	images++;
+
+	if(images >= 3) {
 		drawEditLevel();
 		drawTileMenu();
 	}
@@ -114,6 +126,7 @@ function stoneRead() {
 
 dirtBlock.onload = dirtRead;
 stoneBlock.onload = stoneRead;
+ladder.onload = ladderRead;
 
 function drawEditLevel() {
 	ctx.fillStyle = "#FFFFFF";
@@ -149,6 +162,18 @@ function drawEditLevel() {
 									0, 0, 64, 64,
 									(xind - start_x) * 64 - 16, (yind - start_y) * 64, 64, 64);
 						break;
+					
+					case 4: // Door
+						ctx.fillStyle = "#000000";
+						ctx.fillRect((xind - start_x) * 64 - 16, (yind - start_y) * 64, 64, 64);
+						break;
+					
+					case 5: // Ladder
+						ctx.drawImage(ladder, 
+									0, 0, 64, 64,
+									(xind - start_x) * 64 - 16, (yind - start_y) * 64, 64, 64);
+						break;
+
 				}
 			}
 			
@@ -215,21 +240,31 @@ function drawTileMenu() {
 			tile_ctx.fillStyle = "#FFFF00";
 			tile_ctx.fillRect(8, 346, 68, 68);
 			break;
+		
+		case 4: // Door
+			tile_ctx.fillStyle = "#FFFF00";
+			tile_ctx.fillRect(110, 346, 68, 68);
+			break;
+		
+		case 5: // Ladder
+			tile_ctx.fillStyle = "#FFFF00";
+			tile_ctx.fillRect(110, 178, 68, 68);
+			break;
 	}
 	
 	tile_ctx.fillStyle = "#000000";
 	tile_ctx.fillRect(10, 180, 64, 64);
-	tile_ctx.fillRect(112, 180, 64, 64);
-	//tile_ctx.fillRect(10, 264, 64, 64);
-	//tile_ctx.fillRect(112, 264, 64, 64);
-	//tile_ctx.fillRect(10, 348, 64, 64);
 	tile_ctx.fillRect(112, 348, 64, 64);
+
+	tile_ctx.fillStyle = "#2020FF";
+	tile_ctx.fillRect(112, 180, 64, 64);
 	
 	tile_ctx.fillStyle = "#2490FF";
 	tile_ctx.fillRect(12, 182, 60, 60);
 	tile_ctx.drawImage(dirtBlock, 0, 0, 64, 64, 10, 264, 64, 64);
 	tile_ctx.drawImage(dirtBlock, 64, 0, 64, 64, 112, 264, 64, 64);
 	tile_ctx.drawImage(stoneBlock, 0, 0, 64, 64, 10, 348, 64, 64);
+	tile_ctx.drawImage(ladder, 0, 0, 64, 64, 112, 180, 64, 64);
 }
 
 function move(x, y) {

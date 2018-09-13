@@ -74,7 +74,10 @@ function Render() {
 		} else {
 			if(!player.dead && (key[s_key] && player.poundUnlocked) && !player.grounded)
 				spr_chunks.draw(player.x, player.y, 64, 64, 18);
-			else if(player.dir == 1) {
+			else if(player.climbing) {
+				var walk_cycle_index = (animCounter / 4) % 4;
+				spr_chunks.draw(player.x, player.y, 64, 64, walk_cycle_index < 2 ? 10 : 10 + spr_chunks_num);
+			} else if(player.dir == 1) {
 				if(player.punching) {
 					spr_chunks.draw(player.x, player.y, 64, 64, 7);
 				} else if(!player.grounded) {
@@ -198,6 +201,10 @@ function draw_block(block_id, x, y) {
 	
 	case 4: // black block (next level)
 		spr_black_block.draw(x * 64, y * 64, 64, 64, 0);
+		break;
+	
+	case 5: // ladder
+		spr_ladder.draw(x * 64, y * 64, 64, 64, 0);
 		break;
 	}
 }

@@ -166,7 +166,10 @@ function collisionChecks() {
 	if(!player.doubleJumpUnlocked)
 		player.canDoubleJump = false;
 	
-	if(key[w_key] && jump && (player.grounded || player.canDoubleJump) && !player.dead) {
+	if(key[w_key] && blockAt(player.x, player.y) == 5) { // Climb ladder
+		player.climbing = true;
+		player.vsp = -player.jmp_spd / 2;
+	} else if(key[w_key] && jump && (player.grounded || player.canDoubleJump) && !player.dead) {
 		jump_sound.pause();
 		jump_sound.current_time = 0;
 		
@@ -183,6 +186,9 @@ function collisionChecks() {
 		if(current_level == intro_level)
 			changeLevel(test_level, -1);
 	}
+	
+	if(!key[w_key] || blockAt(player.x, player.y) != 5)
+		player.climbing = false;
 	
 	if(player.grounded)
 		player.canDoubleJump = true;
