@@ -70,44 +70,34 @@ function game_loop() {
 // Key pressed event
 function OnKeyDown(event) {
 	switch(event.key) {
-		case "ArrowUp":
-			key[up] = true;
-			break;
-		
-		case "ArrowDown":
-			key[down] = true;
-			break;
-			
-		case "ArrowLeft":
-			key[left] = true;
-			break;
-			
-		case "ArrowRight":
-			key[right] = true;
-			break;
-		
-		case " ":
-			key[space] = true;
-			break;
-			
 		case "z":
 			key[z_key] = true;
 			break;
 		
+		case "ArrowUp":
+		case " ":
 		case "w":
 			key[w_key] = true;
+			key[space] = true;
+			key[up] = true;
 			break;
 		
+		case "ArrowLeft":
 		case "a":
 			key[a_key] = true;
+			key[left] = true;
 			break;
 			
+		case "ArrowDown":
 		case "s":
 			key[s_key] = true;
+			key[down] = true;
 			break;
-			
+
+		case "ArrowRight":	
 		case "d":
 			key[d_key] = true;
+			key[right] = true;
 			break;
 			
 		case "Enter":
@@ -120,48 +110,38 @@ function OnKeyDown(event) {
 			break;
 	}
 }
+
 // Key released event
 function OnKeyUp(event) {
 	switch(event.key) {
-		case "ArrowUp":
-			key[up] = false;
-			break;
-		
-		case "ArrowDown":
-			key[down] = false;
-			break;
-			
-		case "ArrowLeft":
-			key[left] = false;
-			break;
-			
-		case "ArrowRight":
-			key[right] = false;
-			break;
-		
-		case " ":
-			key[space] = false;
-			space_released = true;
-			break;
-		
 		case "z":
 			key[z_key] = false;
 			break;
 		
+		case " ":
+			space_released = true;
+		case "ArrowUp":
 		case "w":
 			key[w_key] = false;
+			key[space] = false;
 			break;
 		
+		case "ArrowLeft":
 		case "a":
 			key[a_key] = false;
+			key[left] = false;
 			break;
-			
+				
+		case "ArrowDown":
 		case "s":
 			key[s_key] = false;
+			key[down] = false;
 			break;
 			
+		case "ArrowRight":
 		case "d":
 			key[d_key] = false;
+			key[right] = false;
 			break;
 		
 		case "Enter":

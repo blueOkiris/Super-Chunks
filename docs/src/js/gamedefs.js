@@ -14,8 +14,16 @@ var GameState = {
 	GameOver: 3,
 	Paused: 4,
 	Popup: 5,
+	LevelChange: 6,
 };
 var game_state = GameState.Menu;
+
+function Level(layout, bg_color, enemy_location, start_location) {
+	this.data = layout;
+	this.background = bg_color;
+	this.enemies = enemy_location;
+	this.start = start_location;
+}
 
 function Player(startx, starty, image_speed, move_speed, punch_speed, gravity, jumpSpeed, maskw, maskh, unlock) {
 	this.x = startx;
@@ -37,7 +45,7 @@ function Player(startx, starty, image_speed, move_speed, punch_speed, gravity, j
 	this.dir = 1;
 	
 	this.grounded = false;
-	
+	this.climbing = false;
 	this.canDoubleJump = true;
 	
 	this.punching = false;
@@ -58,6 +66,16 @@ function Player(startx, starty, image_speed, move_speed, punch_speed, gravity, j
 	this.doubleJumpUnlocked = unlock == 1 || unlock == 3 || unlock == 4 || unlock == 7;
 	this.punchUnlocked = unlock == 2 || unlock == 4 || unlock == 6 || unlock == 7;
 	this.poundUnlocked = unlock == 3 || unlock == 5 || unlock == 6 || unlock == 7;
+	
+	this.setUnlock = function(x) {
+		this.doubleJumpUnlocked = x == 1 || x == 3 || x == 4 || x == 7;
+		this.punchUnlocked = x == 2 || x == 4 || x == 6 || x == 7;
+		this.poundUnlocked = x == 3 || x == 5 || x == 6 || x == 7;
+	}
+	
+	this.saveUnlock = function() {
+		
+	}
 	
 	this.restart = function() {
 		this.x = startx;
@@ -110,27 +128,25 @@ function Unlockable(xpos, ypos) {
 	this.y = ypos;
 }
 
-var player = new Player(test_level_start[0], test_level_start[1], 1, 4, 10, 0.4, 11, 46, 50, 0);
-var current_level = test_level;
-var enemies = test_level_enemies;
+var player = new Player(0, 0, 1, 4, 10, 0.4, 11, 46, 50, 0);
 
-var test_level_enemies = [new Enemy(64 * 21, 64 * 15, player.grav, 1, -1),
-							new Enemy(64 * 29, 64 * 14, player.grav, 1, -1),
-							new Enemy(64 * 13, 64 * 18, player.grav, 0, -1),
-							new Enemy(64 * 22, 64 * 15, player.grav, 0, 1),
-							new Enemy(64 * 54, 64 * 21, player.grav, 1, -1)];
-	test_level_enemies[3].dir = 1;
-var test_level_bg = "#5522A9";
-	
-var intro_level_enemies = [];
-var current_level_bg = test_level_bg;
+var current_unlock = 0;
+
+var menu_music = 0;
+var intro_level_music = 1;
+
+var current_music = menu_music;
 
 var doubleJumpScroll = new Unlockable(8 * 64, 14.5 * 64);
 var punchScroll = new Unlockable(32 * 64, 13.5 * 64);
 var poundScroll = new Unlockable(45 * 64, 13.5 * 64);
 
-function blockAt(checkx, checky) {
-	return current_level[Math.floor(checky / 64)][Math.floor(checkx / 64)];
+function blockAt(checkx, checky, outMsg = "") {
+	if(outMsg != "") {
+		console.log(outMsg);
+		console.log("(" + Math.floor(checkx / 64), Math.floor(checky / 64) + ")");
+	}
+	return current_level.data[Math.floor(checky / 64)][Math.floor(checkx / 64)];
 }
 
 function isSolid(block_id) {
@@ -141,6 +157,8 @@ function isSolid(block_id) {
 		return true;
 	case 3: // Stone block
 		return true;
+	case 4: // Door (black) block
+		return false;
 		
 	default:
 		return false;
@@ -154,4 +172,5 @@ var game_popup = true;
 var game_pause_msg = ["", "", "", "PAUSED", "", "", "", "PRESS P OR ESCAPE TO RESUME"];
 var game_popup_msg = ["", "", "", "", "", "", "", "PRESS ENTER TO RESUME"];
 
+var change_level = false;
 
