@@ -74,11 +74,13 @@ function OnKeyDown(event) {
 			key[z_key] = true;
 			break;
 		
-		case "ArrowUp":
 		case " ":
+			key[space] = true;
+			break;
+		
+		case "ArrowUp":
 		case "w":
 			key[w_key] = true;
-			key[space] = true;
 			key[up] = true;
 			break;
 		
@@ -119,10 +121,13 @@ function OnKeyUp(event) {
 		
 		case " ":
 			space_released = true;
+			key[space] = false;
+			break;
+
 		case "ArrowUp":
 		case "w":
 			key[w_key] = false;
-			key[space] = false;
+			key[up] = false;
 			break;
 		
 		case "ArrowLeft":
