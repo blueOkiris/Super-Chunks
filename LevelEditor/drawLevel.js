@@ -287,7 +287,7 @@ function shift(x, y) {
 		resize();
 	}
 
-	var yind = 0, xind = 0;
+	var yind = 0, xind = 0, x2 = 0;
 	if(x > 0) {
 		for(yind = 0; yind < level_data.length; yind++ ) { // On each row, shift everything right
 			for(xind = level_data[0].length - 2; xind >= 0; xind--)
@@ -300,8 +300,10 @@ function shift(x, y) {
 		move(-x, 0);
 
 	if(y > 0) {
-		for(yind = level_data.length - 2; yind >= 0; yind--)
-			level_data[yind + 1] = level_data[yind];
+		for(yind = level_data.length - 2; yind >= 0; yind--) {
+			for(x2 = 0; x2 < level_data[yind].length; x2++)
+				level_data[yind + 1][x2] = level_data[yind][x2];
+		}
 		for(xind = 0; xind < level_data[0].length; xind++)
 			level_data[0][xind] =  0;
 		
@@ -354,14 +356,14 @@ function resize() {
 	var h = parseInt(document.getElementById("height").value);
 	
 	if(w > width) {
-		if(width < start_level_data[0].length)
-			width = Math.min(start_level_data[0].length, w);
+		if(width < level_data[0].length)
+			width = Math.min(level_data[0].length, w);
 		
 		var i, j;
-		for(i = 0; i < Math.max(height, start_level_data.length); i++) {
+		for(i = 0; i < Math.max(height, level_data.length); i++) {
 			for(j = 0; j < w - width; j++)
-				start_level_data[i].push(0);
-			start_level_data[i].length = w;
+				level_data[i].push(0);
+			level_data[i].length = w;
 		}
 		
 		width = w;
@@ -370,17 +372,17 @@ function resize() {
 	}
 	
 	if(h > height) {
-		if(height < start_level_data.length)
-			height = Math.min(start_level_data.length, h);
+		if(height < level_data.length)
+			height = Math.min(level_data.length, h);
 		
-		var newRow = [];
-		var i;
-		for(i = 0; i < Math.max(width, start_level_data[0].length); i++)
-			newRow.push(0);
-		newRow.length = width;
-		
-		for(i = 0; i < h - height; i++)
-			start_level_data.push(newRow);
+		var i, j;
+		for(i = 0; i < h - height; i++) {
+			var newRow = [];
+			for(j = 0; j < Math.max(width, level_data[0].length); j++)
+				newRow.push(0);
+			newRow.length = width;
+			level_data.push(newRow);
+		}
 		
 		height = h;
 		

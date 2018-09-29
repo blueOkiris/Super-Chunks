@@ -8,6 +8,5 @@ echo "Enter commit message: "
 read msg
 git commit -m "$msg"
 
-# Update github
+# Update github 
 git push -f origin master
-
