@@ -73,7 +73,7 @@ function Render() {
 			spr_chunks.draw(player.x, player.y, 64, 64, 8);
 		} else {
 			if(!player.dead && (key[s_key] && player.poundUnlocked) && !player.grounded)
-				spr_chunks.draw(player.x, player.y, 64, 64, 18);
+				spr_chunks.draw(player.x, player.y, 64, 64, 19);
 			else if(player.climbing) {
 				var walk_cycle_index = (animCounter / 4) % 4;
 				spr_chunks.draw(player.x, player.y, 64, 64, walk_cycle_index < 2 ? 10 : 10 + spr_chunks_num);
