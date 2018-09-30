@@ -206,6 +206,46 @@ function draw_block(block_id, x, y) {
 	case 5: // ladder
 		spr_ladder.draw(x * 64, y * 64, 64, 64, 0);
 		break;
+	
+	case 6: // Solid ocean block
+		spr_ocean_blocks.draw(x * 64, y * 64, 64, 64, 0);
+		break;
+	
+	case 7: // Empty ocean block
+		spr_ocean_blocks.draw(x * 64, y * 64, 64, 64, 1);
+		break;
+	
+	case 8: // Top left corner ocean block
+		spr_ocean_blocks.draw(x * 64, y * 64, 64, 64, 2);
+		break;
+
+	case 9: // Top right corner ocean block
+		spr_ocean_blocks.draw(x * 64, y * 64, 64, 64, 3);
+		break;
+
+	case 10: // Bottom left corner ocean block
+		spr_ocean_blocks.draw(x * 64, y * 64, 64, 64, 4);
+		break;
+
+	case 11: // Bottom right corner ocean block
+		spr_ocean_blocks.draw(x * 64, y * 64, 64, 64, 5);
+		break;
+
+	case 12: // Top ocean block
+		spr_ocean_blocks.draw(x * 64, y * 64, 64, 64, 6);
+		break;
+
+	case 13: // Right ocean block
+		spr_ocean_blocks.draw(x * 64, y * 64, 64, 64, 7);
+		break;
+
+	case 14: // Down ocean block
+		spr_ocean_blocks.draw(x * 64, y * 64, 64, 64, 8);
+		break;
+
+	case 15: // Left ocean block
+		spr_ocean_blocks.draw(x * 64, y * 64, 64, 64, 9);
+		break;
 	}
 }
 

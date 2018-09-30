@@ -159,6 +159,20 @@ function isSolid(block_id) {
 		return true;
 	case 4: // Door (black) block
 		return false;
+	case 5: // Ladder
+		return false;
+	case 6: // All ocean except empty block
+	case 8:
+	case 9:
+	case 10:
+	case 11:
+	case 12:
+	case 13:
+	case 14:
+	case 15:
+		return true;
+	case 7: // Empty ocean block
+		return false;
 		
 	default:
 		return false;
