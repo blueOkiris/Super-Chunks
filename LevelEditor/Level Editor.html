@@ -3,78 +3,13 @@
 	<head>
   		<meta http-equiv="X-UA-Compatible" content="IE=9" >
 		<link rel="stylesheet" type="text/css" href="editor.css">
-		<script type="text/Javascript">
-			var dirtBlock = new Image();
-			dirtBlock.src = "images/spr_block_1_16x16.png";
-			
-			var stoneBlock = new Image();
-			stoneBlock.src = "images/spr_block_2.png";
 
-			var ladder = new Image();
-			ladder.src = "images/ladder.png";
-		</script>
+		<script type="text/Javascript" src="resources.js"></script>
 	</head>
 	<body>
-		<div class="screen">
-			<div class="user_window">
-				<div class="title_bar">
-					<div class="pure_text" style="font-size: 16pt;"> SUPER CHUNKS LEVEL EDITOR </div>
-					<button class="up_btn" id="up_button" onclick="move(0, -1)">&Hat;</button>
-				</div>
-				
-				<canvas id="level_canvas" width="800" height="600" class="level_canvas">Upgrade your dang browser</canvas>
-				
-				<div class="menu_bar">
-					<button class="down_btn" id="down_btn" onclick="move(0, 1)">v</button>
-					
-					<button class="menu_btn" id="new_btn" onclick="reset()">New</button>
-					<button class="menu_btn" id="resize_btn" onclick="resize()">Resize</button>
-					
-					<div class="pure_text" style="font-size: 9pt;"> WIDTH: </div>
-					<input class="menu_txt" type="text" id="width" value="14">
-					
-					<div class="pure_text" style="font-size: 9pt;"> HEIGHT: </div>
- 					<input class="menu_txt" type="text" id="height" value="10">
-					
-					<button class="menu_btn2" id="lshift_btn" onclick="shift(-1, 0)"> &lt; </button>
-					
-					<div class="double_menu_btn">
-						<button id="ushift_btn" onclick="shift(0, -1)"> &Hat; </button>
-						<button id="dshift_btn" onclick="shift(0, 1)"> v </button>
-					</div>
-					
-					<button class="menu_btn2" id="rshift_btn" onclick="shift(1, 0)"> &gt; </button>
-					
-					<div class="pure_text" style="font-size: 9pt; grid-row: 3;"> 
-						SHIFT&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-					</div>
-					
-					<div class="pure_text" style="font-size: 9pt; grid-row: 3;"></div>
-					
-					<button class="menu_btn2" id="rshift_btn" onclick="output()"> OUTPUT </button>
-				</div>
-				
-				<div class="lt_side_bar">
-					<button class="side_btn" onclick="move(-1, 0)">&lt;</button>
-				</div>
-				
-				<div class="rt_side_bar" onclick="move(1, 0)">
-					<button class="side_btn">&gt;</button>
-				</div>
-				
-				<div class="left_top_corner"></div>
-				<div class="left_bottom_corner"></div>
-   				<div class="right_top_corner"></div>
-   				<div class="right_bottom_corner"></div>
-			</div>
-			
-			<div class="tile_window">
-				<div class="pure_text" style="font-size: 11pt;"> TILE CHOOSER </div>
-				<canvas id="tile_canvas" class="tile_canvas" width="196" height="759">Upgrade your dang browser</canvas>
-			</div>
-		</div>
+		
 	</body>
 	<footer>
-		<script type="text/Javascript" src="drawLevel.js"></script>
+		<script type="text/Javascript" src="draw.js"></script>
 	</footer>
 </html>
