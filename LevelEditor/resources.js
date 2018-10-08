@@ -28,10 +28,11 @@ function checkImagesLoaded() {
 }
 
 // List of actual image objects so it can be drawn
-var imageList;
+var imageList = [];
 
 // Set all images into imageList
-for(let i = 0; i < num_images; i++) {
+for(let i = 0; i < numImages; i++) {
+    /* Set up image objects */
     let cur_img = new Image();
     cur_img.src = imageListSrc[i];
 
@@ -41,4 +42,26 @@ for(let i = 0; i < num_images; i++) {
     };
 
     imageList.push(cur_img);
+
+    /* Set up image selection objects */
+    // document.getElementById("" + i).style="background-image:url(" + imageListSrc[i] + ");"
 }
+
+window.onload = function(){
+    let selectedText = document.getElementById('selected-text');
+
+    document.getElementById('my-icon-select').addEventListener('changed',
+        function(e){
+            selectedText.value = iconSelect.getSelectedValue();
+        }
+    );
+
+    let iconSelect = new IconSelect("my-icon-select");
+
+    let icons = [];
+
+    for(let i = 0; i < numImages; i++)
+        icons.push({"iconFilePath":imageListSrc[i], "iconValue":"" + i});
+
+    iconSelect.refresh(icons);
+};

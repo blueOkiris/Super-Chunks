@@ -15,5 +15,5 @@ var start_level_data =
 var level_data = start_level_data;
 
 function updateTileMap() {
-	alert('here');
+	
 }

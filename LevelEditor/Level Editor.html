@@ -1,15 +1,26 @@
 <html>
 	<meta charset="utf-8"/>
 	<head>
-  		<meta http-equiv="X-UA-Compatible" content="IE=9" >
+		<meta http-equiv="X-UA-Compatible" content="IE=9" >
+		
 		<link rel="stylesheet" type="text/css" href="editor.css">
 
-		<script type="text/Javascript" src="resources.js"></script>
+        <script type="text/javascript" src="lib/control/iconselect.js"></script>
+        <script type="text/javascript" src="lib/iscroll.js"></script>
 	</head>
 	<body>
-		
+		<div id="my-grid">
+			<div id="canvas-holder">
+				<canvas id="levelCanvas"> Your browser does not support this application </canvas>
+			</div>
+			<div id="control-box">
+				<div id="my-icon-select"></div>
+				<input type="text" id="selected-text" name="selected-text" style="width:65px;"> 
+			</div>
+		</div>
 	</body>
 	<footer>
+		<script type="text/Javascript" src="resources.js"></script>
 		<script type="text/Javascript" src="draw.js"></script>
 	</footer>
 </html>
