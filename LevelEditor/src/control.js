@@ -117,7 +117,7 @@ function resizeBtnClicked() {
 }
 
 function output() {
-	let out = "levelData = [\n";
+	let out = "[\n";
 
 	for(let y = 0; y < levelData.length; y++) {
 		out += "\t[ ";
@@ -137,7 +137,7 @@ function output() {
 	}
 
 	//alert(out + "];");
-	console.log(out + "];");
+	console.log("levelData = " + out + "];");
 	
 	var link = document.getElementById('downloadlink');
 	link.href = makeTextFile(out + "];");
