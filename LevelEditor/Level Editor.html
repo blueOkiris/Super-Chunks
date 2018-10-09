@@ -3,7 +3,7 @@
 	<head>
 		<meta http-equiv="X-UA-Compatible" content="IE=9" >
 		
-		<link rel="stylesheet" type="text/css" href="editor.css">
+		<link rel="stylesheet" type="text/css" href="src/editor.css">
 
         <script type="text/javascript" src="lib/control/iconselect.js"></script>
         <script type="text/javascript" src="lib/iscroll.js"></script>
@@ -11,16 +11,29 @@
 	<body>
 		<div id="my-grid">
 			<div id="canvas-holder">
-				<canvas id="levelCanvas"> Your browser does not support this application </canvas>
+				<canvas id="levelCanvas" width="800" height="600"> Your browser does not support this application </canvas>
 			</div>
+
 			<div id="control-box">
+				Tile:
 				<div id="my-icon-select"></div>
-				<input type="text" id="selected-text" name="selected-text" style="width:65px;"> 
+				<input type="text" id="selected-text" name="selected-text"> 
 			</div>
+
+			<div id="resize-width">
+				Width:
+				<input type="text" id="resize-text-x" name="resize-text-x">
+			</div>
+			<div id="resize-height">
+				Height:
+				<input type="text" id="resize-text-y" name="resize-text-y">
+			</div>
+
+			<button id="resize-btn">Resize</button>
 		</div>
 	</body>
 	<footer>
-		<script type="text/Javascript" src="resources.js"></script>
-		<script type="text/Javascript" src="draw.js"></script>
+		<script type="text/Javascript" src="src/resources.js"></script>
+		<script type="text/Javascript" src="src/draw.js"></script>
 	</footer>
 </html>

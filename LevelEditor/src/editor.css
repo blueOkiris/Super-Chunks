@@ -12,45 +12,73 @@ body {
 
 	width: 900px;
 
-	grid-column-gap: 10px;
-	grid-row-gap: 10px;
-
 	grid-template-columns: auto auto auto auto;
+	grid-template-rows: auto auto auto auto 0.2f;
 
 	align-items: center;
+
+	background: #CCCCCC;
+	border: 4px solid black;
+}
+
+#resize-width {
+	border: solid black;
+
+	grid-column: 2;
+	grid-row: 5;
+	
+	text-align:center;
+	margin: auto;
+}
+
+#resize-btn {
+	border: solid black;
+
+	grid-column: 4;
+	grid-row: 5;
+	
+	text-align:center;
+	margin: auto;
+}
+
+#resize-height {
+	border: solid black;
+
+	grid-column: 3;
+	grid-row: 5;
+	
+	text-align:center;
+	margin: auto;
 }
 
 #control-box {
-	border: 4px solid black;
+	border: solid black;
 
-	grid-column-start: 1;
-	grid-row-start: 5;
-
-	grid-column-end: 5;
+	grid-column: 1;
+	grid-row: 5;
+	
+	text-align:center;
+	margin: auto;
 }
 
 #levelCanvas {
 	width: 800px;
 	height: 600px;
-	border: 4px solid black;
+	border: solid black;
 
 	padding: 0;
-    margin-left: auto;
-    margin-right: auto;
-	margin-top: 10px;
-	margin-bottom: 10px;
+    margin: auto;
 }
 
 #canvas-holder {
-	border: 4px solid black;
+	border: solid black;
 
 	grid-column-start: 1;
 	grid-row-start: 1;
 
 	grid-column-end: 5;
 	grid-row-end: 4;
-
-	width: 100%;
+	
 	text-align:center;
 	margin: auto;
 }
@@ -63,8 +91,8 @@ body {
 	position: relative;
 	margin: 0px;
 	padding: 0px;
-	width: 70px; /* sil */
-	height: 60px; /* sil */
+	width: 74px; /* sil */
+	height: 64px; /* sil */
 	border: 1px solid #999999;
 
 	-webkit-border-radius: 3px;
@@ -92,8 +120,8 @@ body {
 	padding: 0px;
 	top: 5px;
 	left: 5px;
-	width: 48px; /* sil */
-	height: 48px; /* sil */
+	width: 64px; /* sil */
+	height: 64px; /* sil */
 
 	-webkit-border-radius: 3px;
 	-moz-border-radius: 3px;
@@ -112,8 +140,8 @@ body {
 	left: 71px;
 	margin: 0px;
 	padding: 0px;
-	width: 170px; /* sil */
-	height: 170px; /* sil */
+	width: 300px; /* sil */
+	height: 300px; /* sil */
 	border: 1px solid #EEEEEE;
 	background-color: #EEEEEE;
 
@@ -128,8 +156,8 @@ body {
 	position: relative;
 	margin: 5px 0px 0px 5px;
 	padding: 0px;
-	width: 48px; /* sil */
-	height: 48px; /* sil */
+	width: 64px; /* sil */
+	height: 64px; /* sil */
 	border: 1px solid #CCCCCC;
 	background-color: #FFFFFF;
 
@@ -149,8 +177,8 @@ body {
 	position: relative;
 	margin: 5px 0px 0px 5px;
 	padding: 0px;
-	width: 48px; /* sil */
-	height: 48px; /* sil */
+	width: 64px; /* sil */
+	height: 64px; /* sil */
 	border: 1px solid #EEEEEE;
 	background-color: #EEEEEE;
 

@@ -20,11 +20,14 @@ var imageListSrc = [
 ];
 var numImages = imageListSrc.length;
 var numLoadedImages = 0;
+var loaded = false;
 
 // Check to see if all images have been loaded
 function checkImagesLoaded() {
-    if(numLoadedImages == numImages)
+    if(numLoadedImages == numImages) {
         updateTileMap();
+        loaded = true;
+    }
 }
 
 // List of actual image objects so it can be drawn
@@ -47,6 +50,7 @@ for(let i = 0; i < numImages; i++) {
     // document.getElementById("" + i).style="background-image:url(" + imageListSrc[i] + ");"
 }
 
+var iconSelect = new IconSelect("my-icon-select");
 window.onload = function(){
     let selectedText = document.getElementById('selected-text');
 
@@ -55,8 +59,6 @@ window.onload = function(){
             selectedText.value = iconSelect.getSelectedValue();
         }
     );
-
-    let iconSelect = new IconSelect("my-icon-select");
 
     let icons = [];
 
