@@ -8,8 +8,6 @@ body {
 }
 
 #canvas-slider-y {
-	border: solid black;
-
 	-webkit-appearance: slider-vertical;
 	grid-column: 1;
 	grid-row: 1 / span 4;
@@ -31,8 +29,6 @@ body {
 }
 
 #resize-width {
-	border: solid black;
-
 	grid-column: 3;
 	grid-row: 5;
 	
@@ -41,8 +37,6 @@ body {
 }
 
 #resize-btn {
-	border: solid black;
-
 	grid-column: 5;
 	grid-row: 5;
 	
@@ -51,8 +45,6 @@ body {
 }
 
 #resize-height {
-	border: solid black;
-
 	grid-column: 4;
 	grid-row: 5;
 	
@@ -61,8 +53,6 @@ body {
 }
 
 #control-box {
-	border: solid black;
-
 	grid-column: 1 / span 2;
 	grid-row: 5;
 	
@@ -73,15 +63,12 @@ body {
 #levelCanvas {
 	width: 800px;
 	height: 600px;
-	border: solid black;
 
 	padding: 0;
     margin: auto;
 }
 
 #canvas-holder {
-	border: solid black;
-
 	grid-column: 2 / span 4;
 	grid-row: 1 / span 4;
 	
