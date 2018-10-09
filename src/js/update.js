@@ -10,7 +10,7 @@ function Update() {
 		if(!key[space]) {
 			bg_music[0].pause();
 			current_unlock = 0;
-			changeLevel(intro_level, intro_level_music);
+			changeLevel(test_from_level_editor, intro_level_music);
 			game_state = GameState.Game;
 		}
 		break;
