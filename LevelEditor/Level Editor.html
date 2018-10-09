@@ -10,8 +10,11 @@
 	</head>
 	<body>
 		<div id="my-grid">
+			<input type="range" min="0" max="9" value="0" class="slider" id="canvas-slider-y" orient="vertical">
 			<div id="canvas-holder">
 				<canvas id="levelCanvas" width="800" height="600"> Your browser does not support this application </canvas>
+				<input type="range" min="0" max="13" value="0" class="slider" id="canvas-slider-x" style="width: 800px;">
+				<button id="output-btn" onclick="output();"> Output </button>
 			</div>
 
 			<div id="control-box">
@@ -29,7 +32,7 @@
 				<input type="text" id="resize-text-y" name="resize-text-y">
 			</div>
 
-			<button id="resize-btn">Resize</button>
+			<button id="resize-btn" onclick="resizeBtnClicked();">Resize</button>
 		</div>
 	</body>
 	<footer>
