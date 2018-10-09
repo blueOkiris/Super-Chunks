@@ -27,7 +27,7 @@ var spr_stone_block = new Sprite("src/images/spr_block_2.png", [[0, 0]], [64, 64
 var spr_black_block = new Sprite("src/images/spr_block_black.png", [[0, 0]], [64, 64]);
 var spr_ocean_blocks = new Sprite("src/images/spr_ocean_blocks.png", [[0, 0], [0, 64], 
 																		[64, 0], [128, 0], [64, 64], [128, 64], 
-																		[196, 0], [256, 0], [196, 64], [256, 64]], [64, 64]);
+																		[192, 0], [256, 0], [192, 64], [256, 64]], [64, 64]);
 
 var spr_brocolli = new Sprite("src/images/spr_brocolli.png", [[0, 0], [64, 0]], [64, 64]);
 var spr_spike = new Sprite("src/images/spr_spike.png", [[0, 0]], [64, 64]);

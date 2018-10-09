@@ -138,6 +138,14 @@ var test_from_level_editor = new Level(
 [],
 [13 * 64, 7 * 64]);
 
+// Fix for messed up level editor
+for(let y = 0; y < test_from_level_editor.data.length; y++) {
+    for(let x = 0; x < test_from_level_editor.data[0].length; x++) {
+        if(test_from_level_editor.data[y][x] >= 5)
+            test_from_level_editor.data[y][x]++;
+    }
+}
+
 var current_level = test_from_level_editor;
 
 

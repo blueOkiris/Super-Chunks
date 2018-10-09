@@ -136,6 +136,26 @@ function output() {
 		out += "\n";
 	}
 
-	alert(out + "];");
+	//alert(out + "];");
 	console.log(out + "];");
+	
+	var link = document.getElementById('downloadlink');
+	link.href = makeTextFile(out + "];");
+	link.style.display = 'block';
 }
+
+/* Save file */
+var textFile = null;
+var makeTextFile = function (text) {
+	var data = new Blob([text], {type: 'text/plain'});
+
+	// If we are replacing a previously generated file we need to
+	// manually revoke the object URL to avoid memory leaks.
+	if (textFile !== null) {
+		window.URL.revokeObjectURL(textFile);
+	}
+
+	textFile = window.URL.createObjectURL(data);
+
+	return textFile;
+};

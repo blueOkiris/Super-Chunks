@@ -239,12 +239,12 @@ function draw_block(block_id, x, y) {
 		spr_ocean_blocks.draw(x * 64, y * 64, 64, 64, 7);
 		break;
 
-	case 14: // Down ocean block
-		spr_ocean_blocks.draw(x * 64, y * 64, 64, 64, 8);
+	case 14: // Bottom ocean block
+		spr_ocean_blocks.draw(x * 64, y * 64, 64, 64, 9);
 		break;
 
 	case 15: // Left ocean block
-		spr_ocean_blocks.draw(x * 64, y * 64, 64, 64, 9);
+		spr_ocean_blocks.draw(x * 64, y * 64, 64, 64, 8);
 		break;
 	}
 }

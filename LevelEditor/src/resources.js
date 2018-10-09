@@ -7,6 +7,7 @@ var imageListSrc = [
     "images/dirt.png",
     "images/stone.png",
     "images/door.png",
+    "images/ladder.png",
     "images/ocean_stone.png",
     "images/ocean_mid.png",
     "images/ocean_corner_tl.png",
@@ -14,8 +15,8 @@ var imageListSrc = [
     "images/ocean_corner_bl.png",
     "images/ocean_corner_br.png",
     "images/ocean_block_t.png",
-    "images/ocean_block_r.png",
     "images/ocean_block_b.png",
+    "images/ocean_block_r.png",
     "images/ocean_block_l.png",
 ];
 var numImages = imageListSrc.length;
