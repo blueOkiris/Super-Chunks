@@ -87,6 +87,7 @@ document.addEventListener('keyup',
             
             case " ":
                 input[Inputs.Punch] = false;
+                gameJustPunched = false;
 
                 gameJustPopup = false;
                 input[Inputs.Confirm] = false;

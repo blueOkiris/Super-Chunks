@@ -119,7 +119,7 @@ function Render() {
 	}
 	
 	animCounter++; //  Update the animation for all sprites every frame
-	//if(!player.canPunch) {
-	//	player.punchStart++;
-	//}
+	if(!player.canPunch) {
+		player.punchStart++;
+	}
 }
