@@ -85,4 +85,4 @@ var splashSprite = new Sprite(splashImage, [[0, 0]], [800, 600]);
 var player = new Player([0, 0], 
     pImageSpeed, pMoveSpeed, pPunchSpeed, pGravity, pJumpSpeed, 
     pMaskW, pMaskH, 
-    false, false, false, chunksSprite);
+    pDefAbilities[0], pDefAbilities[1], pDefAbilities[2], chunksSprite);

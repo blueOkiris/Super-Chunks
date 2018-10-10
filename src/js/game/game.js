@@ -27,7 +27,7 @@ function punchingPhysics() {
 			if(!player.canPunch && player.punchStart > 22) { // Allow for next punch (spam preventer)
 				player.canPunch = true;
 				player.punchStart = 0;
-			} else if(key[space] && space_released && player.punchUnlocked && player.canPunch) { // Actually punch
+			} else if(input[Inputs.Jump] && !gameJustPunched && player.punchUnlocked && player.canPunch) { // Actually punch
 				if(player.grounded || !player.airPunch) {
 					if(!player.grounded)
 						player.airPunch = true;
@@ -36,13 +36,13 @@ function punchingPhysics() {
 					player.punchStart = 0;
 					player.canPunch = false;
 					
-					space_released = false;
+					gameJustPunched = true;
 				
 					punch_sound.play();
 				}
 			}
 		} else { // During the punch
-			player.hsp = player.dir * player.pnc_spd;
+			player.hsp = player.dir * player.punchSpeed;
 			
 			if(player.punchStart > 10)
 				player.hsp = 0;

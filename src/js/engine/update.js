@@ -29,7 +29,7 @@ function Update() {
 		
 		case GameState.Game: // play the game
 			movementPhysics();
-			//punchingPhysics();
+			punchingPhysics();
 			collisionChecks();
 			//enemyCollisions();
 				

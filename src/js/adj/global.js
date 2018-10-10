@@ -29,6 +29,7 @@ var gameState = GameState.Loading;
 
 var gameJustPaused = false;
 var gameJustPopup = false;
+var gameJustPunched = false;
 
 var allImagesLoaded = false;
 
