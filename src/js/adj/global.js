@@ -15,6 +15,7 @@ var pGravity = 0.4;
 var pJumpSpeed = 11;
 var pMaskW = 48;
 var pMaskH = 50;
+var pDefAbilities = [ true, false, false ]; // [punch, dbl jmp, pnd];
 
 const GameState = {
     Loading: -1,
