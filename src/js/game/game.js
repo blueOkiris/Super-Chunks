@@ -1,38 +1,18 @@
 function movementPhysics() {
 	// Player physics
-	var move = key[d_key] - key[a_key];
-	player.hsp = player.mv_spd * move;
+	let move = input[Inputs.Right] - input[Inputs.Left];
+	player.hsp = player.moveSpeed * move;
 	
-	player.vsp += !player.dead && player.punching ? player.grav / 2 : !player.dead && (key[s_key] && player.poundUnlocked) ? player.grav * 8 : player.grav;
-	if(key[s_key] && !player.dead) {
-		if(pound_sound.duration <= 0 || pound_sound.paused && !player.grounded && player.poundUnlocked)
-			pound_sound.play();
-	}
+	player.vsp += 	!player.dead && player.punching ? player.gravity / 2 :
+						!player.dead && (input[Inputs.Pound] && player.poundUnlocked) ? player.gravity * 8 : 
+							player.gravity;
 	
-	if(!player.dead) {
-		// Check y collision if not dead
-		if(player.y + player.vsp < 0) {
-			player.y = 0;
-			player.vsp = 0;
-		} else {
-			var blockLeft = blockAt(player.x + 4, player.y + (player.vsp > 0 ? player.mask_h : 0) + player.vsp);
-			var blockMid = blockAt(player.x + player.mask_w / 2, player.y + (player.vsp > 0 ? player.mask_h : 0) + player.vsp);
-			var blockRight = blockAt(player.x + player.mask_w - 4, player.y + (player.vsp > 0 ? player.mask_h : 0) + player.vsp);
-			
-			// Move until flush against contact
-			var xPos = isSolid(blockLeft) ? player.x + 4 : isSolid(blockMid) ? player.x + player.mask_w / 2 : isSolid(blockRight) ? player.x + player.mask_w - 4: -1024;
-			if(xPos >= 0 && player.vsp != 0) { // There is a collision
-				while(!isSolid(blockAt(xPos, player.y + (player.vsp > 0 ? player.mask_h : 0) + Math.sign(player.vsp))))
-					player.y += Math.sign(player.vsp);
-			
-				if(player. vsp >= 0)
-					player.grounded = true;
-				
-				player.vsp = 0;
-			} else
-				player.grounded = false;
-		}
+	if(input[Inputs.Pound] && !player.dead) {
+		if((sounds[Sounds.Pound].duration <= 0 || sounds[Sounds.Pound].paused) && !player.grounded && player.poundUnlocked)
+			sounds[Sounds.Pound].play();
 	}
+
+	//console.log(player.vsp);
 }
 
 function punchingPhysics() {
@@ -76,124 +56,96 @@ function punchingPhysics() {
 function collisionChecks() {
 	if(!player.dead) {
 		// Check x collision
-		if(player.x + player.hsp < 0) {
+		if(player.x + player.hsp < 0) { // Stop moving if leaving screen
 			player.x = 0;
 			player.hsp = 0;
-		} else {
-			var blockTop = blockAt(player.x + (player.hsp >= 0 ? player.mask_w - 4 : 4) + player.hsp, player.y);
-			var blockMid = blockAt(player.x + (player.hsp >= 0 ? player.mask_w - 4 : 4) + player.hsp, player.y + player.mask_h / 2);
-			var blockLow = blockAt(player.x + (player.hsp >= 0 ? player.mask_w - 4 : 4) + player.hsp, player.y + player.mask_h);
-			
+		} else { // Check for blocks next to player at 3 locations: top of player, bottom of player, and middle of player
+			let blockTop = blockAt(currentLevel, player.x + (player.hsp >= 0 ? player.maskW : 0) + player.hsp, player.y);
+			let blockMid = blockAt(currentLevel, player.x + (player.hsp >= 0 ? player.maskW : 0) + player.hsp, player.y + player.maskH / 2);
+			let blockLow = blockAt(currentLevel, player.x + (player.hsp >= 0 ? player.maskW : 0) + player.hsp, player.y + player.maskH);
+
 			// Move until flush against contact
-			var yPos = isSolid(blockTop) ? player.y: isSolid(blockMid)? player.y + player.mask_h / 2 : isSolid(blockLow) ? player.y + player.mask_h : -1024;
+			let yPos = blockList[blockTop].solid ? player.y : 
+							blockList[blockMid].solid ? player.y + player.maskH / 2 : 
+								blockList[blockLow].solid ? player.y + player.maskH : 
+									-1024;
 			if(yPos >= 0 && player.hsp != 0) { // There is a collision
-				while(!isSolid(blockAt(player.x + (player.hsp > 0 ? player.mask_w - 4 : 4) + Math.sign(player.hsp), yPos)))
+				while(!blockList[blockAt(currentLevel, player.x + (player.hsp > 0 ? player.maskW : 0) + Math.sign(player.hsp), yPos)].solid)
 					player.x += Math.sign(player.hsp);
 			
 				player.hsp = 0;
 			}
 		}
-		
-		/* Unlockable check */
-		// Check if double jump is unlocked
-		if(!player.doubleJumpUnlocked
-		&& player.x + player.mask_w / 2 > doubleJumpScroll.x && player.x + player.mask_w / 2 < doubleJumpScroll.x + 64
-		&& player.y + player.mask_h / 2 > doubleJumpScroll.y && player.y + player.mask_h / 2 < doubleJumpScroll.y + 64) {
-			player.doubleJumpUnlocked = true;
-			
-			game_state = GameState.Popup;
-			game_popup_msg[0] = "";
-			game_popup_msg[1] = "CONGRATULATIONS!";
-			game_popup_msg[2] = "YOU HAVE LEARNED HOW TO AIR JUMP!";
-			game_popup_msg[3] = "PRESS W IN THE AIR TO";
-			game_popup_msg[4] = "GAIN A BOOST IN HEIGHT!";
-			game_popup_msg[5] = "";
-		}
-		
-		// Check if punch is unlocked
-		if(!player.punchUnlocked
-		&& player.x + player.mask_w / 2 > punchScroll.x && player.x + player.mask_w / 2 < punchScroll.x + 64
-		&& player.y + player.mask_h / 2 > punchScroll.y && player.y + player.mask_h / 2 < punchScroll.y + 64) {
-			player.punchUnlocked = true;
-			
-			game_state = GameState.Popup;
-			game_popup_msg[0] = "CONGRATULATIONS!";
-			game_popup_msg[1] = "YOU HAVE LEARNED TO PUNCH!";
-			game_popup_msg[2] = "PRESS SPACE AND YOU WILL";
-			game_popup_msg[3] = "FLY TOWARDS ENEMIES,";
-			game_popup_msg[4] = "BUT BE WARY BECAUSE YOU CAN";
-			game_popup_msg[5] = "ONLY PUNCH ONCE IN MID-AIR!";
-		}
-		
-		// Check if pound is unlocked
-		if(!player.poundUnlocked
-		&& player.x + player.mask_w / 2 > poundScroll.x && player.x + player.mask_w / 2 < poundScroll.x + 64
-		&& player.y + player.mask_h / 2 > poundScroll.y && player.y + player.mask_h / 2 < poundScroll.y + 64) {
-			player.poundUnlocked = true;
-			
-			game_state = GameState.Popup;
-			game_popup_msg[0] = "CONGRATULATIONS!";
-			game_popup_msg[1] = "YOU HAVE LEARNED HOW TO!";
-			game_popup_msg[2] = "GROUND POUND!";
-			game_popup_msg[3] = "PRESS S AND YOU WILL STOMP";
-			game_popup_msg[4] = "DOWN TOWARDS THE GROUND!";
-			game_popup_msg[5] = "";
-		}
 	} else
 		player.hsp = 0;
+	
+	if(!player.dead) {
+		// Check y collision if not dead
+		if(player.y + player.vsp < 0) {
+			player.y = 0;
+			player.vsp = 0;
+		} else {
+			let blockLeft  = blockAt(currentLevel, player.x, 					player.y + (player.vsp > 0 ? player.maskH : 0) + player.vsp);//, "Vsp: '" + player.vsp + "' @ ");
+			let blockMid   = blockAt(currentLevel, player.x + player.maskW / 2,	player.y + (player.vsp > 0 ? player.maskH : 0) + player.vsp);
+			let blockRight = blockAt(currentLevel, player.x + player.maskW,		player.y + (player.vsp > 0 ? player.maskH : 0) + player.vsp);
+			
+			// Move until flush against contact
+			let xPos = blockList[blockLeft].solid ? player.x :
+							blockList[blockMid].solid ? player.x + player.maskW / 2 : 
+								blockList[blockRight].solid ? player.x + player.maskW : 
+									-1024;
+			if(xPos >= 0 && player.vsp != 0) { // There is a collision
+				while(!blockList[currentLevel, blockAt(currentLevel, xPos, player.y + (player.vsp > 0 ? player.maskH : 0) + Math.sign(player.vsp))].solid)
+					player.y += Math.sign(player.vsp);
+			
+				player.grounded = true;
+				player.vsp = 0;
+			} else
+				player.grounded = false;
+		}
+	}
 	
 	if(Math.sign(player.hsp) != 0) {
 		if(player.dir != Math.sign(player.hsp))
 			player.dir = Math.sign(player.hsp);
 		
 		player.x += player.hsp;
-		
-		/*if(player.x + player.mask_w / 2 > 400 && player.x + player.mask_w / 2 < 64 * current_level[0].length - 400)
-			ctx.translate(-player.hsp, 0);*/
 	}
 	
 	player.y += player.vsp;
-	/*if(player.y + player.mask_h / 2 > 300 && player.y + player.mask_h / 2 < 64 * current_level.length - 300)
-		ctx.translate(0, -player.vsp);*/
-	
-	ctx.setTransform(1, 0, 0, 1, 
-	 	// 400 - nearest 4 to player middle
-		400 - (player.x + player.mask_w / 2),
-		// Same here but with 300
-		300 - (player.y + player.mask_h / 2));
 	
 	// Jump
 	if(!player.doubleJumpUnlocked)
 		player.canDoubleJump = false;
 	
-	if(key[w_key] && blockAt(player.x, player.y) == 5) { // Climb ladder
+	if(input[Inputs.Jump] && blockAt(currentLevel, player.x, player.y) == BlockType.Ladder) { // Climb ladder
 		player.climbing = true;
-		player.vsp = -player.jmp_spd / 2;
-	} else if(key[w_key] && jump && (player.grounded || player.canDoubleJump) && !player.dead) {
-		jump_sound.pause();
-		jump_sound.current_time = 0;
+		player.vsp = -player.jumpSpeed / 2;
+	} else if(input[Inputs.Jump] && jump && (player.grounded || player.canDoubleJump) && !player.dead) { // Double Jump
+		sounds[Sounds.Jump].pause();
+		sounds[Sounds.Jump].currentTime = 0;
 		
 		if(!player.grounded)
 			player.canDoubleJump = false;
 		
 		player.grounded = false;
-		player.vsp = -player.jmp_spd;
+		player.vsp = -player.jumpSpeed;
 		
 		jump = false;
 		
-		jump_sound.play();
-	} else if(key[w_key] && blockAt(player.x, player.y) == 4) { // Go through level end door
-		if(current_level == intro_level)
-			changeLevel(test_level, -1);
+		sounds[Sounds.Jump].play();
+	} else if(input[Inputs.Jump] && blockAt(currentLevel, player.x, player.y) == BlockType.Door) { // Go through level end door
+		// if(currentLevel == intro_level)
+		// 	changeLevel(test_level, -1);
 	}
 	
-	if(!key[w_key] || blockAt(player.x, player.y) != 5)
+	if(!input[Inputs.Jump] || blockAt(currentLevel, player.x, player.y) != BlockType.Ladder)
 		player.climbing = false;
 	
 	if(player.grounded)
 		player.canDoubleJump = true;
 	
-	if(!key[w_key])
+	if(!input[Inputs.Jump])
 		jump = true;
 }
 

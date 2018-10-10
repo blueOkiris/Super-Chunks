@@ -122,10 +122,13 @@ function output() {
 	for(let y = 0; y < levelData.length; y++) {
 		out += "\t[ ";
 		for(let x = 0; x < levelData[0].length; x++) {
+			if(Math.floor(levelData[y][x] / 10) == 0 && levelData[y][x] > 0)
+				out += ' ';
+			
 			out += levelData[y][x];
 
 			if(x != levelData[0].length - 1)
-				out += ", ";
+				out += ",";
 		}
 
 		out += "]";
