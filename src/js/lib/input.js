@@ -55,7 +55,7 @@ document.addEventListener('keydown',
                 //console.log("confirmed/punched");
                 break;
             
-            case "Esc":
+            case "Escape":
             case "p":
                 input[Inputs.Pause] = true;
                 break;
@@ -93,7 +93,7 @@ document.addEventListener('keyup',
                 input[Inputs.Confirm] = false;
                 break;
             
-            case "Esc":
+            case "Escape":
             case "p":
                 gameJustPaused = false;
                 input[Inputs.Pause] = false;

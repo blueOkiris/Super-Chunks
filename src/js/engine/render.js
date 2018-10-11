@@ -7,7 +7,7 @@ function Render() {
 			
 		case GameState.Menu:
 			if(music.songList[music.currentSong].paused)
-				music.play(songList[music.currentSong]);
+				music.play(music.currentSong);
 				
 		case GameState.MenuToGame:// start screen
 			ctx.setTransform(1, 0, 0, 1, 0, 0);
