@@ -121,6 +121,9 @@ function collisionChecks() {
 	if(input[Inputs.Jump] && blockAt(currentLevel, player.x, player.y) == BlockType.Ladder) { // Climb ladder
 		player.climbing = true;
 		player.vsp = -player.jumpSpeed / 2;
+
+		jump = false;
+		player.grounded = true;
 	} else if(input[Inputs.Jump] && jump && (player.grounded || player.canDoubleJump) && !player.dead) { // Double Jump
 		sounds[Sounds.Jump].pause();
 		sounds[Sounds.Jump].currentTime = 0;
