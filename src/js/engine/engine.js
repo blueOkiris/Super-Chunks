@@ -14,7 +14,7 @@ function startGame() {
 	// Try to run advanced game loop, but allow simplified for low-end devs
 	if(window.requestAnimationFrame) {
 		onEachFrame = function(cb) {
-			var _cb = function() {
+			var _cb = () => {
 				cb();
 				requestAnimationFrame(_cb);
 			}

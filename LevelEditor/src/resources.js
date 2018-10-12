@@ -15,8 +15,8 @@ var imageListSrc = [
     "images/ocean_corner_bl.png",
     "images/ocean_corner_br.png",
     "images/ocean_block_t.png",
-    "images/ocean_block_b.png",
     "images/ocean_block_r.png",
+    "images/ocean_block_b.png",
     "images/ocean_block_l.png",
 ];
 var enemyImageListSrc = [

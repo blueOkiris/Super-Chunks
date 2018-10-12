@@ -4,7 +4,7 @@ function Update() {
 		case GameState.Loading:
 			if(allImagesLoaded) {
 				setTimeout( // Add delay to show splash screen
-						function() {
+						() => {
 							if(gameState != GameState.Menu) {// Add if in case called many times
 								gameState = GameState.Menu;
 								music.play(BackgroundMusic.TitleTheme);
@@ -25,7 +25,7 @@ function Update() {
 		case GameState.MenuToGame:
 			if(!input[Inputs.Confirm]) {
 				music.stop();
-				changeLevel(introLevel);
+				changeLevel(testLevel);
 				gameState = GameState.Game;
 			}
 			break;
@@ -35,7 +35,7 @@ function Update() {
 			punchingPhysics();
 			collisionChecks();
 			enemyCollisions();
-				
+			checkUnlocked();
 
 			if(input[Inputs.Pause] && !gameJustPaused && !player.dead) {
 				gameJustPaused = true;

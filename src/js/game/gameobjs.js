@@ -51,8 +51,8 @@ var oceanBLBlock        = new Block(BlockType.OceanBottomLeft, true, oceanBlockI
 var oceanBRBlock        = new Block(BlockType.OceanBottomRight, true, oceanBlockImage,  [tileWidth * 2, tileHeight]);
 var oceanTopBlock       = new Block(BlockType.OceanTop, true, oceanBlockImage,          [tileWidth * 3, 0]);
 var oceanRightBlock     = new Block(BlockType.OceanRight, true, oceanBlockImage,        [tileWidth * 4, 0]);
-var oceanBottomBlock    = new Block(BlockType.OceanBottom, true, oceanBlockImage,       [tileWidth * 3, tileHeight]);
-var oceanLeftBlock      = new Block(BlockType.OceanLeft, true, oceanBlockImage,         [tileWidth * 4, tileHeight]);
+var oceanBottomBlock    = new Block(BlockType.OceanBottom, true, oceanBlockImage,       [tileWidth * 4, tileHeight]);
+var oceanLeftBlock      = new Block(BlockType.OceanLeft, true, oceanBlockImage,         [tileWidth * 3, tileHeight]);
 
 var blockList = [
     blankBlock,

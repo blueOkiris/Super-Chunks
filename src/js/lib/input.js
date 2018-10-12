@@ -31,21 +31,25 @@ document.addEventListener('keydown',
         switch(e.key) {
             case "ArrowUp":
             case "w":
+            case "W":
                 input[Inputs.Jump] = true;
                 break;
             
             case "ArrowLeft":
             case "a":
+            case "A":
                 input[Inputs.Left] = true;
                 break;
             
             case "ArrowRight":
             case "d":
+            case "D":
                 input[Inputs.Right] = true;
                 break;
             
             case "ArrowDown":
             case "s":
+            case "S":
                 input[Inputs.Pound] = true;
                 break;
             
@@ -57,6 +61,7 @@ document.addEventListener('keydown',
             
             case "Escape":
             case "p":
+            case "P":
                 input[Inputs.Pause] = true;
                 break;
         }

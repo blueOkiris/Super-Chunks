@@ -147,7 +147,7 @@ function collisionChecks() {
 			ctx.fillRect(0, 0, screenWidth, screenHeight);
 
 			setTimeout(
-				function() { 
+				() => { 
 					changeLevel(currentLevel.nextLevel);
 					gameState = GameState.Game;
 				},
@@ -174,75 +174,75 @@ function enemyCollisions() {
 		
 		// Start by trying to move towards enemy dir
 		let hsp = currentLevel.enemies[i].moveSpeed * currentLevel.enemies[i].dir;
-		let currentEnemy = currentLevel.enemies[i];
+		let current_enemy = currentLevel.enemies[i];
 			
 		// Check to see if there is a block in direction of motion that is stopping the enemy
-		let left_block = blockAt(currentLevel, currentEnemy.x + hsp, currentEnemy.y + spriteHeight / 2);
-		let right_block = blockAt(currentLevel, currentEnemy.x + spriteWidth + hsp, currentEnemy.y + spriteHeight / 2);
+		let left_block = blockAt(currentLevel, current_enemy.x + hsp, current_enemy.y + spriteHeight / 2);
+		let right_block = blockAt(currentLevel, current_enemy.x + spriteWidth + hsp, current_enemy.y + spriteHeight / 2);
 
 		if(blockList[left_block].solid || blockList[right_block].solid) {
 			// Flip directions
-			currentEnemy.dir = -currentEnemy.dir;
+			current_enemy.dir = -current_enemy.dir;
 			hsp = -hsp;
 		}
 	
 		// fall
-		currentEnemy.vsp += currentEnemy.gravity;
+		current_enemy.vsp += current_enemy.gravity;
 
-		if(currentEnemy.y + currentEnemy.vsp < 0) {
-			currentEnemy.y = 0;
-			currentEnemy.vsp = 0;
+		if(current_enemy.y + current_enemy.vsp < 0) {
+			current_enemy.y = 0;
+			current_enemy.vsp = 0;
 		} else {
-			let block_left  = blockAt(currentLevel, currentEnemy.x, 
-										currentEnemy.y + (currentEnemy.vsp > 0 ? spriteHeight : 0) + currentEnemy.vsp);
-			let block_mid   = blockAt(currentLevel, currentEnemy.x + spriteWidth / 2,	
-										currentEnemy.y + (currentEnemy.vsp > 0 ? spriteHeight : 0) + currentEnemy.vsp);
-			let block_right = blockAt(currentLevel, currentEnemy.x + spriteWidth,
-										currentEnemy.y + (currentEnemy.vsp > 0 ? spriteHeight : 0) + currentEnemy.vsp);
+			let block_left  = blockAt(currentLevel, current_enemy.x, 
+										current_enemy.y + (current_enemy.vsp > 0 ? spriteHeight : 0) + current_enemy.vsp);
+			let block_mid   = blockAt(currentLevel, current_enemy.x + spriteWidth / 2,	
+										current_enemy.y + (current_enemy.vsp > 0 ? spriteHeight : 0) + current_enemy.vsp);
+			let block_right = blockAt(currentLevel, current_enemy.x + spriteWidth,
+										current_enemy.y + (current_enemy.vsp > 0 ? spriteHeight : 0) + current_enemy.vsp);
 			
 			// Move until flush against contact
-			let x_pos = blockList[block_left].solid ? currentEnemy.x :
-							blockList[block_mid].solid ? currentEnemy.x + spriteWidth / 2 : 
-								blockList[block_right].solid ? currentEnemy.x + spriteWidth : 
+			let x_pos = blockList[block_left].solid ? current_enemy.x :
+							blockList[block_mid].solid ? current_enemy.x + spriteWidth / 2 : 
+								blockList[block_right].solid ? current_enemy.x + spriteWidth : 
 									-1024;
-			if(x_pos >= 0 && currentEnemy.vsp != 0) { // There is a collision
-				while(!blockList[currentLevel, blockAt(currentLevel, x_pos, currentEnemy.y + (currentEnemy.vsp > 0 ? spriteHeight : 0) + Math.sign(currentEnemy.vsp))].solid)
-					currentEnemy.y += Math.sign(currentEnemy.vsp);
+			if(x_pos >= 0 && current_enemy.vsp != 0) { // There is a collision
+				while(!blockList[currentLevel, blockAt(currentLevel, x_pos, current_enemy.y + (current_enemy.vsp > 0 ? spriteHeight : 0) + Math.sign(current_enemy.vsp))].solid)
+					current_enemy.y += Math.sign(current_enemy.vsp);
 			
-				if(currentEnemy.id == EnemyType.BrusselSprout && vsp >= 0) // jump if a brussel sprout hits the ground
-					currentEnemy.vsp = -player.jumpSpeed;
+				if(current_enemy.id == EnemyType.BrusselSprout && current_enemy.vsp >= 0) // jump if a brussel sprout hits the ground
+					current_enemy.vsp = -player.jumpSpeed;
 				else
-					currentEnemy.vsp = 0;
+					current_enemy.vsp = 0;
 			}
 		}
 	
 		// Only move if player has seen it
-		if(currentEnemy.start) {
+		if(current_enemy.start) {
 			if(!(new Rect(player.x + player.maskW / 2 - screenWidth / 2, player.y + player.maskH / 2 - screenHeight / 2, screenWidth, screenHeight)).containsPoint(
-				currentEnemy.x, currentEnemy.y)) {
+				current_enemy.x, current_enemy.y)) {
 				hsp = 0;
-				currentEnemy.vsp = 0;
+				current_enemy.vsp = 0;
 			} else
-				currentEnemy.start = false;
+				current_enemy.start = false;
 		}
 		
-		if(currentEnemy.id == 2) // Don't let the spikes move
+		if(current_enemy.id == EnemyType.Spike) // Don't let the spikes move
 			hsp = 0;
 		
-		currentEnemy.x += hsp;
-		currentEnemy.y += currentEnemy.vsp;
+		current_enemy.x += hsp;
+		current_enemy.y += current_enemy.vsp;
 		
 		/* Enemy collisions */
 		if(!player.dead) {
 			let enemy_box = new Rect(
-				currentEnemy.x + (spriteWidth - enemyMaskW) / 2, currentEnemy.y + (spriteHeight - enemyMaskH) / 2, 
+				current_enemy.x + (spriteWidth - enemyMaskW) / 2, current_enemy.y + (spriteHeight - enemyMaskH) / 2, 
 				enemyMaskW, enemyMaskH);
 			let player_box = new Rect(player.x, player.y, player.maskW, player.maskH);
 
 			if (enemy_box.overlaps(player_box)) {
-				if(currentEnemy.id != EnemyType.Spike &&
+				if(current_enemy.id != EnemyType.Spike &&
 					(player.punching || (input[Inputs.Pound] && player.poundUnlocked))) {
-					currentEnemy.dead = true;
+					current_enemy.dead = true;
 				
 					player.vsp = -player.jumpSpeed / 2;
 					sounds[Sounds.Jump].play();
@@ -253,10 +253,11 @@ function enemyCollisions() {
 					player.dead = true;
 					music.stop();
 					
-					setTimeout(function() {
+					setTimeout(() => {
 						for(let j = 0; j < currentLevel.enemies.length; j++)
 							currentLevel.enemies[j].restart();
 						player.restart();
+						currentLevel.restart();
 							
 						player.lives--;
 	
@@ -268,6 +269,27 @@ function enemyCollisions() {
 				}
 			}
 		} 
+	}
+}
+
+function checkUnlocked() {
+	for(let i = 0; i < currentLevel.unlockables.length; i++) {
+		let current_unlock = currentLevel.unlockables[i];
+
+		if(current_unlock.collected)
+			continue;
+		
+		if(!player.dead) {
+			let unlock_box = new Rect(current_unlock.x, current_unlock.y, spriteWidth, spriteHeight);
+			let player_box = new Rect(player.x, player.y, player.maskW, player.maskH);
+
+			if (unlock_box.overlaps(player_box)) {
+				current_unlock.unlock();
+				current_unlock.collected = true;
+				gameUnlockedMessage = current_unlock.message;
+				gameState = GameState.Popup;
+			}
+		}
 	}
 }
 

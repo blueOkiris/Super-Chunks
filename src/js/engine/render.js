@@ -87,6 +87,17 @@ function Render() {
 				}
 			}
 
+			// Draw any scrolls in the level
+			for(let i = 0; i < currentLevel.unlockables.length; i++) {
+				if(currentLevel.unlockables[i].collected)
+					continue;
+
+				if((new Rect(player.x + player.maskW / 2 - screenWidth / 2 - spriteWidth, player.y + player.maskH / 2 - screenHeight / 2 - spriteHeight,
+					screenWidth + spriteWidth * 2, screenHeight + spriteHeight * 2)).containsPoint(
+						currentLevel.unlockables[i].x, currentLevel.unlockables[i].y))// culling
+					scrollSprite.draw(currentLevel.unlockables[i].x, currentLevel.unlockables[i].y, spriteWidth, spriteHeight, 0);
+			}
+
 			// Draw lives overlay
 			for(let i = 0; i < player.lives; i++)
 				livesSprite.draw((player.x + player.maskW / 2) - screenWidth / 2 + tileWidth / 2 + 48 * i, (player.y + player.maskH / 2) - screenHeight / 2 + tileHeight / 2, 48, 48, 0);
@@ -147,7 +158,9 @@ function Render() {
 					break;
 				
 				case GameState.Popup:
-					ctx.fillText(gameUnlockedMessage, player.x + player.maskW / 2, player.y + player.maskH / 2);
+					for(let i = 0; i < gameUnlockedMessage.length; i++) {
+						ctx.fillText(gameUnlockedMessage[i], player.x + player.maskW / 2, player.y + player.maskH / 2 - 100 + (30 * i));
+					}
 					break;
 			}
 			break;

@@ -15,7 +15,7 @@ var pGravity = 0.4;
 var pJumpSpeed = 11;
 var pMaskW = 54;
 var pMaskH = 52;
-var pDefAbilities = [ true, true, true ]; // [punch, dbl jmp, pnd];
+var pDefAbilities = [ false, false, false ]; // [punch, dbl jmp, pnd];
 
 var startLives = 3;
 
@@ -46,4 +46,4 @@ var animCounter = 0;
 var jump = true;
 
 var gamePauseMessage = "PAUSED";
-var gameUnlockedMessage = "";
+var gameUnlockedMessage = [];

@@ -6,6 +6,7 @@ class Level{
 		this.background = bg_color;
 		this.music = bg_music;
 		this.enemies = [];
+		this.unlockables = [];
 		this.nextLevel = next_level;
 
 		for(let y = 0; y < this.data.length; y++) {
@@ -81,17 +82,51 @@ class Level{
 							));
 							this.data[y][x] = 0;
 						break;
+					
+					case -7: // Double Jump unlock
+						this.unlockables.push(new Unlockable(x * 64, y * 64, 
+							() => { player.doubleJumpUnlocked = true },
+							"YOU HAVE JUST UNLOCKED\nTHE DOUBLE JUMP!!\n\nPRESS THE JUMP BUTTON\nWHEN IN THE AIR\nTO PERFORM ANOTHER JUMP\n\nPRESS SPACE TO CONFIRM\n"));
+						this.data[y][x] = 0;
+						break;
+					
+					case -8: // Punch unlocked
+						this.unlockables.push(new Unlockable(x * 64, y * 64, () => { player.punchUnlocked = true }, ""));
+						this.data[y][x] = 0;
+						break;
+				
+					case -9: // Pound unlocked
+						this.unlockables.push(new Unlockable(x * 64, y * 64, () => { player.poundUnlocked = true }, ""));
+						this.data[y][x] = 0;
+						break;
 				}
 			}
 		}
+	}
+
+	restart() {
+		for(let i = 0; i < this.unlockables.length; i++)
+			this.unlockables[i].collected = false;
 	}
 };
 
 /* The scrolls that can unlock special abilities throughout the game */
 class Unlockable {
-	constructor(xpos, ypos) {
+	constructor(xpos, ypos, unlock_function, msg) {
 		this.x = xpos;
 		this.y = ypos;
+		this.unlock = unlock_function;
+		this.collected = false;
+
+		this.message = [];
+
+		for(let i = 0, str_build = ""; i < msg.length; i++) {
+			if(msg[i] == '\n') {
+				this.message.push(str_build);
+				str_build = "";
+			} else
+				str_build += msg[i];
+		}
 	}
 };
 
