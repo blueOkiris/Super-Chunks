@@ -63,6 +63,7 @@ function Update() {
 		case GameState.Popup:
 			if(input[Inputs.Confirm] && !gameJustPopup) {
 				gameJustPopup = true;
+				gameJustPunched = true;
 				gameState = GameState.Game;
 			}
 			break;

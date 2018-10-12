@@ -91,12 +91,14 @@ class Level{
 						break;
 					
 					case -8: // Punch unlocked
-						this.unlockables.push(new Unlockable(x * 64, y * 64, () => { player.punchUnlocked = true }, ""));
+						this.unlockables.push(new Unlockable(x * 64, y * 64, () => { player.punchUnlocked = true },
+						"\nYOU HAVE JUST UNLOCKED\nPUNCHING!!\n\nPRESS THE SPACE BUTTON\nTO PUNCH ENEMIES\n\nPRESS SPACE TO CONFIRM\n"));
 						this.data[y][x] = 0;
 						break;
 				
 					case -9: // Pound unlocked
-						this.unlockables.push(new Unlockable(x * 64, y * 64, () => { player.poundUnlocked = true }, ""));
+						this.unlockables.push(new Unlockable(x * 64, y * 64, () => { player.poundUnlocked = true },
+						"\nYOU HAVE JUST UNLOCKED\nTHE GROUND POUND!!\n\nPRESS THE DOWN BUTTON\nTO STOMP ONTO ENEMIES\n\nPRESS SPACE TO CONFIRM\n"));
 						this.data[y][x] = 0;
 						break;
 				}
