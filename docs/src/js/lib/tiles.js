@@ -14,13 +14,13 @@ class Level{
 				// Check for enemies and player start location
 				switch(this.data[y][x]) {
 					case -1: // Start location
-						this.start = [x * 64, y * 64];
+						this.start = [x * tileWidth, y * tileHeight];
 						this.data[y][x] = 0;
 						break;
 					
 					case -2: // Left Brocolli
 						this.enemies.push(
-							new Enemy(x * 64, y * 64, player.gravity, 
+							new Enemy(x * tileWidth, y * tileHeight, player.gravity, 
 								EnemyType.Brocolli, 
 								-1,
 								brocolliSprite,
@@ -33,7 +33,7 @@ class Level{
 					
 					case -3: // Right Brocolli
 						this.enemies.push(
-							new Enemy(x * 64, y * 64, player.gravity, 
+							new Enemy(x * tileWidth, y * tileHeight, player.gravity, 
 								EnemyType.Brocolli, 
 								1,
 								brocolliSprite,
@@ -46,7 +46,7 @@ class Level{
 								
 					case -4: // Spike
 						this.enemies.push(
-							new Enemy(x * 64, y * 64, player.gravity, 
+							new Enemy(x * tileWidth, y * tileHeight, player.gravity, 
 								EnemyType.Spike, 
 								1,
 								spikeSprite,
@@ -59,7 +59,7 @@ class Level{
 					
 					case -5: // Left Brussel Sprout
 						this.enemies.push(
-							new Enemy(x * 64, y * 64, player.gravity, 
+							new Enemy(x * tileWidth, y * tileHeight, player.gravity, 
 								EnemyType.BrusselSprout, 
 								-1,
 								brusselSproutSprite,
@@ -72,7 +72,7 @@ class Level{
 					
 					case -6: // Right Brussel Sprout
 						this.enemies.push(
-							new Enemy(x * 64, y * 64, player.gravity, 
+							new Enemy(x * tileWidth, y * tileHeight, player.gravity, 
 								EnemyType.BrusselSprout, 
 								1,
 								brusselSproutSprite,
@@ -84,20 +84,20 @@ class Level{
 						break;
 					
 					case -7: // Double Jump unlock
-						this.unlockables.push(new Unlockable(x * 64, y * 64, 
+						this.unlockables.push(new Unlockable(x * tileWidth, y * tileHeight, 
 							() => { player.doubleJumpUnlocked = true },
 							"YOU HAVE JUST UNLOCKED\nTHE DOUBLE JUMP!!\n\nPRESS THE JUMP BUTTON\nWHEN IN THE AIR\nTO PERFORM ANOTHER JUMP\n\nPRESS SPACE TO CONFIRM\n"));
 						this.data[y][x] = 0;
 						break;
 					
 					case -8: // Punch unlocked
-						this.unlockables.push(new Unlockable(x * 64, y * 64, () => { player.punchUnlocked = true },
+						this.unlockables.push(new Unlockable(x * tileWidth, y * tileHeight, () => { player.punchUnlocked = true },
 						"\nYOU HAVE JUST UNLOCKED\nPUNCHING!!\n\nPRESS THE SPACE BUTTON\nTO PUNCH ENEMIES\n\nPRESS SPACE TO CONFIRM\n"));
 						this.data[y][x] = 0;
 						break;
 				
 					case -9: // Pound unlocked
-						this.unlockables.push(new Unlockable(x * 64, y * 64, () => { player.poundUnlocked = true },
+						this.unlockables.push(new Unlockable(x * tileWidth, y * tileHeight, () => { player.poundUnlocked = true },
 						"\nYOU HAVE JUST UNLOCKED\nTHE GROUND POUND!!\n\nPRESS THE DOWN BUTTON\nTO STOMP ONTO ENEMIES\n\nPRESS SPACE TO CONFIRM\n"));
 						this.data[y][x] = 0;
 						break;
@@ -162,7 +162,7 @@ class Block {
 	draw(x_pos, y_pos) {
 		ctx.drawImage(
 			this.img, // The tile's image
-			this.imgRect[0], this.imgRect[1], tileWidth, tileHeight, // It's location in that image
+			this.imgRect[0], this.imgRect[1], 64, 64, // It's location in that image
 			x_pos, y_pos, tileWidth, tileHeight); // The tile's actual drawn location
 	}
 };
@@ -170,8 +170,8 @@ class Block {
 function blockAt(map, check_x, check_y, out_msg = "") {
 	if(out_msg != "") {
 		console.log(out_msg);
-		console.log("(" + Math.floor(check_x / 64), Math.floor(check_y / 64) + ")");
+		console.log("(" + Math.floor(check_x / tileHeight), Math.floor(check_y / tileWidth) + ")");
 	}
 
-	return map.data[Math.floor(check_y / 64)][Math.floor(check_x / 64)];
+	return map.data[Math.floor(check_y / tileHeight)][Math.floor(check_x / tileWidth)];
 }

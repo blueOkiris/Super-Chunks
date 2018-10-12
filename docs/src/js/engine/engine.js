@@ -6,6 +6,16 @@ var nextGameTick = (new Date).getTime();
 
 var onPage = true;
 
+window.onresize = function() {
+	screenWidth = getClosestResolution(window.innerWidth * 11 / 12); // Take the width of the window and add a little bit of breathing room
+	screenHeight = screenWidth * 9 / 16; // Do wide screen
+
+	canvas.width = screenWidth;
+	canvas.height = screenHeight;
+
+	startGame();
+};
+
 // The set up for the game loop
 function startGame() {
 	/* Set up the game loop */
