@@ -209,7 +209,7 @@ function enemyCollisions() {
 				while(!blockList[currentLevel, blockAt(currentLevel, x_pos, currentEnemy.y + (currentEnemy.vsp > 0 ? spriteHeight : 0) + Math.sign(currentEnemy.vsp))].solid)
 					currentEnemy.y += Math.sign(currentEnemy.vsp);
 			
-				if(currentEnemy.id == EnemyType.BrusselSprout) // jump if a brussel sprout hits the ground
+				if(currentEnemy.id == EnemyType.BrusselSprout && vsp >= 0) // jump if a brussel sprout hits the ground
 					currentEnemy.vsp = -player.jumpSpeed;
 				else
 					currentEnemy.vsp = 0;
