@@ -1,15 +1,15 @@
 var startLevelData = 
 [
-	[3,3,3,3,3,3,3,3,3,3,3,3,3,3],
-	[3,3,3,3,3,3,3,3,3,3,3,3,3,3],
-	[3,3,3,3,3,3,3,3,3,3,3,3,3,3],
-	[3,3,3,3,3,3,3,3,3,3,3,3,3,3],
-	[3,3,3,3,3,3,3,3,3,3,3,3,3,3],
-	[3,3,3,3,3,3,0,3,3,3,3,3,3,3],
-	[1,1,1,1,1,1,1,1,1,1,1,1,1,1],
-	[2,2,2,2,2,2,2,2,2,2,2,2,2,2],
-	[2,2,2,2,2,2,2,2,2,2,2,2,2,2],
-	[2,2,2,2,2,2,2,2,2,2,2,2,2,2]
+	[ 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3],
+	[ 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3],
+	[ 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3],
+	[ 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3],
+	[ 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3],
+	[ 3, 3, 3, 3, 3, 3,-1, 3, 3, 3, 3, 3, 3, 3],
+	[ 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+	[ 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2],
+	[ 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2],
+	[ 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2]
 ];
 var minimumWidth = 14, minimumHeight = 10;
 
@@ -35,17 +35,26 @@ function updateTileMap() {
 		for(let x = (offsetX > 0 ? offsetX : 0); x < levelData[0].length; x++) {
 			//console.log("offset: (" + offsetX + ", " + offsetY + ")");
 
-			ctx.drawImage(imageList[levelData[y][x]], 
-				(x - offsetX) * 64, (y - offsetY) * 64,
-				64, 64);
+			if(levelData[y][x] >= 0) {
+				ctx.drawImage(imageList[levelData[y][x]], 
+					(x - offsetX) * 64, (y - offsetY) * 64,
+					64, 64);
+			} else {
+				ctx.drawImage(enemyImageList[-levelData[y][x] - 1], 
+					(x - offsetX) * 64, (y - offsetY) * 64,
+					64, 64);
+			}
 		}
 	}
 }
 
+var clicked = false;
 // When clicked, place the appropriate tile
-canvas.addEventListener('click', 
+canvas.addEventListener('mousedown', 
 	function(e) {
 		if(loaded) {
+			clicked = true;
+
 			let x = e.pageX - canvas.offsetLeft;
 			let y = e.pageY - canvas.offsetTop;
 
@@ -59,4 +68,24 @@ canvas.addEventListener('click',
 		}
 	}
 , false);
+canvas.addEventListener('mousemove', 
+	function(e) {
+		if(loaded && clicked) {
+			let x = e.pageX - canvas.offsetLeft;
+			let y = e.pageY - canvas.offsetTop;
 
+			console.log("(" + x + ", " + y + ") => [" + Math.floor((y + offsetY * 64) / 64) + "][" + Math.floor((x + offsetX * 64) / 64) + "]");
+
+			levelData
+				[Math.floor((y + offsetY * 64) / 64)]
+				[Math.floor((x + offsetX * 64) / 64)] = iconSelect.getSelectedValue();
+			
+			updateTileMap();
+		}
+	}
+, false);
+canvas.addEventListener('mouseup',
+	function(e) {
+		clicked = false;
+	}
+, false);

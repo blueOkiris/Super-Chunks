@@ -19,7 +19,15 @@ var imageListSrc = [
     "images/ocean_block_r.png",
     "images/ocean_block_l.png",
 ];
-var numImages = imageListSrc.length;
+var enemyImageListSrc = [
+    "images/chunks.png",
+    "images/brocolli_left.png",
+    "images/brocolli_right.png",
+    "images/spike.png",
+    "images/brussel_left.png",
+    "images/brussel_right.png",
+];
+var numImages = imageListSrc.length + enemyImageListSrc.length;
 var numLoadedImages = 0;
 var loaded = false;
 
@@ -33,9 +41,10 @@ function checkImagesLoaded() {
 
 // List of actual image objects so it can be drawn
 var imageList = [];
+var enemyImageList = [];
 
 // Set all images into imageList
-for(let i = 0; i < numImages; i++) {
+for(let i = 0; i < imageListSrc.length; i++) {
     /* Set up image objects */
     let cur_img = new Image();
     cur_img.src = imageListSrc[i];
@@ -46,6 +55,22 @@ for(let i = 0; i < numImages; i++) {
     };
 
     imageList.push(cur_img);
+
+    /* Set up image selection objects */
+    // document.getElementById("" + i).style="background-image:url(" + imageListSrc[i] + ");"
+}
+// Set all images into enemyImageList
+for(let i = 0; i < enemyImageListSrc.length; i++) {
+    /* Set up image objects */
+    let cur_img = new Image();
+    cur_img.src = enemyImageListSrc[i];
+
+    cur_img.onload = function() {
+        numLoadedImages++;
+        checkImagesLoaded();
+    };
+
+    enemyImageList.push(cur_img);
 
     /* Set up image selection objects */
     // document.getElementById("" + i).style="background-image:url(" + imageListSrc[i] + ");"
@@ -63,8 +88,10 @@ window.onload = function(){
 
     let icons = [];
 
-    for(let i = 0; i < numImages; i++)
+    for(let i = 0; i < imageList.length; i++)
         icons.push({"iconFilePath":imageListSrc[i], "iconValue":"" + i});
+    for(let i = 0; i < enemyImageList.length; i++)
+        icons.push({"iconFilePath":enemyImageListSrc[i], "iconValue":"" + -(i + 1)});
 
     iconSelect.refresh(icons);
 };
