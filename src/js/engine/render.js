@@ -1,8 +1,23 @@
 // Updates every frame (60 fps)
 function Render() {
+	/* Get location of view window */
+	let context_x = (player.x + player.maskW / 2) - (screenWidth / 2);
+	let context_y = (player.y + player.maskH / 2) - (screenHeight / 2);
+	// Adjust for going past level data
+	if(context_x < 0)
+		context_x = 0;
+	if(context_y < 0)
+		context_y = 0;
+	if(context_x + screenWidth > currentLevel.data[0].length * tileWidth)
+		context_x = currentLevel.data[0].length * tileWidth - screenWidth;
+	if(context_y + screenHeight > currentLevel.data.length * tileHeight)
+		context_y = currentLevel.data.length * tileHeight - screenHeight;
+	
 	switch(gameState) {
 		case GameState.Loading:
-			splashSprite.draw(0, 0, screenWidth, screenHeight, 0);
+			ctx.fillStyle = "#7B7318"
+			ctx.fillRect(0, 0, screenWidth, screenHeight);
+			splashSprite.draw((screenWidth - 800) / 2, (screenHeight - 600) / 2, 800, 600, 0);
 			break;
 		
 		case GameState.ChangeLevel:
@@ -21,13 +36,13 @@ function Render() {
 			ctx.fillStyle = "#5522FF";
 			ctx.fillRect(0, 0, screenWidth, screenHeight);
 			ctx.fillStyle = "#FF3336";
-			ctx.fillRect(280, 345, 240, 50);
+			ctx.fillRect(screenWidth / 2 - 120, screenHeight / 2 + 40, 240, 50);
 			ctx.fillStyle = "#CCCCCC";
 			ctx.textAlign = "center";
 			ctx.font = "48px Pixeled";
-			ctx.fillText("SUPER-CHUNKS", 400, 240);
+			ctx.fillText("SUPER-CHUNKS", screenWidth / 2, screenHeight / 2 - 80);
 			ctx.font = "18px Pixeled";
-			ctx.fillText("PRESS SPACE!", 400, 380);
+			ctx.fillText("PRESS SPACE!", screenWidth / 2, screenHeight / 2 + 80);
 			break;
 		
 		case GameState.Game: // Actual test code
@@ -36,9 +51,9 @@ function Render() {
 				music.play(currentLevel.music);
 			}
 			
-			ctx.setTransform(1, 0, 0, 1, 
-				screenWidth / 2 - (player.x + player.maskW / 2), screenHeight / 2 - (player.y + player.maskH / 2));
-			
+			// Adjust screen
+			ctx.setTransform(1, 0, 0, 1, -context_x, -context_y);
+
 			// Draw background
 			ctx.fillStyle = currentLevel.background; // Dull blue
 			ctx.fillRect(
@@ -51,10 +66,13 @@ function Render() {
 			// Draw level map
 			for(let y = 0; y < currentLevel.data.length; y++) {
 				for(let x = 0; x < currentLevel.data[y].length; x++) {
-					if((new Rect(player.x + player.maskW / 2 - screenWidth / 2 - tileWidth, player.y + player.maskH / 2 - screenHeight / 2 - tileHeight,
-						screenWidth + tileWidth * 2, screenHeight + tileWidth * 2)).containsPoint(
-						x * 64, y * 64)) // culling
-					drawBlock(x * 64, y * 64, currentLevel.data[y][x]);
+					let context_rect = new Rect(
+						context_x - tileWidth, context_y - tileHeight,
+						screenWidth + 2 * tileWidth, screenHeight + 2 * tileHeight
+					);
+					
+					if(context_rect.containsPoint( x * 64, y * 64)) // culling
+						drawBlock(x * 64, y * 64, currentLevel.data[y][x]);
 				}
 			}
 
@@ -67,23 +85,19 @@ function Render() {
 			
 			// Draw brocolli enemies
 			for(let i = 0; i < currentLevel.enemies.length; i++) {
-				if(!currentLevel.enemies[i].dead
-					&& (new Rect(player.x + player.maskW / 2 - screenWidth / 2 - spriteWidth, player.y + player.maskH / 2 - screenHeight / 2 - spriteHeight,
-					screenWidth + spriteWidth * 2, screenHeight + spriteHeight * 2)).containsPoint(
-					currentLevel.enemies[i].x, currentLevel.enemies[i].y)) { // culling
+				if(currentLevel.enemies[i].dead)
+					continue;
+				let context_rect = new Rect(
+					context_x - spriteWidth, context_y - spriteHeight,
+					screenWidth + 2 * tileWidth, screenHeight + 2 * tileHeight
+				);
+				
+				if(context_rect.containsPoint(currentLevel.enemies[i].x, currentLevel.enemies[i].y)) {
 					currentLevel.enemies[i].draw(
 						currentLevel.enemies[i].x, currentLevel.enemies[i].y, 
 						spriteWidth, spriteHeight, 
 						currentLevel.enemies[i].animSpeed(animCounter)
 					);
-
-					/*// Draw the collision box
-					ctx.beginPath();
-					ctx.strokeStyle = "#FFFF00";
-					ctx.rect(
-						currentLevel.enemies[i].x + (spriteWidth - enemyMaskW) / 2, currentLevel.enemies[i].y + (spriteHeight - enemyMaskH) / 2, 
-						enemyMaskW, enemyMaskH);
-					ctx.stroke();*/
 				}
 			}
 
@@ -92,18 +106,21 @@ function Render() {
 				if(currentLevel.unlockables[i].collected)
 					continue;
 
-				if((new Rect(player.x + player.maskW / 2 - screenWidth / 2 - spriteWidth, player.y + player.maskH / 2 - screenHeight / 2 - spriteHeight,
-					screenWidth + spriteWidth * 2, screenHeight + spriteHeight * 2)).containsPoint(
-						currentLevel.unlockables[i].x, currentLevel.unlockables[i].y))// culling
+				let context_rect = new Rect(
+					context_x - spriteWidth, context_y - spriteHeight,
+					screenWidth + 2 * spriteWidth, screenHeight + 2 * spriteHeight
+				);
+				
+				if(context_rect.containsPoint(currentLevel.unlockables[i].x, currentLevel.unlockables[i].y))// culling
 					scrollSprite.draw(currentLevel.unlockables[i].x, currentLevel.unlockables[i].y, spriteWidth, spriteHeight, 0);
 			}
 
 			// Draw lives overlay
 			for(let i = 0; i < player.lives; i++)
-				livesSprite.draw((player.x + player.maskW / 2) - screenWidth / 2 + tileWidth / 2 + 48 * i, (player.y + player.maskH / 2) - screenHeight / 2 + tileHeight / 2, 48, 48, 0);
+				livesSprite.draw(context_x + tileWidth / 2 + 48 * i, context_y + tileHeight / 2, 48, 48, 0);
 			ctx.textAlign = "start";
 			ctx.fillStyle = "#FFFFFF";
-			ctx.fillText(" x " + player.lives, (player.x + player.maskW / 2) - screenWidth / 2 + 48 * (startLives + 1), (player.y + player.maskH / 2) - screenHeight / 2 + tileHeight * 0.9);
+			ctx.fillText(" x " + player.lives, context_x + 48 * (startLives + 1), context_y + tileHeight * 0.9);
 			break;	
 			
 		case GameState.GameOver:
@@ -111,17 +128,19 @@ function Render() {
 			ctx.fillStyle = "#000000";
 			ctx.fillRect(0, 0, screenWidth, screenHeight);
 			
+			ctx.font = "48px Pixeled";
 			ctx.textAlign = "center";
 			ctx.fillStyle = "#FFFFFF";
-			ctx.fillText("GAME OVER", 400, 280);
+			ctx.fillText("GAME OVER", screenWidth / 2, screenHeight / 2 - 20);
 			
 			ctx.fillStyle = "#FFFFFF";
-			ctx.fillRect(280, 345, 240, 50);
+			ctx.fillRect(screenWidth / 2 - 160, screenHeight / 2 + 40, 320, 50);
 			ctx.fillStyle = "#000000";
-			ctx.fillRect(264, 349, 272, 42);
-			ctx.fillStyle = "#CCCCCC";
+			ctx.fillRect(screenWidth / 2 - 156,  screenHeight / 2 + 44, 312, 42);
+			ctx.textAlign = "center";
 			ctx.font = "18px Pixeled";
-			ctx.fillText("SPACE TO RESTART!", 400, 380);
+			ctx.fillStyle = "#FFFFFF";
+			ctx.fillText("SPACE TO RESTART", screenWidth / 2, screenHeight / 2 + 80);
 			break;
 		
 		case GameState.Popup:
@@ -133,33 +152,36 @@ function Render() {
 
 			// Draw background
 			ctx.fillStyle = currentLevel.background; // Dull blue
-			ctx.fillRect(player.x - (screenWidth - player.maskW), player.y - (screenHeight - player.maskH), screenWidth * 2, screenHeight * 2);
+			ctx.fillRect(context_x, context_y, screenWidth, screenHeight);
 			
 			//bg_image.draw(0, 0, 5120, 2880, 0);
 			
 			// Draw level map
 			for(let y = 0; y < currentLevel.data.length; y++) {
 				for(let x = 0; x < currentLevel.data[y].length; x++) {
-					if((new Rect(player.x + player.maskW / 2 - screenWidth / 2 - tileWidth, player.y + player.maskH / 2 - screenHeight / 2 - tileHeight,
-						screenWidth + tileWidth * 2, screenHeight + tileWidth * 2)).containsPoint(
-						x * 64, y * 64)) // culling
-					drawBlock(x * 64, y * 64, currentLevel.data[y][x]);
+					let context_rect = new Rect(
+						context_x - tileWidth, context_y - tileHeight,
+						screenWidth + 2 * tileWidth, screenHeight + 2 * tileHeight
+					);
+					
+					if(context_rect.containsPoint(x * 64, y * 64)) // culling
+						drawBlock(x * 64, y * 64, currentLevel.data[y][x]);
 				}
 			}
 
-			messageBoxSprite.draw(player.x + player.maskW / 2 - 312, player.y + player.maskH / 2 - 376 / 2, 624, 376, 0);
+			messageBoxSprite.draw(context_x + screenWidth / 2 - 312, context_y + screenHeight / 2 - 376 / 2, 624, 376, 0);
 			
 			ctx.textAlign = "center";
 			ctx.fillStyle = "#CCCCCC";
 
 			switch(gameState) {
 				case GameState.Paused:
-					ctx.fillText(gamePauseMessage, player.x + player.maskW / 2, player.y + player.maskH / 2);
+					ctx.fillText(gamePauseMessage, context_x + screenWidth / 2, context_y + screenHeight / 2);
 					break;
 				
 				case GameState.Popup:
 					for(let i = 0; i < gameUnlockedMessage.length; i++) {
-						ctx.fillText(gameUnlockedMessage[i], player.x + player.maskW / 2, player.y + player.maskH / 2 - 100 + (30 * i));
+						ctx.fillText(gameUnlockedMessage[i], context_x + screenWidth / 2, context_y + screenHeight / 2 - 100 + (30 * i));
 					}
 					break;
 			}

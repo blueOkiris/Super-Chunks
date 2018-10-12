@@ -85,7 +85,7 @@ function collisionChecks() {
 			player.y = 0;
 			player.vsp = 0;
 		} else {
-			let block_left  = blockAt(currentLevel, player.x, 					player.y + (player.vsp > 0 ? player.maskH : 0) + player.vsp);//, "Vsp: '" + player.vsp + "' @ ");
+			let block_left  = blockAt(currentLevel, player.x, 						player.y + (player.vsp > 0 ? player.maskH : 0) + player.vsp);//, "Vsp: '" + player.vsp + "' @ ");
 			let block_mid   = blockAt(currentLevel, player.x + player.maskW / 2,	player.y + (player.vsp > 0 ? player.maskH : 0) + player.vsp);
 			let block_right = blockAt(currentLevel, player.x + player.maskW,		player.y + (player.vsp > 0 ? player.maskH : 0) + player.vsp);
 			
@@ -181,7 +181,8 @@ function enemyCollisions() {
 		let left_block = blockAt(currentLevel, current_enemy.x + hsp, current_enemy.y + spriteHeight / 2);
 		let right_block = blockAt(currentLevel, current_enemy.x + spriteWidth + hsp, current_enemy.y + spriteHeight / 2);
 
-		if(blockList[left_block].solid || blockList[right_block].solid) {
+		if(current_enemy.x + hsp < 0 || current_enemy.x + spriteWidth + hsp > currentLevel.data[0].length * 64
+			|| blockList[left_block].solid || blockList[right_block].solid) {
 			// Flip directions
 			current_enemy.dir = -current_enemy.dir;
 			hsp = -hsp;
@@ -219,8 +220,21 @@ function enemyCollisions() {
 	
 		// Only move if player has seen it
 		if(current_enemy.start) {
-			if(!(new Rect(player.x + player.maskW / 2 - screenWidth / 2, player.y + player.maskH / 2 - screenHeight / 2, screenWidth, screenHeight)).containsPoint(
-				current_enemy.x, current_enemy.y)) {
+			/* Get location of view window */
+			let context_x = (player.x + player.maskW / 2) - (screenWidth / 2);
+			let context_y = (player.y + player.maskH / 2) - (screenHeight / 2);
+			// Adjust for going past level data
+			if(context_x < 0)
+				context_x = 0;
+			if(context_y < 0)
+				context_y = 0;
+			if(context_x + screenWidth > currentLevel.data[0].length * tileWidth)
+				context_x = currentLevel.data[0].length * tileWidth - screenWidth;
+			if(context_y + screenHeight > currentLevel.data.length * tileHeight)
+				context_y = currentLevel.data.length * tileHeight - screenHeight;
+			
+			let context_rect = new Rect(context_x - spriteWidth, context_y - spriteHeight, screenWidth + spriteWidth * 2, screenHeight + spriteHeight * 2);
+			if(!context_rect.containsPoint(current_enemy.x, current_enemy.y)) {
 				hsp = 0;
 				current_enemy.vsp = 0;
 			} else
@@ -293,5 +307,4 @@ function checkUnlocked() {
 		}
 	}
 }
-
 
