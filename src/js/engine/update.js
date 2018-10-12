@@ -48,6 +48,8 @@ function Update() {
 			if(!gameJustPunched) {
 				music.stop();
 				gameState = GameState.Menu; // Wait for release
+
+				player.lives = startLives;
 			}
 			break;
 		

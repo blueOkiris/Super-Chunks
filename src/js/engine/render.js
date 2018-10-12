@@ -92,7 +92,7 @@ function Render() {
 				livesSprite.draw((player.x + player.maskW / 2) - screenWidth / 2 + tileWidth / 2 + 48 * i, (player.y + player.maskH / 2) - screenHeight / 2 + tileHeight / 2, 48, 48, 0);
 			ctx.textAlign = "start";
 			ctx.fillStyle = "#FFFFFF";
-			ctx.fillText(" x " + player.lives, (player.x + player.maskW / 2) - screenWidth / 2 + 48 * 4, (player.y + player.maskH / 2) - screenHeight / 2 + tileHeight * 0.9);
+			ctx.fillText(" x " + player.lives, (player.x + player.maskW / 2) - screenWidth / 2 + 48 * (startLives + 1), (player.y + player.maskH / 2) - screenHeight / 2 + tileHeight * 0.9);
 			break;	
 			
 		case GameState.GameOver:
