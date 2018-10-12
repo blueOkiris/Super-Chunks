@@ -98,7 +98,8 @@ function collisionChecks() {
 				while(!blockList[currentLevel, blockAt(currentLevel, x_pos, player.y + (player.vsp > 0 ? player.maskH : 0) + Math.sign(player.vsp))].solid)
 					player.y += Math.sign(player.vsp);
 			
-				player.grounded = true;
+				if(player.vsp >= 0) // If falling (not jumping)
+					player.grounded = true;
 				player.vsp = 0;
 			} else
 				player.grounded = false;
