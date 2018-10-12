@@ -43,19 +43,28 @@ function Render() {
 			//bg_image.draw(0, 0, 5120, 2880, 0);
 			
 			// Draw level map
-			for(let y = 0; y < currentLevel.data.length; y++)
-				for(let x = 0; x < currentLevel.data[y].length; x++)
+			for(let y = 0; y < currentLevel.data.length; y++) {
+				for(let x = 0; x < currentLevel.data[y].length; x++) {
+					if((new Rect(player.x + player.maskW / 2 - screenWidth / 2 - tileWidth, player.y + player.maskH / 2 - screenHeight / 2 - tileHeight,
+						screenWidth + tileWidth * 2, screenHeight + tileWidth * 2)).containsPoint(
+						x * 64, y * 64)) // culling
 					drawBlock(x * 64, y * 64, currentLevel.data[y][x]);
+				}
+			}
 
 			drawPlayer();
 			
 			// Draw brocolli enemies
 			for(let i = 0; i < currentLevel.enemies.length; i++) {
-				currentLevel.enemies[i].draw(
-					currentLevel.enemies[i].x, currentLevel.enemies[i].y, 
-					spriteWidth, spriteHeight, 
-					currentLevel.enemies[i].animSpeed(animCounter)
-				);
+				if((new Rect(player.x + player.maskW / 2 - screenWidth / 2 - spriteWidth, player.y + player.maskH / 2 - screenHeight / 2 - spriteHeight,
+					screenWidth + spriteWidth * 2, screenHeight + spriteHeight * 2)).containsPoint(
+					currentLevel.enemies[i].x, currentLevel.enemies[i].y)) { // culling
+					currentLevel.enemies[i].draw(
+						currentLevel.enemies[i].x, currentLevel.enemies[i].y, 
+						spriteWidth, spriteHeight, 
+						currentLevel.enemies[i].animSpeed(animCounter)
+					);
+				}
 			}
 
 			// Draw lives overlay

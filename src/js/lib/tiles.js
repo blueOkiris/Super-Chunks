@@ -18,7 +18,7 @@ class Level{
 					
 					case -2: // Left Brocolli
 						this.enemies.push(
-							new Enemy(x * 64, y * 64, player.grav, 
+							new Enemy(x * 64, y * 64, player.gravity, 
 								EnemyType.Brocolli, 
 								-1,
 								brocolliSprite,
@@ -31,7 +31,7 @@ class Level{
 					
 					case -3: // Right Brocolli
 						this.enemies.push(
-							new Enemy(x * 64, y * 64, player.grav, 
+							new Enemy(x * 64, y * 64, player.gravity, 
 								EnemyType.Brocolli, 
 								1,
 								brocolliSprite,
@@ -44,7 +44,7 @@ class Level{
 								
 					case -4: // Spike
 						this.enemies.push(
-							new Enemy(x * 64, y * 64, player.grav, 
+							new Enemy(x * 64, y * 64, player.gravity, 
 								EnemyType.Spike, 
 								1,
 								spikeSprite,
@@ -57,7 +57,7 @@ class Level{
 					
 					case -5: // Left Brussel Sprout
 						this.enemies.push(
-							new Enemy(x * 64, y * 64, player.grav, 
+							new Enemy(x * 64, y * 64, player.gravity, 
 								EnemyType.BrusselSprout, 
 								-1,
 								brusselSproutSprite,
@@ -70,7 +70,7 @@ class Level{
 					
 					case -6: // Right Brussel Sprout
 						this.enemies.push(
-							new Enemy(x * 64, y * 64, player.grav, 
+							new Enemy(x * 64, y * 64, player.gravity, 
 								EnemyType.BrusselSprout, 
 								1,
 								brusselSproutSprite,

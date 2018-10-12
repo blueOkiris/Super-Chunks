@@ -31,7 +31,7 @@ function Update() {
 			movementPhysics();
 			punchingPhysics();
 			collisionChecks();
-			//enemyCollisions();
+			enemyCollisions();
 				
 
 			if(input[Inputs.Pause] && !gameJustPaused && !player.dead) {
@@ -42,10 +42,10 @@ function Update() {
 			break;
 			
 		case GameState.GameOver:
-			/*if(space_released) {
-				bg_music[0].duration = 0;
-				game_state = GameState.Menu; // Wait for release
-			}*/
+			if(!gameJustPunched) {
+				music.stop();
+				gameState = GameState.Menu; // Wait for release
+			}
 			break;
 		
 		case GameState.Paused:

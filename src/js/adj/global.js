@@ -13,9 +13,11 @@ var pMoveSpeed = 4;
 var pPunchSpeed = 10;
 var pGravity = 0.4;
 var pJumpSpeed = 11;
-var pMaskW = 48;
-var pMaskH = 50;
+var pMaskW = 52;
+var pMaskH = 52;
 var pDefAbilities = [ true, true, true ]; // [punch, dbl jmp, pnd];
+
+var startLives = 3;
 
 const GameState = {
     Loading: -1,

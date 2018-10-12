@@ -60,17 +60,17 @@ function collisionChecks() {
 			player.x = 0;
 			player.hsp = 0;
 		} else { // Check for blocks next to player at 3 locations: top of player, bottom of player, and middle of player
-			let blockTop = blockAt(currentLevel, player.x + (player.hsp >= 0 ? player.maskW : 0) + player.hsp, player.y);
-			let blockMid = blockAt(currentLevel, player.x + (player.hsp >= 0 ? player.maskW : 0) + player.hsp, player.y + player.maskH / 2);
-			let blockLow = blockAt(currentLevel, player.x + (player.hsp >= 0 ? player.maskW : 0) + player.hsp, player.y + player.maskH);
+			let block_top = blockAt(currentLevel, player.x + (player.hsp >= 0 ? player.maskW : 0) + player.hsp, player.y);
+			let block_mid = blockAt(currentLevel, player.x + (player.hsp >= 0 ? player.maskW : 0) + player.hsp, player.y + player.maskH / 2);
+			let block_low = blockAt(currentLevel, player.x + (player.hsp >= 0 ? player.maskW : 0) + player.hsp, player.y + player.maskH);
 
 			// Move until flush against contact
-			let yPos = blockList[blockTop].solid ? player.y : 
-							blockList[blockMid].solid ? player.y + player.maskH / 2 : 
-								blockList[blockLow].solid ? player.y + player.maskH : 
+			let y_pos = blockList[block_top].solid ? player.y : 
+							blockList[block_mid].solid ? player.y + player.maskH / 2 : 
+								blockList[block_low].solid ? player.y + player.maskH : 
 									-1024;
-			if(yPos >= 0 && player.hsp != 0) { // There is a collision
-				while(!blockList[blockAt(currentLevel, player.x + (player.hsp > 0 ? player.maskW : 0) + Math.sign(player.hsp), yPos)].solid)
+			if(y_pos >= 0 && player.hsp != 0) { // There is a collision
+				while(!blockList[blockAt(currentLevel, player.x + (player.hsp > 0 ? player.maskW : 0) + Math.sign(player.hsp), y_pos)].solid)
 					player.x += Math.sign(player.hsp);
 			
 				player.hsp = 0;
@@ -85,17 +85,17 @@ function collisionChecks() {
 			player.y = 0;
 			player.vsp = 0;
 		} else {
-			let blockLeft  = blockAt(currentLevel, player.x, 					player.y + (player.vsp > 0 ? player.maskH : 0) + player.vsp);//, "Vsp: '" + player.vsp + "' @ ");
-			let blockMid   = blockAt(currentLevel, player.x + player.maskW / 2,	player.y + (player.vsp > 0 ? player.maskH : 0) + player.vsp);
-			let blockRight = blockAt(currentLevel, player.x + player.maskW,		player.y + (player.vsp > 0 ? player.maskH : 0) + player.vsp);
+			let block_left  = blockAt(currentLevel, player.x, 					player.y + (player.vsp > 0 ? player.maskH : 0) + player.vsp);//, "Vsp: '" + player.vsp + "' @ ");
+			let block_mid   = blockAt(currentLevel, player.x + player.maskW / 2,	player.y + (player.vsp > 0 ? player.maskH : 0) + player.vsp);
+			let block_right = blockAt(currentLevel, player.x + player.maskW,		player.y + (player.vsp > 0 ? player.maskH : 0) + player.vsp);
 			
 			// Move until flush against contact
-			let xPos = blockList[blockLeft].solid ? player.x :
-							blockList[blockMid].solid ? player.x + player.maskW / 2 : 
-								blockList[blockRight].solid ? player.x + player.maskW : 
+			let x_pos = blockList[block_left].solid ? player.x :
+							blockList[block_mid].solid ? player.x + player.maskW / 2 : 
+								blockList[block_right].solid ? player.x + player.maskW : 
 									-1024;
-			if(xPos >= 0 && player.vsp != 0) { // There is a collision
-				while(!blockList[currentLevel, blockAt(currentLevel, xPos, player.y + (player.vsp > 0 ? player.maskH : 0) + Math.sign(player.vsp))].solid)
+			if(x_pos >= 0 && player.vsp != 0) { // There is a collision
+				while(!blockList[currentLevel, blockAt(currentLevel, x_pos, player.y + (player.vsp > 0 ? player.maskH : 0) + Math.sign(player.vsp))].solid)
 					player.y += Math.sign(player.vsp);
 			
 				player.grounded = true;
@@ -154,90 +154,103 @@ function collisionChecks() {
 
 function enemyCollisions() {
 	/* Enemy physics */
-	for(var i = 0; i < current_level.enemies.length; i++) {
-		if(current_level.enemies[i].dead)
+	for(let i = 0; i < currentLevel.enemies.length; i++) {
+		// Only draw if not dead
+		if(currentLevel.enemies[i].dead)
 			continue;
 		
-		var hsp = current_level.enemies[i].move_speed * current_level.enemies[i].dir;
-				
-		if(isSolid(blockAt(current_level.enemies[i].x + hsp, current_level.enemies[i].y + 32))
-		|| isSolid(blockAt(current_level.enemies[i].x + 64 + hsp, current_level.enemies[i].y + 32))) {
-			current_level.enemies[i].dir = -current_level.enemies[i].dir;
+		// Start by trying to move towards enemy dir
+		let hsp = currentLevel.enemies[i].moveSpeed * currentLevel.enemies[i].dir;
+			
+		// Check to see if there is a block in direction of motion that is stopping the enemy
+		let left_block = blockAt(currentLevel, currentLevel.enemies[i].x + hsp, currentLevel.enemies[i].y + spriteHeight / 2);
+		let right_block = blockAt(currentLevel, currentLevel.enemies[i].x + spriteWidth + hsp, currentLevel.enemies[i].y + spriteHeight / 2);
+
+		if(blockList[left_block].solid || blockList[right_block].solid) {
+			// Flip directions
+			currentLevel.enemies[i].dir = -currentLevel.enemies[i].dir;
 			hsp = -hsp;
 		}
 	
-		current_level.enemies[i].vsp += current_level.enemies[i].gravity;
-		// Check y collision
-		var blockLeft = blockAt(current_level.enemies[i].x, current_level.enemies[i].y + 64 + current_level.enemies[i].vsp);
-		var blockMid = blockAt(current_level.enemies[i].x + 32, current_level.enemies[i].y + 64 + current_level.enemies[i].vsp);
-		var blockRight = blockAt(current_level.enemies[i].x + 64, current_level.enemies[i].y + 64 + current_level.enemies[i].vsp);
-	
-		// Move until flush against contact
-		var xPos = isSolid(blockLeft) ? current_level.enemies[i].x : isSolid(blockMid) ? current_level.enemies[i].x + 32 : isSolid(blockRight) ? current_level.enemies[i].x + 64 : -1024;
-		if(xPos >= 0 && current_level.enemies[i].vsp != 0) { // There is a collision
-			while(!isSolid(blockAt(xPos, current_level.enemies[i].y + 64 + Math.sign(current_level.enemies[i].vsp))))
-				current_level.enemies[i].y += Math.sign(current_level.enemies[i].vsp);
-				
-			if(current_level.enemies[i].vsp >= 0 && current_level.enemies[i].id == 1) // jump if a brussel sprout hits the ground
-				current_level.enemies[i].vsp = -player.jmp_spd;
-			else
-				current_level.enemies[i].vsp = 0;
+		// fall
+		currentLevel.enemies[i].vsp += currentLevel.enemies[i].gravity;
+
+		if(currentLevel.enemies[i].y + currentLevel.enemies[i].vsp < 0) {
+			currentLevel.enemies[i].y = 0;
+			currentLevel.enemies[i].vsp = 0;
+		} else {
+			let block_left  = blockAt(currentLevel, currentLevel.enemies[i].x, 
+										currentLevel.enemies[i].y + (currentLevel.enemies[i].vsp > 0 ? spriteHeight : 0) + currentLevel.enemies[i].vsp);
+			let block_mid   = blockAt(currentLevel, currentLevel.enemies[i].x + spriteWidth / 2,	
+										currentLevel.enemies[i].y + (currentLevel.enemies[i].vsp > 0 ? spriteHeight : 0) + currentLevel.enemies[i].vsp);
+			let block_right = blockAt(currentLevel, currentLevel.enemies[i].x + spriteWidth,
+										currentLevel.enemies[i].y + (currentLevel.enemies[i].vsp > 0 ? spriteHeight : 0) + currentLevel.enemies[i].vsp);
+			
+			// Move until flush against contact
+			let x_pos = blockList[block_left].solid ? currentLevel.enemies[i].x :
+							blockList[block_mid].solid ? currentLevel.enemies[i].x + spriteWidth / 2 : 
+								blockList[block_right].solid ? currentLevel.enemies[i].x + spriteWidth : 
+									-1024;
+			if(x_pos >= 0 && currentLevel.enemies[i].vsp != 0) { // There is a collision
+				while(!blockList[currentLevel, blockAt(currentLevel, x_pos, currentLevel.enemies[i].y + (currentLevel.enemies[i].vsp > 0 ? spriteHeight : 0) + Math.sign(currentLevel.enemies[i].vsp))].solid)
+					currentLevel.enemies[i].y += Math.sign(currentLevel.enemies[i].vsp);
+			
+				if(currentLevel.enemies[i].id == EnemyType.BrusselSprout) // jump if a brussel sprout hits the ground
+					currentLevel.enemies[i].vsp = -player.jumpSpeed;
+				else
+					currentLevel.enemies[i].vsp = 0;
+			}
 		}
 	
-		// Only move if player can see it
-		if(current_level.enemies[i].start) {
-			if(current_level.enemies[i].x > player.x + player.mask_w / 2 + 400
-			|| current_level.enemies[i].x + 64 < player.x + player.mask_w / 2 - 400
-			|| current_level.enemies[i].y > player.y + player.mask_h / 2 + 300
-			|| current_level.enemies[i].y + 64 < player.y + player.mask_h / 2 - 300) {
+		// Only move if player has seen it
+		if(currentLevel.enemies[i].start) {
+			if(!(new Rect(player.x + player.maskW / 2 - screenWidth / 2, player.y + player.maskH / 2 - screenHeight / 2, screenWidth, screenHeight)).containsPoint(
+				currentLevel.enemies[i].x, currentLevel.enemies[i].y)) {
 				hsp = 0;
-				current_level.enemies[i].vsp = 0;
+				currentLevel.enemies[i].vsp = 0;
 			} else
-				current_level.enemies[i].start = false;
+				currentLevel.enemies[i].start = false;
 		}
 		
-		if(current_level.enemies[i].id == 2) // Don't let the spikes move
+		if(currentLevel.enemies[i].id == 2) // Don't let the spikes move
 			hsp = 0;
 		
-		current_level.enemies[i].x += hsp;
-		current_level.enemies[i].y += current_level.enemies[i].vsp;
+		currentLevel.enemies[i].x += hsp;
+		currentLevel.enemies[i].y += currentLevel.enemies[i].vsp;
 		
 		/* Enemy collisions */
 		if(!player.dead) {
-			if (current_level.enemies[i].x < player.x + player.mask_w + 4
-			 && current_level.enemies[i].x + 64 > player.x + 4
-			 && current_level.enemies[i].y < player.y + player.mask_h
-			 && 64 + current_level.enemies[i].y > player.y) {
-				if(player.punching || (key[s_key] && player.poundUnlocked)) {
-					current_level.enemies[i].dead = true;
+			let enemy_box = new Rect(
+				currentLevel.enemies[i].x + 0.0625 * spriteWidth, currentLevel.enemies[i].y + 0.0625 * spriteHeight,
+				0.875 * spriteWidth, 0.875 * spriteHeight);
+			if (enemy_box.containsPoint(player.x + player.maskW / 2, player.y + player.maskH / 2)) {
+				if(player.punching || (input[Inputs.Pound] && player.poundUnlocked)) {
+					currentLevel.enemies[i].dead = true;
 				
-					player.vsp = -player.jmp_spd / 2;
-					jump_sound.play();
+					player.vsp = -player.jumpSpeed / 2;
+					sounds[Sounds.Jump].play();
 				} else {
-					death_sound.play();
+					sounds[Sounds.Death].play();
 					
-					player.vsp = -player.jmp_spd * 1.5;
+					player.vsp = -player.jumpSpeed * 1.5;
 					player.dead = true;
-					bg_music[current_music].currentTime = 0;
-					bg_music[current_music].pause();
+					music.stop();
 					
 					setTimeout(function() {
-						for(var j = 0; j < current_level.enemies.length; j++)
-							current_level.enemies[j].restart();
+						for(let j = 0; j < currentLevel.enemies.length; j++)
+							currentLevel.enemies[j].restart();
 						player.restart();
-						player.setUnlock(current_unlock);
 							
 						player.lives--;
 	
 						if(player.lives < 0) {
-							space_released = false;
-							current_music = 0;
-							game_state = GameState.GameOver;
+							gameJustPunched = true;
+							gameState = GameState.GameOver;
 						}
 					}, 1000);
 				}
 			}
-		}
+		} 
 	}
 }
 

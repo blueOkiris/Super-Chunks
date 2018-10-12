@@ -26,15 +26,15 @@ class Enemy {
     }
 
     restart() {
-        this.x = defaults[0];
-        this.y = defaults[1];
+        this.x = this.defaults[0];
+        this.y = this.defaults[1];
         
         this.vsp = 0;
         
         this.dead = false;
         this.start = true;
         
-        this.dir = defaults[2];
+        this.dir = this.defaults[2];
     }
 
     draw(x, y, width, height, index) {
@@ -78,7 +78,7 @@ class Player {
         this.poundUnlocked = pound_unlk;
 
         this.dead = false;
-        this.lives = 3;
+        this.lives = startLives;
 
         this.defaults = [start, punch_unlk, double_unlk, pound_unlk];
     }
@@ -88,8 +88,8 @@ class Player {
     }
 
     restart() {
-        this.x = defaults[0][0];
-        this.y = defaults[0][1];
+        this.x = this.defaults[0][0];
+        this.y = this.defaults[0][1];
         
         this.vsp = 0;
         this.hsp = 0;
@@ -105,9 +105,9 @@ class Player {
         this.canPunch = true;
         this.airPunch = false;
         
-        this.punchUnlocked = defaults[1];
-        this.doubleJumpUnlocked = defaults[2];
-        this.poundUnlocked = defaults[3];
+        this.punchUnlocked = this.defaults[1];
+        this.doubleJumpUnlocked = this.defaults[2];
+        this.poundUnlocked = this.defaults[3];
 
         this.dead = false;
     }
