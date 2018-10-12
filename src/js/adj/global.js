@@ -15,7 +15,7 @@ var pGravity = 0.4;
 var pJumpSpeed = 11;
 var pMaskW = 54;
 var pMaskH = 52;
-var pDefAbilities = [ false, false, false ]; // [punch, dbl jmp, pnd];
+var pDefAbilities = [ true, true, true ]; // [punch, dbl jmp, pnd];
 
 var startLives = 3;
 
@@ -30,6 +30,7 @@ const GameState = {
 	GameOver: 3,
 	Paused: 4,
 	Popup: 5,
+	ChangeLevel: 6,
 };
 var gameState = GameState.Loading;
 

@@ -13,6 +13,9 @@ function Update() {
 					1000);
 			}
 			break;
+		
+		case GameState.ChangeLevel:
+			break;
 
 		case GameState.Menu:
 			if(input[Inputs.Confirm])

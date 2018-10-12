@@ -4,7 +4,13 @@ function Render() {
 		case GameState.Loading:
 			splashSprite.draw(0, 0, screenWidth, screenHeight, 0);
 			break;
-			
+		
+		case GameState.ChangeLevel:
+			ctx.setTransform(1, 0, 0, 1, 0, 0);
+			ctx.fillStyle = "#000000";
+			ctx.fillRect(0, 0, screenWidth, screenHeight);
+			break;
+
 		case GameState.Menu:
 			if(music.songList[music.currentSong].paused)
 				music.play(music.currentSong);
@@ -13,7 +19,7 @@ function Render() {
 			ctx.setTransform(1, 0, 0, 1, 0, 0);
 			// Make a little button
 			ctx.fillStyle = "#5522FF";
-			ctx.fillRect(0, 0, 800, 600);
+			ctx.fillRect(0, 0, screenWidth, screenHeight);
 			ctx.fillStyle = "#FF3336";
 			ctx.fillRect(280, 345, 240, 50);
 			ctx.fillStyle = "#CCCCCC";
@@ -92,7 +98,7 @@ function Render() {
 		case GameState.GameOver:
 			ctx.setTransform(1, 0, 0, 1, 0, 0);
 			ctx.fillStyle = "#000000";
-			ctx.fillRect(0, 0, 800, 600);
+			ctx.fillRect(0, 0, screenWidth, screenHeight);
 			
 			ctx.textAlign = "center";
 			ctx.fillStyle = "#FFFFFF";
