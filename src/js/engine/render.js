@@ -71,8 +71,8 @@ function Render() {
 						screenWidth + 2 * tileWidth, screenHeight + 2 * tileHeight
 					);
 					
-					if(context_rect.containsPoint( x * 64, y * 64)) // culling
-						drawBlock(x * 64, y * 64, currentLevel.data[y][x]);
+					if(context_rect.containsPoint( x * tileWidth, y * tileHeight)) // culling
+						drawBlock(x * tileWidth, y * tileHeight, currentLevel.data[y][x]);
 				}
 			}
 
@@ -164,8 +164,8 @@ function Render() {
 						screenWidth + 2 * tileWidth, screenHeight + 2 * tileHeight
 					);
 					
-					if(context_rect.containsPoint(x * 64, y * 64)) // culling
-						drawBlock(x * 64, y * 64, currentLevel.data[y][x]);
+					if(context_rect.containsPoint(x * tileWidth, y * tileHeight)) // culling
+						drawBlock(x * tileWidth, y * tileHeight, currentLevel.data[y][x]);
 				}
 			}
 

@@ -12,6 +12,8 @@ window.onresize = function() {
 
 	canvas.width = screenWidth;
 	canvas.height = screenHeight;
+
+	startGame();
 };
 
 // The set up for the game loop
