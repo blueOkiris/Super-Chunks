@@ -9,6 +9,11 @@ class Rect {
 	containsPoint(x_pos, y_pos) {
 		return (x_pos >= this.x) && (x_pos <= this.x + this.width) && (y_pos >= this.y) && (y_pos <= this.y + this.height);
 	}
+
+	overlaps(other) {
+		return (this.x < other.x + other.width) && (this.x + this.width > other.x)
+				&& (this.y < other.y + other.height)  && (this.y + this.height > other.y);
+	}
 };
 
 class Sprite {

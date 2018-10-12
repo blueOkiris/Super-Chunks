@@ -140,6 +140,9 @@ function collisionChecks() {
 	} else if(input[Inputs.Jump] && blockAt(currentLevel, player.x, player.y) == BlockType.Door) { // Go through level end door
 		// if(currentLevel == intro_level)
 		// 	changeLevel(test_level, -1);
+		if(currentLevel.nextLevel != null) {
+			changeLevel(currentLevel.nextLevel);
+		}
 	}
 	
 	if(!input[Inputs.Jump] || blockAt(currentLevel, player.x, player.y) != BlockType.Ladder)
@@ -161,71 +164,75 @@ function enemyCollisions() {
 		
 		// Start by trying to move towards enemy dir
 		let hsp = currentLevel.enemies[i].moveSpeed * currentLevel.enemies[i].dir;
+		let currentEnemy = currentLevel.enemies[i];
 			
 		// Check to see if there is a block in direction of motion that is stopping the enemy
-		let left_block = blockAt(currentLevel, currentLevel.enemies[i].x + hsp, currentLevel.enemies[i].y + spriteHeight / 2);
-		let right_block = blockAt(currentLevel, currentLevel.enemies[i].x + spriteWidth + hsp, currentLevel.enemies[i].y + spriteHeight / 2);
+		let left_block = blockAt(currentLevel, currentEnemy.x + hsp, currentEnemy.y + spriteHeight / 2);
+		let right_block = blockAt(currentLevel, currentEnemy.x + spriteWidth + hsp, currentEnemy.y + spriteHeight / 2);
 
 		if(blockList[left_block].solid || blockList[right_block].solid) {
 			// Flip directions
-			currentLevel.enemies[i].dir = -currentLevel.enemies[i].dir;
+			currentEnemy.dir = -currentEnemy.dir;
 			hsp = -hsp;
 		}
 	
 		// fall
-		currentLevel.enemies[i].vsp += currentLevel.enemies[i].gravity;
+		currentEnemy.vsp += currentEnemy.gravity;
 
-		if(currentLevel.enemies[i].y + currentLevel.enemies[i].vsp < 0) {
-			currentLevel.enemies[i].y = 0;
-			currentLevel.enemies[i].vsp = 0;
+		if(currentEnemy.y + currentEnemy.vsp < 0) {
+			currentEnemy.y = 0;
+			currentEnemy.vsp = 0;
 		} else {
-			let block_left  = blockAt(currentLevel, currentLevel.enemies[i].x, 
-										currentLevel.enemies[i].y + (currentLevel.enemies[i].vsp > 0 ? spriteHeight : 0) + currentLevel.enemies[i].vsp);
-			let block_mid   = blockAt(currentLevel, currentLevel.enemies[i].x + spriteWidth / 2,	
-										currentLevel.enemies[i].y + (currentLevel.enemies[i].vsp > 0 ? spriteHeight : 0) + currentLevel.enemies[i].vsp);
-			let block_right = blockAt(currentLevel, currentLevel.enemies[i].x + spriteWidth,
-										currentLevel.enemies[i].y + (currentLevel.enemies[i].vsp > 0 ? spriteHeight : 0) + currentLevel.enemies[i].vsp);
+			let block_left  = blockAt(currentLevel, currentEnemy.x, 
+										currentEnemy.y + (currentEnemy.vsp > 0 ? spriteHeight : 0) + currentEnemy.vsp);
+			let block_mid   = blockAt(currentLevel, currentEnemy.x + spriteWidth / 2,	
+										currentEnemy.y + (currentEnemy.vsp > 0 ? spriteHeight : 0) + currentEnemy.vsp);
+			let block_right = blockAt(currentLevel, currentEnemy.x + spriteWidth,
+										currentEnemy.y + (currentEnemy.vsp > 0 ? spriteHeight : 0) + currentEnemy.vsp);
 			
 			// Move until flush against contact
-			let x_pos = blockList[block_left].solid ? currentLevel.enemies[i].x :
-							blockList[block_mid].solid ? currentLevel.enemies[i].x + spriteWidth / 2 : 
-								blockList[block_right].solid ? currentLevel.enemies[i].x + spriteWidth : 
+			let x_pos = blockList[block_left].solid ? currentEnemy.x :
+							blockList[block_mid].solid ? currentEnemy.x + spriteWidth / 2 : 
+								blockList[block_right].solid ? currentEnemy.x + spriteWidth : 
 									-1024;
-			if(x_pos >= 0 && currentLevel.enemies[i].vsp != 0) { // There is a collision
-				while(!blockList[currentLevel, blockAt(currentLevel, x_pos, currentLevel.enemies[i].y + (currentLevel.enemies[i].vsp > 0 ? spriteHeight : 0) + Math.sign(currentLevel.enemies[i].vsp))].solid)
-					currentLevel.enemies[i].y += Math.sign(currentLevel.enemies[i].vsp);
+			if(x_pos >= 0 && currentEnemy.vsp != 0) { // There is a collision
+				while(!blockList[currentLevel, blockAt(currentLevel, x_pos, currentEnemy.y + (currentEnemy.vsp > 0 ? spriteHeight : 0) + Math.sign(currentEnemy.vsp))].solid)
+					currentEnemy.y += Math.sign(currentEnemy.vsp);
 			
-				if(currentLevel.enemies[i].id == EnemyType.BrusselSprout) // jump if a brussel sprout hits the ground
-					currentLevel.enemies[i].vsp = -player.jumpSpeed;
+				if(currentEnemy.id == EnemyType.BrusselSprout) // jump if a brussel sprout hits the ground
+					currentEnemy.vsp = -player.jumpSpeed;
 				else
-					currentLevel.enemies[i].vsp = 0;
+					currentEnemy.vsp = 0;
 			}
 		}
 	
 		// Only move if player has seen it
-		if(currentLevel.enemies[i].start) {
+		if(currentEnemy.start) {
 			if(!(new Rect(player.x + player.maskW / 2 - screenWidth / 2, player.y + player.maskH / 2 - screenHeight / 2, screenWidth, screenHeight)).containsPoint(
-				currentLevel.enemies[i].x, currentLevel.enemies[i].y)) {
+				currentEnemy.x, currentEnemy.y)) {
 				hsp = 0;
-				currentLevel.enemies[i].vsp = 0;
+				currentEnemy.vsp = 0;
 			} else
-				currentLevel.enemies[i].start = false;
+				currentEnemy.start = false;
 		}
 		
-		if(currentLevel.enemies[i].id == 2) // Don't let the spikes move
+		if(currentEnemy.id == 2) // Don't let the spikes move
 			hsp = 0;
 		
-		currentLevel.enemies[i].x += hsp;
-		currentLevel.enemies[i].y += currentLevel.enemies[i].vsp;
+		currentEnemy.x += hsp;
+		currentEnemy.y += currentEnemy.vsp;
 		
 		/* Enemy collisions */
 		if(!player.dead) {
 			let enemy_box = new Rect(
-				currentLevel.enemies[i].x + 0.0625 * spriteWidth, currentLevel.enemies[i].y + 0.0625 * spriteHeight,
-				0.875 * spriteWidth, 0.875 * spriteHeight);
-			if (enemy_box.containsPoint(player.x + player.maskW / 2, player.y + player.maskH / 2)) {
-				if(player.punching || (input[Inputs.Pound] && player.poundUnlocked)) {
-					currentLevel.enemies[i].dead = true;
+				currentEnemy.x + (spriteWidth - enemyMaskW) / 2, currentEnemy.y + (spriteHeight - enemyMaskH) / 2, 
+				enemyMaskW, enemyMaskH);
+			let player_box = new Rect(player.x, player.y, player.maskW, player.maskH);
+
+			if (enemy_box.overlaps(player_box)) {
+				if(currentEnemy.id != EnemyType.Spike &&
+					(player.punching || (input[Inputs.Pound] && player.poundUnlocked))) {
+					currentEnemy.dead = true;
 				
 					player.vsp = -player.jumpSpeed / 2;
 					sounds[Sounds.Jump].play();

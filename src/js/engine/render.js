@@ -53,10 +53,16 @@ function Render() {
 			}
 
 			drawPlayer();
+			/*// Draw the collision box
+			ctx.beginPath();
+			ctx.strokeStyle = "#FFFF00";
+			ctx.rect(player.x, player.y, player.maskW, player.maskH);
+			ctx.stroke();*/
 			
 			// Draw brocolli enemies
 			for(let i = 0; i < currentLevel.enemies.length; i++) {
-				if((new Rect(player.x + player.maskW / 2 - screenWidth / 2 - spriteWidth, player.y + player.maskH / 2 - screenHeight / 2 - spriteHeight,
+				if(!currentLevel.enemies[i].dead
+					&& (new Rect(player.x + player.maskW / 2 - screenWidth / 2 - spriteWidth, player.y + player.maskH / 2 - screenHeight / 2 - spriteHeight,
 					screenWidth + spriteWidth * 2, screenHeight + spriteHeight * 2)).containsPoint(
 					currentLevel.enemies[i].x, currentLevel.enemies[i].y)) { // culling
 					currentLevel.enemies[i].draw(
@@ -64,6 +70,14 @@ function Render() {
 						spriteWidth, spriteHeight, 
 						currentLevel.enemies[i].animSpeed(animCounter)
 					);
+
+					/*// Draw the collision box
+					ctx.beginPath();
+					ctx.strokeStyle = "#FFFF00";
+					ctx.rect(
+						currentLevel.enemies[i].x + (spriteWidth - enemyMaskW) / 2, currentLevel.enemies[i].y + (spriteHeight - enemyMaskH) / 2, 
+						enemyMaskW, enemyMaskH);
+					ctx.stroke();*/
 				}
 			}
 
@@ -95,35 +109,41 @@ function Render() {
 		
 		case GameState.Popup:
 		case GameState.Paused:
-			/*if(bg_music[current_music].duration <= 0 || bg_music[current_music].paused && !player.dead)
-				bg_music[current_music].play();
-			
+			if(music.songList[currentLevel.music].paused) {
+				music.stop();
+				music.play(currentLevel.music);
+			}
+
 			// Draw background
-			ctx.fillStyle = "#5522A9"; // Dull blue
-			ctx.fillRect(player.x - (800 - player.mask_w), player.y - (600 - player.mask_h), 1600, 1200);
+			ctx.fillStyle = currentLevel.background; // Dull blue
+			ctx.fillRect(player.x - (screenWidth - player.maskW), player.y - (screenHeight - player.maskH), screenWidth * 2, screenHeight * 2);
 			
 			//bg_image.draw(0, 0, 5120, 2880, 0);
 			
 			// Draw level map
-			for(var y = 0; y < current_level.data.length; y++)
-				for(var x = 0; x < current_level.data[y].length; x++)
-					draw_block(current_level.data[y][x], x, y);
-					
-			spr_message_box.draw(player.x + player.mask_w / 2 - 312, player.y + player.mask_h / 2 - 376/2, 624, 376, 0);
+			for(let y = 0; y < currentLevel.data.length; y++) {
+				for(let x = 0; x < currentLevel.data[y].length; x++) {
+					if((new Rect(player.x + player.maskW / 2 - screenWidth / 2 - tileWidth, player.y + player.maskH / 2 - screenHeight / 2 - tileHeight,
+						screenWidth + tileWidth * 2, screenHeight + tileWidth * 2)).containsPoint(
+						x * 64, y * 64)) // culling
+					drawBlock(x * 64, y * 64, currentLevel.data[y][x]);
+				}
+			}
+
+			messageBoxSprite.draw(player.x + player.maskW / 2 - 312, player.y + player.maskH / 2 - 376 / 2, 624, 376, 0);
 			
 			ctx.textAlign = "center";
 			ctx.fillStyle = "#CCCCCC";
-			for(var i = 0; i < game_pause_msg.length; i++) {
-				switch(game_state) {
+
+			switch(gameState) {
 				case GameState.Paused:
-					ctx.fillText(game_pause_msg[i], player.x + player.mask_w / 2, player.y + player.mask_h / 2 + i * 30 - 100);
+					ctx.fillText(gamePauseMessage, player.x + player.maskW / 2, player.y + player.maskH / 2);
 					break;
 				
 				case GameState.Popup:
-					ctx.fillText(game_popup_msg[i], player.x + player.mask_w / 2, player.y + player.mask_h / 2 + i * 30 - 100);
+					ctx.fillText(gameUnlockedMessage, player.x + player.maskW / 2, player.y + player.maskH / 2);
 					break;
-				}
-			}*/
+			}
 			break;
 	}
 	

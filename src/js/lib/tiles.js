@@ -1,11 +1,12 @@
 // Includes Level, Block, and blockAt
 
 class Level{
-	constructor(layout, bg_color, bg_music) {
+	constructor(layout, bg_color, bg_music, next_level) {
 		this.data = layout;
 		this.background = bg_color;
 		this.music = bg_music;
 		this.enemies = [];
+		this.nextLevel = next_level;
 
 		for(let y = 0; y < this.data.length; y++) {
 			for(let x = 0; x < this.data[0].length; x++) {
