@@ -26,8 +26,12 @@ function Update() {
 			if(!input[Inputs.Confirm]) {
 				music.stop();
 				changeLevel(testLevel);
-				gameState = GameState.Game;
+				gameState = GameState.LevelSelect;
 			}
+			break;
+
+		case GameState.LevelSelect:
+			
 			break;
 		
 		case GameState.Game: // play the game

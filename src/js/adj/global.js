@@ -42,8 +42,15 @@ const GameState = {
 	Paused: 4,
 	Popup: 5,
 	ChangeLevel: 6,
+	LevelSelect: 7,
 };
 var gameState = GameState.Loading;
+
+const Worlds = {
+	Grass: 0,
+	Water: 1,
+}
+var currentWorld = Worlds.Grass;
 
 var gameJustPaused = false;
 var gameJustPopup = false;
