@@ -142,14 +142,14 @@ function collisionChecks() {
 		// if(currentLevel == intro_level)
 		// 	changeLevel(test_level, -1);
 		if(currentLevel.nextLevel != null) {
-			gameState = GameState.LevelChange;
+			gameState = GameState.ChangeLevel;
 			ctx.setTransform(1, 0, 0, 1, 0, 0);
 			ctx.fillStyle = "#000000";
 			ctx.fillRect(0, 0, screenWidth, screenHeight);
 
 			setTimeout(
 				() => { 
-					changeLevel(currentLevel.nextLevel);
+					nextLevel();
 					gameState = GameState.Game;
 				},
 			500);

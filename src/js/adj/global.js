@@ -43,14 +43,11 @@ const GameState = {
 	Popup: 5,
 	ChangeLevel: 6,
 	LevelSelect: 7,
+	StartLevel: 8,
+	LevelDown: 9,
+	LevelUp: 10,
 };
 var gameState = GameState.Loading;
-
-const Worlds = {
-	Grass: 0,
-	Water: 1,
-}
-var currentWorld = Worlds.Grass;
 
 var gameJustPaused = false;
 var gameJustPopup = false;

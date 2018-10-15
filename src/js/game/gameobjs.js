@@ -31,7 +31,6 @@ const ChunksAnim = {
     ClimbB: 21,
 }
 
-
 var livesSprite  = new Sprite(livesImage, [[0, 0]], [48, 48]);
 var scrollSprite = new Sprite(scrollImage, [[0, 0]], [64, 64]);
 
@@ -80,6 +79,10 @@ var spikeSprite = new Sprite(spikeImage, [[0, 0]], [64, 64]);
 
 var messageBoxSprite = new Sprite(messageBoxImage, [[0, 0]], [624, 376]);
 var splashSprite = new Sprite(splashImage, [[0, 0]], [800, 600]);
+
+var grassWorldSelSprite = new Sprite(grassWorldImage, [[0, 0]], [624, 376]);
+var oceanWorldSelSprite = new Sprite(oceanWorldImage, [[0, 0]], [624, 376]);
+var airWorldSelSprite = new Sprite(airWorldImage, [[0, 0]], [624, 376]);
 
 /* Player Object */
 var player = new Player([0, 0], 

@@ -54,6 +54,18 @@ var ladderImage = new Image();
 ladderImage.src = "src/images/ladder.png";
 ladderImage.addEventListener('load', checkAllImagesLoaded());
 
+var grassWorldImage = new Image();
+grassWorldImage.src = "src/images/grass_world.png";
+grassWorldImage.addEventListener('load', checkAllImagesLoaded());
+
+var oceanWorldImage = new Image();
+oceanWorldImage.src = "src/images/water_world.png";
+oceanWorldImage.addEventListener('load', checkAllImagesLoaded());
+
+var airWorldImage = new Image();
+airWorldImage.src = "src/images/air_world.png";
+airWorldImage.addEventListener('load', checkAllImagesLoaded());
+
 function checkAllImagesLoaded() {
 	numImagesLoaded++;
 

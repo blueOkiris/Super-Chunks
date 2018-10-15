@@ -20,6 +20,32 @@ function Render() {
 			splashSprite.draw((screenWidth - 800) / 2, (screenHeight - 600) / 2, 800, 600, 0);
 			break;
 		
+		case GameState.LevelSelect:
+		case GameState.StartLevel:
+			ctx.setTransform(1, 0, 0, 1, 0, 0);
+			ctx.fillStyle = "#5522FF";
+			ctx.fillRect(0, 0, screenWidth, screenHeight);
+
+			/* Draw the items */
+			switch(currentWorld) {
+				case Worlds.Grass:
+					grassWorldSelSprite.draw((screenWidth - 624) / 2, (screenHeight - 376) / 4, 624, 376, 0);
+					oceanWorldSelSprite.draw((screenWidth - 624) / 2, ((screenHeight - 376) / 4) * 2 + 376 , 624, 376, 0);
+					break;
+
+				case Worlds.Water:
+					oceanWorldSelSprite.draw((screenWidth - 624) / 2, (screenHeight - 376) / 4, 624, 376, 0);
+					airWorldSelSprite.draw((screenWidth - 624) / 2, ((screenHeight - 376) / 4) * 2 + 376 , 624, 376, 0);
+					break;
+
+				case Worlds.Air:
+					airWorldSelSprite.draw((screenWidth - 624) / 2, (screenHeight - 376) / 4, 624, 376, 0);
+					//grassWorldSelSprite.draw((screenWidth - 624) / 2, ((screenHeight - 376) / 4) * 2 + 376 , 624, 376, 0);
+					break;
+			}
+			console.log(currentWorld);
+			break;
+		
 		case GameState.ChangeLevel:
 			ctx.setTransform(1, 0, 0, 1, 0, 0);
 			ctx.fillStyle = "#000000";
@@ -27,10 +53,9 @@ function Render() {
 			break;
 
 		case GameState.Menu:
+		case GameState.MenuToGame:// start screen
 			if(music.songList[music.currentSong].paused)
 				music.play(music.currentSong);
-				
-		case GameState.MenuToGame:// start screen
 			ctx.setTransform(1, 0, 0, 1, 0, 0);
 			// Make a little button
 			ctx.fillStyle = "#5522FF";
