@@ -18,6 +18,16 @@ var imageListSrc = [
     "images/ocean_block_r.png",
     "images/ocean_block_b.png",
     "images/ocean_block_l.png",
+    "images/air_stone.png",
+    "images/air_mid.png",
+    "images/air_tl.png",
+    "images/air_tr.png",
+    "images/air_bl.png",
+    "images/air_br.png",
+    "images/air_top.png",
+    "images/air_right.png",
+    "images/air_bottom.png",
+    "images/air_left.png",
 ];
 var enemyImageListSrc = [
     "images/chunks.png",
