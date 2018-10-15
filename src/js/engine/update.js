@@ -37,14 +37,16 @@ function Update() {
 				currentWorld++;
 
 				if(currentWorld >= numWorlds)
-					currentWorld = 0;
+					//currentWorld = 0;
+					currentWorld = numWorlds - 1;
 				
 				gameState = GameState.LevelDown;
 			} else if(input[Inputs.Jump]) {
 				currentWorld--;
 
 				if(currentWorld < 0)
-					currentWorld = numWorlds - 1;
+					//currentWorld = numWorlds - 1;
+					currentWorld = 0;
 				
 				gameState = GameState.LevelUp;
 			}

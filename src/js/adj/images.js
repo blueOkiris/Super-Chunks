@@ -1,5 +1,5 @@
 /* Image objects */
-var numImages = 13;
+var numImages = 18;
 var numImagesLoaded = 0;
 
 var chunksImage = new Image();
@@ -69,6 +69,10 @@ oceanWorldImage.addEventListener('load', checkAllImagesLoaded());
 var airWorldImage = new Image();
 airWorldImage.src = "src/images/air_world.png";
 airWorldImage.addEventListener('load', checkAllImagesLoaded());
+
+var arrowImage = new Image();
+arrowImage.src = "src/images/arrows.png";
+arrowImage.addEventListener('load', checkAllImagesLoaded())
 
 function checkAllImagesLoaded() {
 	numImagesLoaded++;

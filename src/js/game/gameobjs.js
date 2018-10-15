@@ -105,6 +105,7 @@ var splashSprite = new Sprite(splashImage, [[0, 0]], [800, 600]);
 var grassWorldSelSprite = new Sprite(grassWorldImage, [[0, 0]], [624, 376]);
 var oceanWorldSelSprite = new Sprite(oceanWorldImage, [[0, 0]], [624, 376]);
 var airWorldSelSprite = new Sprite(airWorldImage, [[0, 0]], [624, 376]);
+var arrowSprite = new Sprite(arrowImage, [[0,0], [128, 0], [256, 0]], [128, 384]);
 
 /* Player Object */
 var player = new Player([0, 0], 

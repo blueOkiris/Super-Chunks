@@ -21,29 +21,44 @@ function Render() {
 			break;
 		
 		case GameState.LevelSelect:
+		case GameState.LevelUp:
+		case GameState.LevelDown:
 		case GameState.StartLevel:
 			ctx.setTransform(1, 0, 0, 1, 0, 0);
 			ctx.fillStyle = "#5522FF";
 			ctx.fillRect(0, 0, screenWidth, screenHeight);
 
+			switch(gameState) {
+				case GameState.StartLevel:
+				case GameState.LevelSelect:
+					arrowSprite.draw(tileWidth, (screenHeight - 384) / 2, 128, 384, 0);
+					break;
+				case GameState.LevelUp:
+					arrowSprite.draw(tileWidth, (screenHeight - 384) / 2, 128, 384, 1);
+					break;
+				case GameState.LevelDown:
+					arrowSprite.draw(tileWidth, (screenHeight - 384) / 2, 128, 384, 2);
+					break;
+			}
 			/* Draw the items */
 			switch(currentWorld) {
 				case Worlds.Grass:
-					grassWorldSelSprite.draw((screenWidth - 624) / 2, (screenHeight - 376) / 4, 624, 376, 0);
-					oceanWorldSelSprite.draw((screenWidth - 624) / 2, ((screenHeight - 376) / 4) * 2 + 376 , 624, 376, 0);
+					grassWorldSelSprite.draw((screenWidth - 624) / 2, (screenHeight - 376) / 2, 624, 376, 0);
+					oceanWorldSelSprite.draw((screenWidth - 624) / 2, screenHeight - ((screenHeight - 376) / 4), 624, 376, 0);
 					break;
 
 				case Worlds.Water:
-					oceanWorldSelSprite.draw((screenWidth - 624) / 2, (screenHeight - 376) / 4, 624, 376, 0);
-					airWorldSelSprite.draw((screenWidth - 624) / 2, ((screenHeight - 376) / 4) * 2 + 376 , 624, 376, 0);
+					grassWorldSelSprite.draw((screenWidth - 624) / 2, -374 * 7 / 8, 624, 376, 0);
+					oceanWorldSelSprite.draw((screenWidth - 624) / 2, (screenHeight - 376) / 2, 624, 376, 0);
+					airWorldSelSprite.draw((screenWidth - 624) / 2, screenHeight - ((screenHeight - 376) / 4) , 624, 376, 0);
 					break;
 
 				case Worlds.Air:
-					airWorldSelSprite.draw((screenWidth - 624) / 2, (screenHeight - 376) / 4, 624, 376, 0);
-					//grassWorldSelSprite.draw((screenWidth - 624) / 2, ((screenHeight - 376) / 4) * 2 + 376 , 624, 376, 0);
+					oceanWorldSelSprite.draw((screenWidth - 624) / 2, -374 * 7 / 8, 624, 376, 0);
+					airWorldSelSprite.draw((screenWidth - 624) / 2, (screenHeight - 376) / 2, 624, 376, 0);
 					break;
 			}
-			console.log(currentWorld);
+			//console.log(currentWorld);
 			break;
 		
 		case GameState.ChangeLevel:
