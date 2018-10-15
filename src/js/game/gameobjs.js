@@ -53,6 +53,18 @@ var oceanRightBlock     = new Block(BlockType.OceanRight, true, oceanBlockImage,
 var oceanBottomBlock    = new Block(BlockType.OceanBottom, true, oceanBlockImage,       [64 * 4, 64]);
 var oceanLeftBlock      = new Block(BlockType.OceanLeft, true, oceanBlockImage,         [64 * 3, 64]);
 
+/* Air tileset */
+var airStoneBlock     = new Block(BlockType.AirStone, true, airBlockImage,        [0, 0]);
+var airMidBlock       = new Block(BlockType.AirMid, false, airBlockImage,         [0, 64]);
+var airTLBlock        = new Block(BlockType.AirTopLeft, true, airBlockImage,      [64, 0]);
+var airTRBlock        = new Block(BlockType.AirTopRight, true, airBlockImage,     [64 * 2, 0]);
+var airBLBlock        = new Block(BlockType.AirBottomLeft, true, airBlockImage,   [64, 64]);
+var airBRBlock        = new Block(BlockType.AirBottomRight, true, airBlockImage,  [64 * 2, 64]);
+var airTopBlock       = new Block(BlockType.AirTop, true, airBlockImage,          [64 * 3, 0]);
+var airRightBlock     = new Block(BlockType.AirRight, true, airBlockImage,        [64 * 4, 0]);
+var airBottomBlock    = new Block(BlockType.AirBottom, true, airBlockImage,       [64 * 4, 64]);
+var airLeftBlock      = new Block(BlockType.AirLeft, true, airBlockImage,         [64 * 3, 64]);
+
 var blockList = [
     blankBlock,
     grassBlock,
@@ -70,6 +82,16 @@ var blockList = [
     oceanRightBlock,
     oceanBottomBlock,
     oceanLeftBlock,
+    oceanStoneBlock,
+    airMidBlock,
+    airTLBlock,
+    airTRBlock,
+    airBLBlock,
+    airBRBlock,
+    airTopBlock,
+    airRightBlock,
+    airBottomBlock,
+    airLeftBlock,
 ]
 
 /* Enemy Sprites */

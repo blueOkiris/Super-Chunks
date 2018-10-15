@@ -139,21 +139,17 @@ function collisionChecks() {
 		
 		sounds[Sounds.Jump].play();
 	} else if(input[Inputs.Jump] && blockAt(currentLevel, player.x, player.y) == BlockType.Door) { // Go through level end door
-		// if(currentLevel == intro_level)
-		// 	changeLevel(test_level, -1);
-		if(currentLevel.nextLevel != null) {
-			gameState = GameState.ChangeLevel;
-			ctx.setTransform(1, 0, 0, 1, 0, 0);
-			ctx.fillStyle = "#000000";
-			ctx.fillRect(0, 0, screenWidth, screenHeight);
+		gameState = GameState.ChangeLevel;
+		ctx.setTransform(1, 0, 0, 1, 0, 0);
+		ctx.fillStyle = "#000000";
+		ctx.fillRect(0, 0, screenWidth, screenHeight);
 
-			setTimeout(
-				() => { 
-					nextLevel();
-					gameState = GameState.Game;
-				},
-			500);
-		}
+		setTimeout(
+			() => { 
+				nextLevel();
+				gameState = GameState.Game;
+			},
+		500);
 	}
 	
 	if(!input[Inputs.Jump] || blockAt(currentLevel, player.x, player.y) != BlockType.Ladder)

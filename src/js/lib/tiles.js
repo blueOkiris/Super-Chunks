@@ -22,12 +22,16 @@ class Unlockable {
 
 /* The types of blocks that exist */
 const BlockType = {
+	/* Default */
 	Blank: 0,
 	Grass: 1,
 	Dirt: 2,
 	Stone: 3,
+
 	Door: 4,
 	Ladder: 5,
+
+	/* Water Blocks */
 	OceanStone: 6,
 	OceanMid: 7,
 	OceanTopLeft: 8,
@@ -38,6 +42,18 @@ const BlockType = {
 	OceanRight: 13,
 	OceanBottom: 14,
 	OceanLeft: 15,
+
+	/* Air Blocks */
+	AirStone: 16,
+	AirMid: 17,
+	AirTopLeft: 18,
+	AirTopRight: 19,
+	AirBottomLeft: 20,
+	AirBottomRight: 21,
+	AirTop: 22,
+	AirRight: 23,
+	AirBottom: 24,
+	AirLeft: 25,
 };
 class Block {
 	constructor(identifier, is_solid, img_obj, img_loc) {

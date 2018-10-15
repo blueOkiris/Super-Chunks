@@ -1,8 +1,8 @@
 // Updates every frame (60 fps)
 function Render() {
 	/* Get location of view window */
-	let context_x = (player.x + player.maskW / 2) - (screenWidth / 2);
-	let context_y = (player.y + player.maskH / 2) - (screenHeight / 2);
+	let context_x = Math.round((player.x + player.maskW / 2) - (screenWidth / 2));
+	let context_y = Math.round((player.y + player.maskH / 2) - (screenHeight / 2));
 	// Adjust for going past level data
 	if(context_x < 0)
 		context_x = 0;

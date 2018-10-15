@@ -1,5 +1,5 @@
 function getClosestResolution(width) {
-	let supportedWidths = [800, 1024, 1152, 1280, 1366];
+	let supportedWidths = [1024, 1152, 1280, 1366, 1920];
 	let current = supportedWidths[0];
 
 	for(let i = 0; i < supportedWidths.length; i++) {

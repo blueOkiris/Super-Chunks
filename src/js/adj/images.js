@@ -30,6 +30,10 @@ var oceanBlockImage = new Image();
 oceanBlockImage.src = "src/images/spr_ocean_blocks.png";
 oceanBlockImage.addEventListener('load', checkAllImagesLoaded());
 
+var airBlockImage = new Image();
+airBlockImage.src = "src/images/air_blocks.png";
+airBlockImage.addEventListener('load', checkAllImagesLoaded());
+
 var brocolliImage = new Image();
 brocolliImage.src = "src/images/spr_brocolli.png";
 brocolliImage.addEventListener('load', checkAllImagesLoaded());

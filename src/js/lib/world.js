@@ -114,5 +114,8 @@ class Level{
 	restart() {
 		for(let i = 0; i < this.unlockables.length; i++)
 			this.unlockables[i].collected = false;
+		
+		for(let i = 0; i < this.enemies.length; i++)
+			this.enemies[i].restart();
 	}
 };
