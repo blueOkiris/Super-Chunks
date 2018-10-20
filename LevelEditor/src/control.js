@@ -140,7 +140,7 @@ function output() {
 	}
 
 	//alert(out + "];");
-	//console.log("levelData = " + out + "];");
+	console.log("levelData = " + out + "];");
 	
 	var link = document.getElementById('downloadlink');
 	link.href = makeTextFile(out + "];");
@@ -167,44 +167,72 @@ var makeTextFile = function (text) {
 function getLevel() {
 	let reader = new FileReader();
 	reader.onload = function(e) {
-		this.text = reader.result;
+		let text = reader.result;
+
+		let level_chars = [];
+		let new_level_data = [];
+		let row_data = [];
+		let number = "";
+
+		console.log("Reading level...");
+		//console.log(text);
+
+		let i = 0;
+
+		//console.log("Finding start position");
+
+		i = 0;
+		//console.log(text.charAt(0));
+		while(text.charAt(i) != "[") {
+			console.log(text.charAt(i));
+			i++;
+		}
+		i++;
+
+		//console.log("Found start index");
+		for(; i < text.length; i++) {
+			if(text.charAt(i) != ' '
+			&& text.charAt(i) != '\n' 
+			&& text.charAt(i) != '\t'
+			&& text.charAt(i) != '\r'
+			&& text.charAt(i) != ';'
+			&& text.charAt(i) != '[')
+				level_chars.push(text.charAt(i));
+		}
+		level_chars.pop();
+
+		console.log("Interpretting array code");
+		for(i = 0; i < level_chars.length; i++) {
+			if(level_chars[i] == ']') {
+				// Check for left over number
+				if(number != "") {
+					row_data.push(parseInt(number));
+					number = "";
+				}
+
+				new_level_data.push(row_data);
+				row_data = [];
+				
+				i++; // Theres a comma after the right bracket
+			} else if(level_chars[i] == ',') {
+				row_data.push(parseInt(number));
+				number = "";
+			} else
+				number += level_chars[i];
+		}
+
+		console.log("Done.");
+
+		levelData = new_level_data;
+		xSlider.max = levelData[0].length;
+		ySlider.max = levelData.length;
+		document.getElementById("resize-text-x").value = "" + levelData[0].length;
+		document.getElementById("resize-text-y").value = "" + levelData.length;
+
+		updateTileMap();
 	}
 
 	let file = document.getElementById("read_level").files[0];
 	reader.readAsText(file);
 	//console.log(reader.text);
-
-	let level_chars = [];
-
-	let new_level_data = [];
-	let row_data = [];
-	let number = "";
-
-	let i = 0;
-	while(reader.result.toString()[i] != '[');
-		i++;
-	i++;
-	for(; i < reader.result.toString().length; i++) {
-		if(reader.result.toString()[i] != ' '
-		&& reader.result.toString()[i] != '\n' 
-		&& reader.result.toString()[i] != '\t'
-		&& reader.result.toString()[i] != '\r'
-		&& reader.result.toString()[i] != ';'
-		&& reader.result.toString()[i] != '[')
-			level_chars.push(reader.result.toString()[i]);
-	}
-	level_chars.pop();
-
-	for(i = 0; i < level_chars.length; i++) {
-		if(level_chars[i] == ']') {
-			new_level_data.push(row_data);
-			row_data = [];
-		} else if(level_chars[i] == ',') {
-			row_data.push(parseInt(number));
-			number = "";
-		} else
-			number += level_chars[i];
-	}
-
-	console.log(new_level_data);
 }
