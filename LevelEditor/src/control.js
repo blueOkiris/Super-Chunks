@@ -140,7 +140,7 @@ function output() {
 	}
 
 	//alert(out + "];");
-	console.log("levelData = " + out + "];");
+	//console.log("levelData = " + out + "];");
 	
 	var link = document.getElementById('downloadlink');
 	link.href = makeTextFile(out + "];");
@@ -162,3 +162,49 @@ var makeTextFile = function (text) {
 
 	return textFile;
 };
+
+/* Load file */
+function getLevel() {
+	let reader = new FileReader();
+	reader.onload = function(e) {
+		this.text = reader.result;
+	}
+
+	let file = document.getElementById("read_level").files[0];
+	reader.readAsText(file);
+	//console.log(reader.text);
+
+	let level_chars = [];
+
+	let new_level_data = [];
+	let row_data = [];
+	let number = "";
+
+	let i = 0;
+	while(reader.result.toString()[i] != '[');
+		i++;
+	i++;
+	for(; i < reader.result.toString().length; i++) {
+		if(reader.result.toString()[i] != ' '
+		&& reader.result.toString()[i] != '\n' 
+		&& reader.result.toString()[i] != '\t'
+		&& reader.result.toString()[i] != '\r'
+		&& reader.result.toString()[i] != ';'
+		&& reader.result.toString()[i] != '[')
+			level_chars.push(reader.result.toString()[i]);
+	}
+	level_chars.pop();
+
+	for(i = 0; i < level_chars.length; i++) {
+		if(level_chars[i] == ']') {
+			new_level_data.push(row_data);
+			row_data = [];
+		} else if(level_chars[i] == ',') {
+			row_data.push(parseInt(number));
+			number = "";
+		} else
+			number += level_chars[i];
+	}
+
+	console.log(new_level_data);
+}
