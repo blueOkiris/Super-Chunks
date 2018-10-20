@@ -173,75 +173,77 @@ function enemyCollisions() {
 		let hsp = currentLevel.enemies[i].moveSpeed * currentLevel.enemies[i].dir;
 		let current_enemy = currentLevel.enemies[i];
 			
-		// Check to see if there is a block in direction of motion that is stopping the enemy
-		let left_block = blockAt(currentLevel, current_enemy.x + hsp, current_enemy.y + spriteHeight / 2);
-		let right_block = blockAt(currentLevel, current_enemy.x + spriteWidth + hsp, current_enemy.y + spriteHeight / 2);
+		if(currentLevel.enemies[i].id != EnemyType.Spike) {
+			// Check to see if there is a block in direction of motion that is stopping the enemy
+			let left_block = blockAt(currentLevel, current_enemy.x + hsp, current_enemy.y + spriteHeight / 2);
+			let right_block = blockAt(currentLevel, current_enemy.x + spriteWidth + hsp, current_enemy.y + spriteHeight / 2);
 
-		if(current_enemy.x + hsp < 0 || current_enemy.x + spriteWidth + hsp > currentLevel.data[0].length * 64
-			|| blockList[left_block].solid || blockList[right_block].solid) {
-			// Flip directions
-			current_enemy.dir = -current_enemy.dir;
-			hsp = -hsp;
-		}
-	
-		// fall
-		current_enemy.vsp += current_enemy.gravity;
-
-		if(current_enemy.y + current_enemy.vsp < 0) {
-			current_enemy.y = 0;
-			current_enemy.vsp = 0;
-		} else {
-			let block_left  = blockAt(currentLevel, current_enemy.x, 
-										current_enemy.y + (current_enemy.vsp > 0 ? spriteHeight : 0) + current_enemy.vsp);
-			let block_mid   = blockAt(currentLevel, current_enemy.x + spriteWidth / 2,	
-										current_enemy.y + (current_enemy.vsp > 0 ? spriteHeight : 0) + current_enemy.vsp);
-			let block_right = blockAt(currentLevel, current_enemy.x + spriteWidth,
-										current_enemy.y + (current_enemy.vsp > 0 ? spriteHeight : 0) + current_enemy.vsp);
-			
-			// Move until flush against contact
-			let x_pos = blockList[block_left].solid ? current_enemy.x :
-							blockList[block_mid].solid ? current_enemy.x + spriteWidth / 2 : 
-								blockList[block_right].solid ? current_enemy.x + spriteWidth : 
-									-1024;
-			if(x_pos >= 0 && current_enemy.vsp != 0) { // There is a collision
-				while(!blockList[currentLevel, blockAt(currentLevel, x_pos, current_enemy.y + (current_enemy.vsp > 0 ? spriteHeight : 0) + Math.sign(current_enemy.vsp))].solid)
-					current_enemy.y += Math.sign(current_enemy.vsp);
-			
-				if(current_enemy.id == EnemyType.BrusselSprout && current_enemy.vsp >= 0) // jump if a brussel sprout hits the ground
-					current_enemy.vsp = -player.jumpSpeed;
-				else
-					current_enemy.vsp = 0;
+			if(current_enemy.x + hsp < 0 || current_enemy.x + spriteWidth + hsp > currentLevel.data[0].length * 64
+				|| blockList[left_block].solid || blockList[right_block].solid) {
+				// Flip directions
+				current_enemy.dir = -current_enemy.dir;
+				hsp = -hsp;
 			}
-		}
-	
-		// Only move if player has seen it
-		if(current_enemy.start) {
-			/* Get location of view window */
-			let context_x = (player.x + player.maskW / 2) - (screenWidth / 2);
-			let context_y = (player.y + player.maskH / 2) - (screenHeight / 2);
-			// Adjust for going past level data
-			if(context_x < 0)
-				context_x = 0;
-			if(context_y < 0)
-				context_y = 0;
-			if(context_x + screenWidth > currentLevel.data[0].length * tileWidth)
-				context_x = currentLevel.data[0].length * tileWidth - screenWidth;
-			if(context_y + screenHeight > currentLevel.data.length * tileHeight)
-				context_y = currentLevel.data.length * tileHeight - screenHeight;
-			
-			let context_rect = new Rect(context_x - spriteWidth, context_y - spriteHeight, screenWidth + spriteWidth * 2, screenHeight + spriteHeight * 2);
-			if(!context_rect.containsPoint(current_enemy.x, current_enemy.y)) {
-				hsp = 0;
+		
+			// fall
+			current_enemy.vsp += current_enemy.gravity;
+
+			if(current_enemy.y + current_enemy.vsp < 0) {
+				current_enemy.y = 0;
 				current_enemy.vsp = 0;
-			} else
-				current_enemy.start = false;
+			} else {
+				let block_left  = blockAt(currentLevel, current_enemy.x, 
+											current_enemy.y + (current_enemy.vsp > 0 ? spriteHeight : 0) + current_enemy.vsp);
+				let block_mid   = blockAt(currentLevel, current_enemy.x + spriteWidth / 2,	
+											current_enemy.y + (current_enemy.vsp > 0 ? spriteHeight : 0) + current_enemy.vsp);
+				let block_right = blockAt(currentLevel, current_enemy.x + spriteWidth,
+											current_enemy.y + (current_enemy.vsp > 0 ? spriteHeight : 0) + current_enemy.vsp);
+				
+				// Move until flush against contact
+				let x_pos = blockList[block_left].solid ? current_enemy.x :
+								blockList[block_mid].solid ? current_enemy.x + spriteWidth / 2 : 
+									blockList[block_right].solid ? current_enemy.x + spriteWidth : 
+										-1024;
+				if(x_pos >= 0 && current_enemy.vsp != 0) { // There is a collision
+					while(!blockList[currentLevel, blockAt(currentLevel, x_pos, current_enemy.y + (current_enemy.vsp > 0 ? spriteHeight : 0) + Math.sign(current_enemy.vsp))].solid)
+						current_enemy.y += Math.sign(current_enemy.vsp);
+				
+					if(current_enemy.id == EnemyType.BrusselSprout && current_enemy.vsp >= 0) // jump if a brussel sprout hits the ground
+						current_enemy.vsp = -player.jumpSpeed;
+					else
+						current_enemy.vsp = 0;
+				}
+			}
+		
+			// Only move if player has seen it
+			if(current_enemy.start) {
+				/* Get location of view window */
+				let context_x = (player.x + player.maskW / 2) - (screenWidth / 2);
+				let context_y = (player.y + player.maskH / 2) - (screenHeight / 2);
+				// Adjust for going past level data
+				if(context_x < 0)
+					context_x = 0;
+				if(context_y < 0)
+					context_y = 0;
+				if(context_x + screenWidth > currentLevel.data[0].length * tileWidth)
+					context_x = currentLevel.data[0].length * tileWidth - screenWidth;
+				if(context_y + screenHeight > currentLevel.data.length * tileHeight)
+					context_y = currentLevel.data.length * tileHeight - screenHeight;
+				
+				let context_rect = new Rect(context_x - spriteWidth, context_y - spriteHeight, screenWidth + spriteWidth * 2, screenHeight + spriteHeight * 2);
+				if(!context_rect.containsPoint(current_enemy.x, current_enemy.y)) {
+					hsp = 0;
+					current_enemy.vsp = 0;
+				} else
+					current_enemy.start = false;
+			}
+			
+			if(current_enemy.id == EnemyType.Spike) // Don't let the spikes move
+				hsp = 0;
+			
+			current_enemy.x += hsp;
+			current_enemy.y += current_enemy.vsp;
 		}
-		
-		if(current_enemy.id == EnemyType.Spike) // Don't let the spikes move
-			hsp = 0;
-		
-		current_enemy.x += hsp;
-		current_enemy.y += current_enemy.vsp;
 		
 		/* Enemy collisions */
 		if(!player.dead) {
@@ -275,6 +277,12 @@ function enemyCollisions() {
 						if(player.lives < 0) {
 							gameJustPunched = true;
 							gameState = GameState.GameOver;
+
+							player.poundUnlocked = false;
+							player.doubleJumpUnlocked = false;
+							player.punchUnlocked = false;
+							player.lives = startLives;
+							player.restart();
 						}
 					}, 1000);
 				}

@@ -122,7 +122,7 @@ function output() {
 	for(let y = 0; y < levelData.length; y++) {
 		out += "\t[ ";
 		for(let x = 0; x < levelData[0].length; x++) {
-			if(Math.floor(levelData[y][x] / 10) == 0 && levelData[y][x] > 0)
+			if(Math.floor(levelData[y][x] / 10) == 0 && levelData[y][x] >= 0)
 				out += ' ';
 			
 			out += levelData[y][x];
@@ -212,7 +212,7 @@ function getLevel() {
 
 				new_level_data.push(row_data);
 				row_data = [];
-				
+
 				i++; // Theres a comma after the right bracket
 			} else if(level_chars[i] == ',') {
 				row_data.push(parseInt(number));

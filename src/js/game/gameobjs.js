@@ -82,7 +82,7 @@ var blockList = [
     oceanRightBlock,
     oceanBottomBlock,
     oceanLeftBlock,
-    oceanStoneBlock,
+    airStoneBlock,
     airMidBlock,
     airTLBlock,
     airTRBlock,
