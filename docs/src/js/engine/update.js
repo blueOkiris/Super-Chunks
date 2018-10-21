@@ -87,6 +87,7 @@ function Update() {
 		case GameState.GameOver:
 			if(!gameJustPunched) {
 				music.stop();
+				music.play(BackgroundMusic.TitleTheme);
 				gameState = GameState.Menu; // Wait for release
 
 				player.lives = startLives;
