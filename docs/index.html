@@ -1,0 +1,45 @@
+<html>
+	<meta charset="utf-8"/>
+	<head>
+		<meta http-equiv="X-UA-Compatible" content="IE=9" >
+		<link rel="stylesheet" type="text/css" href="src/window.css">
+		
+		<script src="src/js/adj/global.js" type="text/Javascript"></script>
+
+		<script src="src/js/adj/images.js" type="text/Javascript"></script>
+		<script src="src/js/adj/music.js" type="text/Javascript"></script>
+		
+		<script src="src/js/lib/sprite.js" type="text/Javascript"></script>
+		<script src="src/js/lib/characters.js" type="text/Javascript"></script>
+		<script src="src/js/lib/tiles.js" type="text/Javascript"></script>
+		<script src="src/js/lib/world.js" type="text/Javascript"></script>
+		<script src="src/js/lib/input.js" type="text/Javascript"></script>
+
+		<script src="src/js/game/gameobjs.js" type="text/Javascript"></script>
+		<script src="src/js/game/levels.js" type="text/Javascript"></script>
+		<script src="src/js/game/game.js" type="text/Javascript"></script>
+		<script src="src/js/game/draw.js" type="text/Javascript"></script>
+
+		<script src="src/js/engine/update.js" type="text/Javascript"></script>
+		<script src="src/js/engine/render.js" type="text/Javascript"></script>
+		<script src="src/js/engine/engine.js" type="text/Javascript"></script>
+	</head>
+	<body bgcolor="#053630">
+		<!-- <h1> <font color="#FFFFFF";"> SUPER-CHUNKS </font></h1> -->
+		
+		<canvas id="game_screen" width="800" height="600">
+			No canvas support
+		</canvas>
+		
+		<script type="text/Javascript">
+			var canvas = document.getElementById('game_screen'); // Get the canvas
+			var ctx = canvas.getContext('2d'); // and the context
+
+			canvas.width = screenWidth;
+			canvas.height = screenHeight;
+			
+			ctx.fillStyle = "#FFFFFF";
+			startGame();
+		</script>
+	</body>
+</html>
