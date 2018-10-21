@@ -59,6 +59,9 @@ function collisionChecks() {
 		if(player.x + player.hsp < 0) { // Stop moving if leaving screen
 			player.x = 0;
 			player.hsp = 0;
+		} else if(player.x + spriteWidth + player.hsp > currentLevel.data[0].length * 64) {
+			player.hsp = 0;
+			player.x = (currentLevel.data[0].length * 64) - spriteWidth;	
 		} else { // Check for blocks next to player at 3 locations: top of player, bottom of player, and middle of player
 			let block_top = blockAt(currentLevel, player.x + (player.hsp >= 0 ? player.maskW : 0) + player.hsp, player.y);
 			let block_mid = blockAt(currentLevel, player.x + (player.hsp >= 0 ? player.maskW : 0) + player.hsp, player.y + player.maskH / 2);
