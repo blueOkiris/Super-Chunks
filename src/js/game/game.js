@@ -153,7 +153,6 @@ function collisionChecks() {
 		setTimeout(
 			() => { 
 				nextLevel();
-				gameState = GameState.Game;
 			},
 		500);
 	}

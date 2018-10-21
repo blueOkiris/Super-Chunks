@@ -3,15 +3,20 @@ function Render() {
 	/* Get location of view window */
 	let context_x = Math.round((player.x + player.maskW / 2) - (screenWidth / 2));
 	let context_y = Math.round((player.y + player.maskH / 2) - (screenHeight / 2));
-	// Adjust for going past level data
-	if(context_x < 0)
-		context_x = 0;
-	if(context_y < 0)
-		context_y = 0;
-	if(context_x + screenWidth > currentLevel.data[0].length * tileWidth)
-		context_x = currentLevel.data[0].length * tileWidth - screenWidth;
-	if(context_y + screenHeight > currentLevel.data.length * tileHeight)
-		context_y = currentLevel.data.length * tileHeight - screenHeight;
+	if(gameState != GameState.LevelSelect
+		&& gameState != GameState.LevelUp
+		&& gameState != GameState.LevelDown
+		&& gameState != GameState.StartLevel) {
+		// Adjust for going past level data
+		if(context_x < 0)
+			context_x = 0;
+		if(context_y < 0)
+			context_y = 0;
+		if(context_x + screenWidth > currentLevel.data[0].length * tileWidth)
+			context_x = currentLevel.data[0].length * tileWidth - screenWidth;
+		if(context_y + screenHeight > currentLevel.data.length * tileHeight)
+			context_y = currentLevel.data.length * tileHeight - screenHeight;
+	}
 	
 	switch(gameState) {
 		case GameState.Loading:
