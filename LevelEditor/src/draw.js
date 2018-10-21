@@ -58,7 +58,7 @@ canvas.addEventListener('mousedown',
 			let x = e.pageX - canvas.offsetLeft;
 			let y = e.pageY - canvas.offsetTop;
 
-			console.log("(" + x + ", " + y + ") => [" + Math.floor((y + offsetY * 64) / 64) + "][" + Math.floor((x + offsetX * 64) / 64) + "]");
+			//console.log("(" + x + ", " + y + ") => [" + Math.floor((y + offsetY * 64) / 64) + "][" + Math.floor((x + offsetX * 64) / 64) + "]");
 
 			levelData
 				[Math.floor((y + offsetY * 64) / 64)]
@@ -74,7 +74,7 @@ canvas.addEventListener('mousemove',
 			let x = e.pageX - canvas.offsetLeft;
 			let y = e.pageY - canvas.offsetTop;
 
-			console.log("(" + x + ", " + y + ") => [" + Math.floor((y + offsetY * 64) / 64) + "][" + Math.floor((x + offsetX * 64) / 64) + "]");
+			//console.log("(" + x + ", " + y + ") => [" + Math.floor((y + offsetY * 64) / 64) + "][" + Math.floor((x + offsetX * 64) / 64) + "]");
 
 			levelData
 				[Math.floor((y + offsetY * 64) / 64)]

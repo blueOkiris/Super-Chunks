@@ -65,6 +65,8 @@ var airRightBlock     = new Block(BlockType.AirRight, true, airBlockImage,      
 var airBottomBlock    = new Block(BlockType.AirBottom, true, airBlockImage,       [64 * 4, 64]);
 var airLeftBlock      = new Block(BlockType.AirLeft, true, airBlockImage,         [64 * 3, 64]);
 
+var waterBlock        = new Block(BlockType.Water, false, waterImage,             [0, 0]);
+
 var blockList = [
     blankBlock,
     grassBlock,
@@ -92,6 +94,7 @@ var blockList = [
     airRightBlock,
     airBottomBlock,
     airLeftBlock,
+    waterBlock,
 ]
 
 /* Enemy Sprites */

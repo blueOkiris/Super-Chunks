@@ -28,6 +28,7 @@ var imageListSrc = [
     "images/air_right.png",
     "images/air_bottom.png",
     "images/air_left.png",
+    "images/water.png",
 ];
 var enemyImageListSrc = [
     "images/chunks.png",

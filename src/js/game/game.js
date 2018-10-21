@@ -5,7 +5,8 @@ function movementPhysics() {
 	
 	player.vsp += 	!player.dead && player.punching ? player.gravity / 2 :
 						!player.dead && (input[Inputs.Pound] && player.poundUnlocked) ? player.gravity * 8 : 
-							player.gravity;
+							(blockList[blockAt(currentLevel, player.x + player.maskW / 2, player.y + player.maskH / 2)].id
+							  == BlockType.Water ? player.gravity / 8 : player.gravity);
 	
 	if(input[Inputs.Pound] && !player.dead) {
 		if((sounds[Sounds.Pound].duration <= 0 || sounds[Sounds.Pound].paused) && !player.grounded && player.poundUnlocked)
@@ -122,13 +123,13 @@ function collisionChecks() {
 	if(!player.doubleJumpUnlocked)
 		player.canDoubleJump = false;
 	
-	if(input[Inputs.Jump] && blockAt(currentLevel, player.x, player.y) == BlockType.Ladder) { // Climb ladder
+	if(input[Inputs.Jump] && blockAt(currentLevel, player.x + player.maskW / 2, player.y + player.maskH / 2) == BlockType.Ladder) { // Climb ladder
 		player.climbing = true;
 		player.vsp = -player.jumpSpeed / 2;
 
 		jump = false;
 		player.grounded = true;
-	} else if(input[Inputs.Jump] && jump && (player.grounded || player.canDoubleJump) && !player.dead) { // Double Jump
+	} else if(input[Inputs.Jump] && jump && (player.grounded || player.canDoubleJump || blockAt(currentLevel, player.x + player.maskW / 2, player.y + player.maskH / 2) == BlockType.Water) && !player.dead) { // Double Jump
 		sounds[Sounds.Jump].pause();
 		sounds[Sounds.Jump].currentTime = 0;
 		
@@ -136,12 +137,14 @@ function collisionChecks() {
 			player.canDoubleJump = false;
 		
 		player.grounded = false;
-		player.vsp = -player.jumpSpeed;
+		player.vsp =
+			blockAt(currentLevel, player.x + player.maskW / 2, player.y + player.maskH / 2)
+				== BlockType.Water ? -player.jumpSpeed / 4 : -player.jumpSpeed;
 		
 		jump = false;
 		
 		sounds[Sounds.Jump].play();
-	} else if(input[Inputs.Jump] && blockAt(currentLevel, player.x, player.y) == BlockType.Door) { // Go through level end door
+	} else if(input[Inputs.Jump] && blockAt(currentLevel, player.x + player.maskW / 2, player.y + player.maskH / 2) == BlockType.Door) { // Go through level end door
 		gameState = GameState.ChangeLevel;
 		ctx.setTransform(1, 0, 0, 1, 0, 0);
 		ctx.fillStyle = "#000000";
@@ -155,7 +158,7 @@ function collisionChecks() {
 		500);
 	}
 	
-	if(!input[Inputs.Jump] || blockAt(currentLevel, player.x, player.y) != BlockType.Ladder)
+	if(!input[Inputs.Jump] || blockAt(currentLevel, player.x + player.maskW / 2, player.y + player.maskH / 2) != BlockType.Ladder)
 		player.climbing = false;
 	
 	if(player.grounded)

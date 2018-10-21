@@ -119,7 +119,11 @@ function nextLevel() {
 	
 	if(currentLevel.music != new_level.music) {
 		music.stop();
-		music.play(new_level.music);
+
+		if(new_level.music != null)
+			music.play(new_level.music);
+		else
+			music.play(BackgroundMusic.TitleTheme);
 	}
 
 	currentLevel = new_level;

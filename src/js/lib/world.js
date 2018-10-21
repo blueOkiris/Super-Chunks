@@ -33,7 +33,7 @@ class Level{
 									return counter / 8;
 								}
 							));
-							this.data[y][x] = 0;
+							this.data[y][x] = this.data[y-1][x];
 						break;
 					
 					case -3: // Right Brocolli
@@ -46,7 +46,7 @@ class Level{
 									return counter / 8;
 								}
 							));
-							this.data[y][x] = 0;
+							this.data[y][x] = this.data[y-1][x];
 						break;
 								
 					case -4: // Spike
@@ -59,7 +59,7 @@ class Level{
 									return 0;
 								}
 							));
-							this.data[y][x] = 0;
+							this.data[y][x] = this.data[y-1][x];
 						break;
 					
 					case -5: // Left Brussel Sprout
@@ -72,7 +72,7 @@ class Level{
 									return (counter / 8) % 4;
 								}
 							));
-							this.data[y][x] = 0;
+							this.data[y][x] = this.data[y-1][x];
 						break;
 					
 					case -6: // Right Brussel Sprout
@@ -85,26 +85,29 @@ class Level{
 									return (counter / 8) % 4;
 								}
 							));
-							this.data[y][x] = 0;
+							this.data[y][x] = this.data[y-1][x];
 						break;
 					
 					case -7: // Double Jump unlock
 						this.unlockables.push(new Unlockable(x * tileWidth, y * tileHeight, 
 							() => { player.doubleJumpUnlocked = true },
 							"YOU HAVE JUST UNLOCKED\nTHE DOUBLE JUMP!!\n\nPRESS THE JUMP BUTTON\nWHEN IN THE AIR\nTO PERFORM ANOTHER JUMP\n\nPRESS SPACE TO CONFIRM\n"));
-						this.data[y][x] = 0;
+						
+						this.data[y][x] = this.data[y-1][x];
 						break;
 					
 					case -8: // Punch unlocked
 						this.unlockables.push(new Unlockable(x * tileWidth, y * tileHeight, () => { player.punchUnlocked = true },
 						"\nYOU HAVE JUST UNLOCKED\nPUNCHING!!\n\nPRESS THE SPACE BUTTON\nTO PUNCH ENEMIES\n\nPRESS SPACE TO CONFIRM\n"));
-						this.data[y][x] = 0;
+						
+						this.data[y][x] = this.data[y-1][x];
 						break;
 				
 					case -9: // Pound unlocked
 						this.unlockables.push(new Unlockable(x * tileWidth, y * tileHeight, () => { player.poundUnlocked = true },
 						"\nYOU HAVE JUST UNLOCKED\nTHE GROUND POUND!!\n\nPRESS THE DOWN BUTTON\nTO STOMP ONTO ENEMIES\n\nPRESS SPACE TO CONFIRM\n"));
-						this.data[y][x] = 0;
+						
+						this.data[y][x] = this.data[y-1][x];
 						break;
 				}
 			}

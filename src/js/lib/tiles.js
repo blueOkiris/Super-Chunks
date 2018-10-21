@@ -54,6 +54,8 @@ const BlockType = {
 	AirRight: 23,
 	AirBottom: 24,
 	AirLeft: 25,
+
+	Water: 26,
 };
 class Block {
 	constructor(identifier, is_solid, img_obj, img_loc) {

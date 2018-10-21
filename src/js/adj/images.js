@@ -74,6 +74,10 @@ var arrowImage = new Image();
 arrowImage.src = "src/images/arrows.png";
 arrowImage.addEventListener('load', checkAllImagesLoaded())
 
+var waterImage = new Image();
+waterImage.src = "src/images/water.png";
+waterImage.addEventListener('load', checkAllImagesLoaded())
+
 function checkAllImagesLoaded() {
 	numImagesLoaded++;
 

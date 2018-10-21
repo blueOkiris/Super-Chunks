@@ -2,7 +2,7 @@ Tips for Good Water Level:
 - Part water, part platforming
 - Don't throw out old mechanics
 	* Specifically don't take control from player
-- B/c secret is double jump, focus on that
+- B/c secret is punch, focus on that
 	* To avoid linearity, don't make it exclusive
 	* Try to suggest it
 - Pipes/Tunnels/Enclosing can help to make interesting
