@@ -285,6 +285,7 @@ function enemyCollisions() {
 						if(player.lives < 0) {
 							gameJustPunched = true;
 							gameState = GameState.GameOver;
+							music.stop();
 
 							player.poundUnlocked = false;
 							player.doubleJumpUnlocked = false;
