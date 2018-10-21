@@ -31,7 +31,6 @@ const ChunksAnim = {
     ClimbB: 21,
 }
 
-
 var livesSprite  = new Sprite(livesImage, [[0, 0]], [48, 48]);
 var scrollSprite = new Sprite(scrollImage, [[0, 0]], [64, 64]);
 
@@ -54,6 +53,20 @@ var oceanRightBlock     = new Block(BlockType.OceanRight, true, oceanBlockImage,
 var oceanBottomBlock    = new Block(BlockType.OceanBottom, true, oceanBlockImage,       [64 * 4, 64]);
 var oceanLeftBlock      = new Block(BlockType.OceanLeft, true, oceanBlockImage,         [64 * 3, 64]);
 
+/* Air tileset */
+var airStoneBlock     = new Block(BlockType.AirStone, true, airBlockImage,        [0, 0]);
+var airMidBlock       = new Block(BlockType.AirMid, false, airBlockImage,         [0, 64]);
+var airTLBlock        = new Block(BlockType.AirTopLeft, true, airBlockImage,      [64, 0]);
+var airTRBlock        = new Block(BlockType.AirTopRight, true, airBlockImage,     [64 * 2, 0]);
+var airBLBlock        = new Block(BlockType.AirBottomLeft, true, airBlockImage,   [64, 64]);
+var airBRBlock        = new Block(BlockType.AirBottomRight, true, airBlockImage,  [64 * 2, 64]);
+var airTopBlock       = new Block(BlockType.AirTop, true, airBlockImage,          [64 * 3, 0]);
+var airRightBlock     = new Block(BlockType.AirRight, true, airBlockImage,        [64 * 4, 0]);
+var airBottomBlock    = new Block(BlockType.AirBottom, true, airBlockImage,       [64 * 4, 64]);
+var airLeftBlock      = new Block(BlockType.AirLeft, true, airBlockImage,         [64 * 3, 64]);
+
+var waterBlock        = new Block(BlockType.Water, false, waterImage,             [0, 0]);
+
 var blockList = [
     blankBlock,
     grassBlock,
@@ -71,6 +84,17 @@ var blockList = [
     oceanRightBlock,
     oceanBottomBlock,
     oceanLeftBlock,
+    airStoneBlock,
+    airMidBlock,
+    airTLBlock,
+    airTRBlock,
+    airBLBlock,
+    airBRBlock,
+    airTopBlock,
+    airRightBlock,
+    airBottomBlock,
+    airLeftBlock,
+    waterBlock,
 ]
 
 /* Enemy Sprites */
@@ -80,6 +104,11 @@ var spikeSprite = new Sprite(spikeImage, [[0, 0]], [64, 64]);
 
 var messageBoxSprite = new Sprite(messageBoxImage, [[0, 0]], [624, 376]);
 var splashSprite = new Sprite(splashImage, [[0, 0]], [800, 600]);
+
+var grassWorldSelSprite = new Sprite(grassWorldImage, [[0, 0]], [624, 376]);
+var oceanWorldSelSprite = new Sprite(oceanWorldImage, [[0, 0]], [624, 376]);
+var airWorldSelSprite = new Sprite(airWorldImage, [[0, 0]], [624, 376]);
+var arrowSprite = new Sprite(arrowImage, [[0,0], [128, 0], [256, 0]], [128, 384]);
 
 /* Player Object */
 var player = new Player([0, 0], 

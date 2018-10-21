@@ -183,7 +183,10 @@ function enemyCollisions() {
 			let left_block = blockAt(currentLevel, current_enemy.x + hsp, current_enemy.y + spriteHeight / 2);
 			let right_block = blockAt(currentLevel, current_enemy.x + spriteWidth + hsp, current_enemy.y + spriteHeight / 2);
 
-			if(current_enemy.x + hsp < 0 || current_enemy.x + spriteWidth + hsp > currentLevel.data[0].length * 64
+			if(left_block == null || right_block == null) {
+				current_enemy.dir = -current_enemy.dir;
+				hsp = -hsp;
+			} else if(current_enemy.x + hsp < 0 || current_enemy.x + spriteWidth + hsp > currentLevel.data[0].length * 64
 				|| blockList[left_block].solid || blockList[right_block].solid) {
 				// Flip directions
 				current_enemy.dir = -current_enemy.dir;

@@ -120,9 +120,8 @@ function nextLevel() {
 	
 	let new_level = worlds[currentWorld].levels[worlds[currentWorld].currentLevel];
 	
-
 	if(worlds[currentWorld].currentLevel < worlds[currentWorld].levels.length) {
-		if(currentLevel.music != new_level.music) {
+		if(currentLevel == null || currentLevel.music != new_level.music) {
 			music.stop();
 			music.play(new_level.music);
 		}

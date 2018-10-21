@@ -1,23 +1,69 @@
 // Updates every frame (60 fps)
 function Render() {
 	/* Get location of view window */
-	let context_x = (player.x + player.maskW / 2) - (screenWidth / 2);
-	let context_y = (player.y + player.maskH / 2) - (screenHeight / 2);
-	// Adjust for going past level data
-	if(context_x < 0)
-		context_x = 0;
-	if(context_y < 0)
-		context_y = 0;
-	if(context_x + screenWidth > currentLevel.data[0].length * tileWidth)
-		context_x = currentLevel.data[0].length * tileWidth - screenWidth;
-	if(context_y + screenHeight > currentLevel.data.length * tileHeight)
-		context_y = currentLevel.data.length * tileHeight - screenHeight;
+	let context_x = Math.round((player.x + player.maskW / 2) - (screenWidth / 2));
+	let context_y = Math.round((player.y + player.maskH / 2) - (screenHeight / 2));
+	if(gameState != GameState.LevelSelect
+		&& gameState != GameState.LevelUp
+		&& gameState != GameState.LevelDown
+		&& gameState != GameState.StartLevel) {
+		// Adjust for going past level data
+		if(context_x < 0)
+			context_x = 0;
+		if(context_y < 0)
+			context_y = 0;
+		if(context_x + screenWidth > currentLevel.data[0].length * tileWidth)
+			context_x = currentLevel.data[0].length * tileWidth - screenWidth;
+		if(context_y + screenHeight > currentLevel.data.length * tileHeight)
+			context_y = currentLevel.data.length * tileHeight - screenHeight;
+	}
 	
 	switch(gameState) {
 		case GameState.Loading:
 			ctx.fillStyle = "#7B7318"
 			ctx.fillRect(0, 0, screenWidth, screenHeight);
 			splashSprite.draw((screenWidth - 800) / 2, (screenHeight - 600) / 2, 800, 600, 0);
+			break;
+		
+		case GameState.LevelSelect:
+		case GameState.LevelUp:
+		case GameState.LevelDown:
+		case GameState.StartLevel:
+			ctx.setTransform(1, 0, 0, 1, 0, 0);
+			ctx.fillStyle = "#5522FF";
+			ctx.fillRect(0, 0, screenWidth, screenHeight);
+
+			switch(gameState) {
+				case GameState.StartLevel:
+				case GameState.LevelSelect:
+					arrowSprite.draw(tileWidth, (screenHeight - 384) / 2, 128, 384, 0);
+					break;
+				case GameState.LevelUp:
+					arrowSprite.draw(tileWidth, (screenHeight - 384) / 2, 128, 384, 1);
+					break;
+				case GameState.LevelDown:
+					arrowSprite.draw(tileWidth, (screenHeight - 384) / 2, 128, 384, 2);
+					break;
+			}
+			/* Draw the items */
+			switch(currentWorld) {
+				case Worlds.Grass:
+					grassWorldSelSprite.draw((screenWidth - 624) / 2, (screenHeight - 376) / 2, 624, 376, 0);
+					oceanWorldSelSprite.draw((screenWidth - 624) / 2, screenHeight - ((screenHeight - 376) / 4), 624, 376, 0);
+					break;
+
+				case Worlds.Water:
+					grassWorldSelSprite.draw((screenWidth - 624) / 2, -374 * 7 / 8, 624, 376, 0);
+					oceanWorldSelSprite.draw((screenWidth - 624) / 2, (screenHeight - 376) / 2, 624, 376, 0);
+					airWorldSelSprite.draw((screenWidth - 624) / 2, screenHeight - ((screenHeight - 376) / 4) , 624, 376, 0);
+					break;
+
+				case Worlds.Air:
+					oceanWorldSelSprite.draw((screenWidth - 624) / 2, -374 * 7 / 8, 624, 376, 0);
+					airWorldSelSprite.draw((screenWidth - 624) / 2, (screenHeight - 376) / 2, 624, 376, 0);
+					break;
+			}
+			//console.log(currentWorld);
 			break;
 		
 		case GameState.ChangeLevel:
@@ -27,10 +73,9 @@ function Render() {
 			break;
 
 		case GameState.Menu:
+		case GameState.MenuToGame:// start screen
 			if(music.songList[music.currentSong].paused)
 				music.play(music.currentSong);
-				
-		case GameState.MenuToGame:// start screen
 			ctx.setTransform(1, 0, 0, 1, 0, 0);
 			// Make a little button
 			ctx.fillStyle = "#5522FF";

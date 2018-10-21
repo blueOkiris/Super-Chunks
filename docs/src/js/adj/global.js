@@ -1,5 +1,5 @@
 function getClosestResolution(width) {
-	let supportedWidths = [800, 1024, 1152, 1280, 1366];
+	let supportedWidths = [1024, 1152, 1280, 1366, 1920];
 	let current = supportedWidths[0];
 
 	for(let i = 0; i < supportedWidths.length; i++) {
@@ -42,6 +42,10 @@ const GameState = {
 	Paused: 4,
 	Popup: 5,
 	ChangeLevel: 6,
+	LevelSelect: 7,
+	StartLevel: 8,
+	LevelDown: 9,
+	LevelUp: 10,
 };
 var gameState = GameState.Loading;
 

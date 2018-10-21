@@ -25,11 +25,51 @@ function Update() {
 		case GameState.MenuToGame:
 			if(!input[Inputs.Confirm]) {
 				music.stop();
-				changeLevel(testLevel);
-				gameState = GameState.Game;
+				gameState = GameState.LevelSelect;
+			}
+			break;
+
+		case GameState.LevelSelect:
+			if(input[Inputs.Confirm])
+				gameState = GameState.StartLevel;
+			
+			if(input[Inputs.Pound]) {
+				currentWorld++;
+
+				if(currentWorld >= numWorlds)
+					//currentWorld = 0;
+					currentWorld = numWorlds - 1;
+				
+				gameState = GameState.LevelDown;
+			} else if(input[Inputs.Jump]) {
+				currentWorld--;
+
+				if(currentWorld < 0)
+					//currentWorld = numWorlds - 1;
+					currentWorld = 0;
+				
+				gameState = GameState.LevelUp;
 			}
 			break;
 		
+		case GameState.LevelDown:
+			if(!input[Inputs.Pound])
+				gameState = GameState.LevelSelect;
+			break;
+		case GameState.LevelUp:
+			if(!input[Inputs.Jump])
+				gameState = GameState.LevelSelect;
+			break;
+		
+		case GameState.StartLevel:
+			if(!input[Inputs.Confirm]) {
+				music.stop();
+				worlds[currentWorld].currentLevel = -1;
+				nextLevel();
+				gameState = GameState.Game;
+			}
+			break;
+
 		case GameState.Game: // play the game
 			movementPhysics();
 			punchingPhysics();
@@ -70,10 +110,24 @@ function Update() {
 	}
 }
 
-function changeLevel(new_level) {
-	if(currentLevel.music != new_level.music) {
+function nextLevel() {
+	worlds[currentWorld].currentLevel++;
+	if(worlds[currentWorld].currentLevel >= worlds[currentWorld].levels.length) { //  TODO: When world ends
+		gameState = GameState.LevelSelect;
+		input[Inputs.Confirm] = false;
+	} else 
+		gameState = GameState.Game;
+	
+	let new_level = worlds[currentWorld].levels[worlds[currentWorld].currentLevel];
+	
+	if(worlds[currentWorld].currentLevel < worlds[currentWorld].levels.length) {
+		if(currentLevel == null || currentLevel.music != new_level.music) {
+			music.stop();
+			music.play(new_level.music);
+		}
+	} else {
 		music.stop();
-		music.play(new_level.music);
+		music.play(BackgroundMusic.TitleTheme);
 	}
 
 	currentLevel = new_level;
@@ -82,12 +136,13 @@ function changeLevel(new_level) {
 	let lives = player.lives;
 	let unlocks = [player.punchUnlocked, player.doubleJumpUnlocked, player.poundUnlocked];
 
-	player = new Player(new_level.start, 
-		pImageSpeed, pMoveSpeed, pPunchSpeed, pGravity, pJumpSpeed, 
-		pMaskW, pMaskH, 
-		unlocks[0], unlocks[1], unlocks[2],
-		chunksSprite
-	);
+	if(worlds[currentWorld].currentLevel < worlds[currentWorld].levels.length)
+		player = new Player(new_level.start, 
+			pImageSpeed, pMoveSpeed, pPunchSpeed, pGravity, pJumpSpeed, 
+			pMaskW, pMaskH, 
+			unlocks[0], unlocks[1], unlocks[2],
+			chunksSprite
+		);
 	player.lives = lives;
 }
 

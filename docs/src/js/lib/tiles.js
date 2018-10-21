@@ -1,116 +1,4 @@
-// Includes Level, Block, and blockAt
-
-class Level{
-	constructor(layout, bg_color, bg_music, next_level) {
-		this.data = layout;
-		this.background = bg_color;
-		this.music = bg_music;
-		this.enemies = [];
-		this.unlockables = [];
-		this.nextLevel = next_level;
-
-		for(let y = 0; y < this.data.length; y++) {
-			for(let x = 0; x < this.data[0].length; x++) {
-				// Check for enemies and player start location
-				switch(this.data[y][x]) {
-					case -1: // Start location
-						this.start = [x * tileWidth, y * tileHeight];
-						this.data[y][x] = 0;
-						break;
-					
-					case -2: // Left Brocolli
-						this.enemies.push(
-							new Enemy(x * tileWidth, y * tileHeight, player.gravity, 
-								EnemyType.Brocolli, 
-								-1,
-								brocolliSprite,
-								function(counter) {
-									return counter / 8;
-								}
-							));
-							this.data[y][x] = 0;
-						break;
-					
-					case -3: // Right Brocolli
-						this.enemies.push(
-							new Enemy(x * tileWidth, y * tileHeight, player.gravity, 
-								EnemyType.Brocolli, 
-								1,
-								brocolliSprite,
-								function(counter) {
-									return counter / 8;
-								}
-							));
-							this.data[y][x] = 0;
-						break;
-								
-					case -4: // Spike
-						this.enemies.push(
-							new Enemy(x * tileWidth, y * tileHeight, player.gravity, 
-								EnemyType.Spike, 
-								1,
-								spikeSprite,
-								function(counter) {
-									return 0;
-								}
-							));
-							this.data[y][x] = 0;
-						break;
-					
-					case -5: // Left Brussel Sprout
-						this.enemies.push(
-							new Enemy(x * tileWidth, y * tileHeight, player.gravity, 
-								EnemyType.BrusselSprout, 
-								-1,
-								brusselSproutSprite,
-								function(counter) {
-									return (counter / 8) % 4;
-								}
-							));
-							this.data[y][x] = 0;
-						break;
-					
-					case -6: // Right Brussel Sprout
-						this.enemies.push(
-							new Enemy(x * tileWidth, y * tileHeight, player.gravity, 
-								EnemyType.BrusselSprout, 
-								1,
-								brusselSproutSprite,
-								function(counter) {
-									return (counter / 8) % 4;
-								}
-							));
-							this.data[y][x] = 0;
-						break;
-					
-					case -7: // Double Jump unlock
-						this.unlockables.push(new Unlockable(x * tileWidth, y * tileHeight, 
-							() => { player.doubleJumpUnlocked = true },
-							"YOU HAVE JUST UNLOCKED\nTHE DOUBLE JUMP!!\n\nPRESS THE JUMP BUTTON\nWHEN IN THE AIR\nTO PERFORM ANOTHER JUMP\n\nPRESS SPACE TO CONFIRM\n"));
-						this.data[y][x] = 0;
-						break;
-					
-					case -8: // Punch unlocked
-						this.unlockables.push(new Unlockable(x * tileWidth, y * tileHeight, () => { player.punchUnlocked = true },
-						"\nYOU HAVE JUST UNLOCKED\nPUNCHING!!\n\nPRESS THE SPACE BUTTON\nTO PUNCH ENEMIES\n\nPRESS SPACE TO CONFIRM\n"));
-						this.data[y][x] = 0;
-						break;
-				
-					case -9: // Pound unlocked
-						this.unlockables.push(new Unlockable(x * tileWidth, y * tileHeight, () => { player.poundUnlocked = true },
-						"\nYOU HAVE JUST UNLOCKED\nTHE GROUND POUND!!\n\nPRESS THE DOWN BUTTON\nTO STOMP ONTO ENEMIES\n\nPRESS SPACE TO CONFIRM\n"));
-						this.data[y][x] = 0;
-						break;
-				}
-			}
-		}
-	}
-
-	restart() {
-		for(let i = 0; i < this.unlockables.length; i++)
-			this.unlockables[i].collected = false;
-	}
-};
+// Includes Block, and blockAt
 
 /* The scrolls that can unlock special abilities throughout the game */
 class Unlockable {
@@ -134,12 +22,16 @@ class Unlockable {
 
 /* The types of blocks that exist */
 const BlockType = {
+	/* Default */
 	Blank: 0,
 	Grass: 1,
 	Dirt: 2,
 	Stone: 3,
+
 	Door: 4,
 	Ladder: 5,
+
+	/* Water Blocks */
 	OceanStone: 6,
 	OceanMid: 7,
 	OceanTopLeft: 8,
@@ -150,6 +42,20 @@ const BlockType = {
 	OceanRight: 13,
 	OceanBottom: 14,
 	OceanLeft: 15,
+
+	/* Air Blocks */
+	AirStone: 16,
+	AirMid: 17,
+	AirTopLeft: 18,
+	AirTopRight: 19,
+	AirBottomLeft: 20,
+	AirBottomRight: 21,
+	AirTop: 22,
+	AirRight: 23,
+	AirBottom: 24,
+	AirLeft: 25,
+
+	Water: 26,
 };
 class Block {
 	constructor(identifier, is_solid, img_obj, img_loc) {

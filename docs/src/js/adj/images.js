@@ -1,5 +1,5 @@
 /* Image objects */
-var numImages = 13;
+var numImages = 18;
 var numImagesLoaded = 0;
 
 var chunksImage = new Image();
@@ -30,6 +30,10 @@ var oceanBlockImage = new Image();
 oceanBlockImage.src = "src/images/spr_ocean_blocks.png";
 oceanBlockImage.addEventListener('load', checkAllImagesLoaded());
 
+var airBlockImage = new Image();
+airBlockImage.src = "src/images/air_blocks.png";
+airBlockImage.addEventListener('load', checkAllImagesLoaded());
+
 var brocolliImage = new Image();
 brocolliImage.src = "src/images/spr_brocolli.png";
 brocolliImage.addEventListener('load', checkAllImagesLoaded());
@@ -53,6 +57,26 @@ splashImage.addEventListener('load', checkAllImagesLoaded());
 var ladderImage = new Image();
 ladderImage.src = "src/images/ladder.png";
 ladderImage.addEventListener('load', checkAllImagesLoaded());
+
+var grassWorldImage = new Image();
+grassWorldImage.src = "src/images/grass_world.png";
+grassWorldImage.addEventListener('load', checkAllImagesLoaded());
+
+var oceanWorldImage = new Image();
+oceanWorldImage.src = "src/images/water_world.png";
+oceanWorldImage.addEventListener('load', checkAllImagesLoaded());
+
+var airWorldImage = new Image();
+airWorldImage.src = "src/images/air_world.png";
+airWorldImage.addEventListener('load', checkAllImagesLoaded());
+
+var arrowImage = new Image();
+arrowImage.src = "src/images/arrows.png";
+arrowImage.addEventListener('load', checkAllImagesLoaded())
+
+var waterImage = new Image();
+waterImage.src = "src/images/water.png";
+waterImage.addEventListener('load', checkAllImagesLoaded())
 
 function checkAllImagesLoaded() {
 	numImagesLoaded++;
