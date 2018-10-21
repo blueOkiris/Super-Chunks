@@ -283,6 +283,11 @@ function enemyCollisions() {
 							player.punchUnlocked = false;
 							player.lives = startLives;
 							player.restart();
+
+							for(let j = 0; j < numWorlds; j++) {
+								for(let k = 0; k < worlds[j].levels.length; k++)
+									worlds[j].levels[k].restart();
+							}
 						}
 					}, 1000);
 				}
